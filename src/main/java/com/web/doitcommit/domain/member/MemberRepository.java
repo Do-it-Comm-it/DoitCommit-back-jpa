@@ -10,6 +10,4 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @EntityGraph(attributePaths = {"interestTechSet","roleSet"}, type = EntityGraph.EntityGraphType.LOAD)
     Optional<Member> findByOauthId(String oauthId);
 
-
-
 }

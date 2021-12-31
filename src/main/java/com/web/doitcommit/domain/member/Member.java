@@ -3,6 +3,7 @@ package com.web.doitcommit.domain.member;
 import com.web.doitcommit.domain.BaseEntity;
 import com.web.doitcommit.domain.interestTech.InterestTech;
 import com.web.doitcommit.domain.memberRole.MemberRole;
+import com.web.doitcommit.domain.memberRole.Role;
 import lombok.*;
 
 import javax.persistence.*;
@@ -38,6 +39,12 @@ public class Member extends BaseEntity {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
+    private String picture;
+
+    @Column(nullable = false)
+    private Role role;
+
     @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "interest_tech", joinColumns = @JoinColumn(name = "member_id"))
     @Enumerated(EnumType.STRING)
@@ -64,4 +71,23 @@ public class Member extends BaseEntity {
     @Builder.Default
     @Column(nullable = false)
     private String filename = "";
+
+    @Builder
+    public Member(String oauthId, String email, String picture, Role role){
+        this.oauthId = oauthId;
+        this.email = email;
+        this.picture = picture;
+        this.role = role;
+    }
+
+    public Member update(String oauthId, String picture){
+        this.oauthId = oauthId;
+        this.picture = picture;
+
+        return this;
+    }
+
+    public String getRoleKey(){
+        return this.role.getKey();
+    }
 }
