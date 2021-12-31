@@ -1,10 +1,16 @@
 package com.web.doitcommit.domain.member;
 
 import com.web.doitcommit.domain.BaseEntity;
+import com.web.doitcommit.domain.interestTech.InterestTech;
+import com.web.doitcommit.domain.memberRole.MemberRole;
 import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 @Builder
 @AllArgsConstructor
@@ -20,7 +26,7 @@ public class Member extends BaseEntity {
     @Column(nullable = false)
     private String username;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 6)
     private String nickname;
 
     @Column(nullable = false)
@@ -29,11 +35,21 @@ public class Member extends BaseEntity {
     @Column(nullable = false, unique = true)
     private String oauthId;
 
-    private String tech;
+    @Column(nullable = false)
+    private String password;
+
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name = "interest_tech", joinColumns = @JoinColumn(name = "member_id"))
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    private Set<InterestTech> interestTechSet = new HashSet<InterestTech>();
 
     private String position;
 
-    private String role;
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(joinColumns = @JoinColumn(name = "member_id"))
+    @Builder.Default
+    private Set<MemberRole> roleSet = new HashSet<MemberRole>(Arrays.asList(MemberRole.USER));
 
     private String githubUrl;
 
