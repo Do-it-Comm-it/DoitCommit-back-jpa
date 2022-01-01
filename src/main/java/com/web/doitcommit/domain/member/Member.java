@@ -2,13 +2,9 @@ package com.web.doitcommit.domain.member;
 
 import com.web.doitcommit.domain.BaseEntity;
 import com.web.doitcommit.domain.interestTech.InterestTech;
-import com.web.doitcommit.domain.memberRole.MemberRole;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -32,6 +28,10 @@ public class Member extends BaseEntity {
     @Column(nullable = false)
     private String email;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private AuthProvider provider;
+
     @Column(nullable = false, unique = true)
     private String oauthId;
 
@@ -46,10 +46,9 @@ public class Member extends BaseEntity {
 
     private String position;
 
-    @ElementCollection(fetch = FetchType.LAZY)
-    @CollectionTable(joinColumns = @JoinColumn(name = "member_id"))
     @Builder.Default
-    private Set<MemberRole> roleSet = new HashSet<MemberRole>(Arrays.asList(MemberRole.USER));
+    @Column(nullable = false)
+    private String role = "USER";
 
     private String githubUrl;
 
