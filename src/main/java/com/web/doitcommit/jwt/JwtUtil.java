@@ -18,7 +18,8 @@ public class JwtUtil implements InitializingBean {
     @Value("${app.auth.tokenSecret}")
     private String secretKey;
 
-    private long expire = 60 * 24 * 30;
+    @Value("${app.auth.tokenExpirationMsec}")
+    private long expire;
 
     private Key key;
 
@@ -29,12 +30,12 @@ public class JwtUtil implements InitializingBean {
     }
 
     //토큰 생성
-    public String generateToken(Long userId) throws UnsupportedEncodingException {
+    public String generateToken(Long memberId) throws UnsupportedEncodingException {
 
         return "Bearer " + Jwts.builder()
                 .setIssuedAt(new Date())
                 .setExpiration(Date.from(ZonedDateTime.now().plusMinutes(expire).toInstant()))
-                .claim("userId", userId)
+                .claim("memberId", memberId)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -44,7 +45,7 @@ public class JwtUtil implements InitializingBean {
             try{
 
                 Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(tokenStr).getBody();
-                Long userId = claims.get("userId", Long.class);
+                Long userId = claims.get("memberId", Long.class);
                 return userId;
 
             }catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {

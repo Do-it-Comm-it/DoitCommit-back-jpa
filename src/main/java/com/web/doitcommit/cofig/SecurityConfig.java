@@ -20,7 +20,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final OAuth2DetailsService oAuth2DetailsService;
-    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
 
     @Bean
     public PasswordEncoder encode() {
@@ -38,6 +37,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new JwtUtil();
     }
 
+    @Bean
+    public OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler(){
+        return new OAuth2AuthenticationSuccessHandler(jwtUtil());
+    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         //세션 사용x
@@ -52,9 +56,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .userInfoEndpoint()
                 .userService(oAuth2DetailsService)
                 .and()
-                .successHandler(oAuth2AuthenticationSuccessHandler);
-
-
+                .successHandler(oAuth2AuthenticationSuccessHandler());
 
     }
 }
