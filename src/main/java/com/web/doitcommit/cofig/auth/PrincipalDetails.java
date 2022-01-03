@@ -1,6 +1,6 @@
 package com.web.doitcommit.cofig.auth;
 
-import com.web.doitcommit.cofig.oauth.userInfo.OAuth2UserInfo;
+import com.web.doitcommit.cofig.oAuth.userInfo.OAuth2UserInfo;
 import com.web.doitcommit.domain.member.Member;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;

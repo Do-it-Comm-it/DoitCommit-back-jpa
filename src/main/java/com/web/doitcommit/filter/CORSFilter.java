@@ -1,4 +1,4 @@
-package com.web.doitcommit.cofig.filter;
+package com.web.doitcommit.filter;
 
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;

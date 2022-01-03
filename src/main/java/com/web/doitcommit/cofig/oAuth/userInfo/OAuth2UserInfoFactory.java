@@ -1,4 +1,4 @@
-package com.web.doitcommit.cofig.oauth.userInfo;
+package com.web.doitcommit.cofig.oAuth.userInfo;
 
 import com.web.doitcommit.domain.member.AuthProvider;
 
@@ -9,6 +9,7 @@ public class OAuth2UserInfoFactory {
                                                    Map<String, Object> attributes) {
         switch (provider) {
             case GOOGLE: return new GoogleOAuth2UserInfo(attributes);
+            case GITHUB: return new GitHubOAuth2UserInfo(attributes);
             default: throw new IllegalArgumentException("Invalid Provider Type.");
         }
     }

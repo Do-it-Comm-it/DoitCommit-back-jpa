@@ -1,7 +1,7 @@
 package com.web.doitcommit.cofig;
 
-import com.web.doitcommit.cofig.oauth.OAuth2DetailsService;
-import com.web.doitcommit.cofig.oauth.handler.OAuth2AuthenticationSuccessHandler;
+import com.web.doitcommit.cofig.oAuth.OAuth2DetailsService;
+import com.web.doitcommit.cofig.oAuth.handler.OAuth2AuthenticationSuccessHandler;
 import com.web.doitcommit.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -25,6 +25,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public PasswordEncoder encode() {
         return new BCryptPasswordEncoder();
     }
+
 
     @Bean
     @Override
@@ -53,6 +54,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests().anyRequest().permitAll();
         http.oauth2Login()
+                .authorizationEndpoint()
+                .baseUri("/oauth2/authorization")
+                .and()
                 .userInfoEndpoint()
                 .userService(oAuth2DetailsService)
                 .and()

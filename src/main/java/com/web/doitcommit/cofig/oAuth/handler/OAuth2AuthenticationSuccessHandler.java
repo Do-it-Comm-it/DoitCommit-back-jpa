@@ -1,14 +1,11 @@
-package com.web.doitcommit.cofig.oauth.handler;
+package com.web.doitcommit.cofig.oAuth.handler;
 
 import com.web.doitcommit.cofig.auth.PrincipalDetails;
 import com.web.doitcommit.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
-import org.springframework.stereotype.Component;
 import org.springframework.util.SerializationUtils;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;

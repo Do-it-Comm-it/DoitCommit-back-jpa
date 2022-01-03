@@ -1,4 +1,4 @@
-package com.web.doitcommit.cofig.oauth.userInfo;
+package com.web.doitcommit.cofig.oAuth.userInfo;
 
 import java.util.Map;
 
@@ -21,5 +21,6 @@ public abstract class OAuth2UserInfo {
     public abstract String getEmail();
 
     public abstract String getImageUrl();
+
 }
 

@@ -19,13 +19,11 @@ public class Member extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberId;
 
-    @Column(nullable = false)
     private String username;
 
     @Column(unique = true, length = 6)
     private String nickname;
 
-    @Column(nullable = false)
     private String email;
 
     @Column(nullable = false)
@@ -63,4 +61,16 @@ public class Member extends BaseEntity {
     @Builder.Default
     @Column(nullable = false)
     private String filename = "";
+
+    @Builder.Default
+    @Column(nullable = false)
+    private String pictureUrl = "";
+
+    public void setPicture(String pictureUrl){
+        this.pictureUrl = pictureUrl;
+    }
+
+    public void setEmail(String email){
+        this.email = email;
+    }
 }
