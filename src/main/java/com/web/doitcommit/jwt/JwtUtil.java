@@ -15,11 +15,14 @@ import java.util.Date;
 @Log4j2
 public class JwtUtil implements InitializingBean {
 
-    @Value("${app.auth.tokenSecret}")
+    @Value("${app.token.secretKey}")
     private String secretKey;
 
-    @Value("${app.auth.tokenExpirationMsec}")
-    private long expire;
+    @Value("${app.token.accessTokenExpire}")
+    private long accessTokenExpire;
+
+    @Value("${app.token.refreshTokenExpire}")
+    private long refreshTokenExpire;
 
     private Key key;
 
@@ -29,21 +32,32 @@ public class JwtUtil implements InitializingBean {
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    //토큰 생성
-    public String generateToken(Long memberId) throws UnsupportedEncodingException {
+    //accessToken 생성
+    public String generateAccessToken(Long memberId) {
 
-        return "Bearer " + Jwts.builder()
+        return Jwts.builder()
                 .setIssuedAt(new Date())
-                .setExpiration(Date.from(ZonedDateTime.now().plusMinutes(expire).toInstant()))
+                .setExpiration(Date.from(ZonedDateTime.now().plusMinutes(accessTokenExpire).toInstant()))
                 .claim("memberId", memberId)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 
+    //refreshToken 생성
+    public String generateRefreshToken(Long memberId) {
+
+        return Jwts.builder()
+                .setIssuedAt(new Date())
+                .setExpiration(Date.from(ZonedDateTime.now().plusMinutes(refreshTokenExpire).toInstant()))
+                .claim("memberId", memberId)
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    //토큰 검증
     public Long validateAndExtract(String tokenStr){
 
             try{
-
                 Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(tokenStr).getBody();
                 Long userId = claims.get("memberId", Long.class);
                 return userId;
@@ -57,7 +71,6 @@ public class JwtUtil implements InitializingBean {
             } catch (IllegalArgumentException e) {
                 log.info("JWT 토큰이 잘못되었습니다.");
             }
-
             return null;
     }
 }

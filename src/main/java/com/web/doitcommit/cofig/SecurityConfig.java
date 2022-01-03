@@ -26,7 +26,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
@@ -54,9 +53,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests().anyRequest().permitAll();
         http.oauth2Login()
-                .authorizationEndpoint()
-                .baseUri("/oauth2/authorization")
-                .and()
                 .userInfoEndpoint()
                 .userService(oAuth2DetailsService)
                 .and()

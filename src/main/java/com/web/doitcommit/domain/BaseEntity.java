@@ -16,12 +16,10 @@ import java.time.LocalDateTime;
 @EntityListeners(value = {AuditingEntityListener.class})
 public abstract class BaseEntity {
 
-    @DateTimeFormat(pattern = "yyyy/MM/ddTHH:mm")
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime joinDate;
 
-    @DateTimeFormat(pattern = "yyyy/MM/ddTHH:mm")
     @LastModifiedDate
     private LocalDateTime updateDate;
 }

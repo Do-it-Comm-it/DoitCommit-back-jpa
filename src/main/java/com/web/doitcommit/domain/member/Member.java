@@ -37,7 +37,7 @@ public class Member extends BaseEntity {
     private String password;
 
     @ElementCollection(fetch = FetchType.LAZY)
-    @CollectionTable(name = "interest_tech", joinColumns = @JoinColumn(name = "member_id"))
+    @CollectionTable(joinColumns = @JoinColumn(name = "member_id"))
     @Enumerated(EnumType.STRING)
     @Builder.Default
     private Set<InterestTech> interestTechSet = new HashSet<InterestTech>();
@@ -53,14 +53,6 @@ public class Member extends BaseEntity {
     private String url1;
 
     private String url2;
-
-    @Builder.Default
-    @Column(nullable = false)
-    private String folderPath = "";
-
-    @Builder.Default
-    @Column(nullable = false)
-    private String filename = "";
 
     @Builder.Default
     @Column(nullable = false)
