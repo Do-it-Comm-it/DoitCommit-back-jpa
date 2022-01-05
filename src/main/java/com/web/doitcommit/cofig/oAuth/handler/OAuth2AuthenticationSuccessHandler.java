@@ -27,15 +27,25 @@ public class OAuth2AuthenticationSuccessHandler extends SavedRequestAwareAuthent
 
         PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
 
-        String jwtToken = jwtUtil.generateAccessToken(principalDetails.getMember().getMemberId());
+        //accessToken, refreshToken 토큰 생성
+        String accessToken = jwtUtil.generateAccessToken(principalDetails.getMember().getMemberId());
+        String refreshToken = jwtUtil.generateRefreshToken(principalDetails.getMember().getMemberId());
 
-        //쿠키에 jwt 토큰 저장
-        Cookie myCookie = new Cookie("Authentication", jwtToken);
-        myCookie.setMaxAge(300);
-        myCookie.setPath("/"); // 모든 경로에서 접근 가능 하도록 설정
-        response.addCookie(myCookie);
+        //accessToken, refreshToken - response 쿠키에 저장
+        setCookie(response, "accessToken", accessToken);
+        setCookie(response, "refreshToken", refreshToken);
 
         //redirect
         getRedirectStrategy().sendRedirect(request,response,redirectUrl);
     }
+
+    private void setCookie(HttpServletResponse response, String name, String jwtToken) {
+
+        Cookie cookie = new Cookie(name, jwtToken);
+        cookie.setMaxAge(300); // 모든 경로에서 접근 가능 하도록 설정
+        cookie.setPath("/");
+
+        response.addCookie(cookie);
+    }
+
 }

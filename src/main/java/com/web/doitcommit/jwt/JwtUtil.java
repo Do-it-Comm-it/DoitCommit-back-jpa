@@ -56,21 +56,20 @@ public class JwtUtil implements InitializingBean {
 
     //토큰 검증
     public Long validateAndExtract(String tokenStr){
+        try{
+            Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(tokenStr).getBody();
+            Long userId = claims.get("memberId", Long.class);
+            return userId;
 
-            try{
-                Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(tokenStr).getBody();
-                Long userId = claims.get("memberId", Long.class);
-                return userId;
-
-            }catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
-                log.info("잘못된 JWT 서명입니다.");
-            } catch (ExpiredJwtException e) {
-                log.info("만료된 JWT 토큰입니다.");
-            } catch (UnsupportedJwtException e) {
-                log.info("지원되지 않는 JWT 토큰입니다.");
-            } catch (IllegalArgumentException e) {
-                log.info("JWT 토큰이 잘못되었습니다.");
-            }
-            return null;
+        }catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
+            log.info("잘못된 JWT 서명입니다.");
+        } catch (ExpiredJwtException e) {
+            log.info("만료된 JWT 토큰입니다.");
+        } catch (UnsupportedJwtException e) {
+            log.info("지원되지 않는 JWT 토큰입니다.");
+        } catch (IllegalArgumentException e) {
+            log.info("JWT 토큰이 잘못되었습니다.");
+        }
+        return null;
     }
 }
