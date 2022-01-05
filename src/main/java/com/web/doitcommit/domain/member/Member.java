@@ -21,7 +21,7 @@ public class Member extends BaseEntity {
 
     private String username;
 
-    @Column(unique = true, length = 6)
+    @Column(unique = true, length = 12)
     private String nickname;
 
     private String email;

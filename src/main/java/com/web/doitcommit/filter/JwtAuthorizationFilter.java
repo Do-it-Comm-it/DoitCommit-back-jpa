@@ -30,6 +30,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         this.memberRepository = memberRepository;
     }
 
+    //TODO refreshToken 검증 요청시 이 필터가 타면 안됨.
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain chain) throws IOException, ServletException {
@@ -58,10 +59,10 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
                     PrincipalDetails principalDetails = new PrincipalDetails(member);
 
-                    //강제로 Authentication 만들기
+                    //Authentication 객체 만들기
                     Authentication authentication = new UsernamePasswordAuthenticationToken(principalDetails, null, principalDetails.getAuthorities());
 
-                    //강제로 시큐리티의 세션에 접근하여 Authentication 객체를 저장.
+                    //시큐리티의 세션에 접근하여 Authentication 객체를 저장.
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
             }
