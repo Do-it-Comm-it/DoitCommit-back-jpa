@@ -1,4 +1,4 @@
-package com.web.doitcommit.cofig.oAuth.userInfo;
+package com.web.doitcommit.config.oAuth.userInfo;
 
 import com.web.doitcommit.domain.member.AuthProvider;
 

@@ -1,6 +1,6 @@
-package com.web.doitcommit.cofig.oAuth.handler;
+package com.web.doitcommit.config.oAuth.handler;
 
-import com.web.doitcommit.cofig.auth.PrincipalDetails;
+import com.web.doitcommit.config.auth.PrincipalDetails;
 import com.web.doitcommit.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;

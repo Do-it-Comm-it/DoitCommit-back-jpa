@@ -1,6 +1,6 @@
 package com.web.doitcommit.filter;
 
-import com.web.doitcommit.cofig.auth.PrincipalDetails;
+import com.web.doitcommit.config.auth.PrincipalDetails;
 import com.web.doitcommit.domain.member.Member;
 import com.web.doitcommit.domain.member.MemberRepository;
 import com.web.doitcommit.jwt.JwtUtil;

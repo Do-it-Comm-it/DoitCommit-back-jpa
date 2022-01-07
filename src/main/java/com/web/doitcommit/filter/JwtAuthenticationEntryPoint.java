@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 //로그인 안 된 사용자 401 Unauthorized 에러 리턴
-@Component
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     @Override

@@ -1,7 +1,7 @@
-package com.web.doitcommit.cofig;
+package com.web.doitcommit.config;
 
-import com.web.doitcommit.cofig.oAuth.OAuth2DetailsService;
-import com.web.doitcommit.cofig.oAuth.handler.OAuth2AuthenticationSuccessHandler;
+import com.web.doitcommit.config.oAuth.OAuth2DetailsService;
+import com.web.doitcommit.config.oAuth.handler.OAuth2AuthenticationSuccessHandler;
 import com.web.doitcommit.domain.member.MemberRepository;
 import com.web.doitcommit.filter.JwtAuthenticationEntryPoint;
 import com.web.doitcommit.filter.JwtAuthorizationFilter;
@@ -9,8 +9,6 @@ import com.web.doitcommit.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
