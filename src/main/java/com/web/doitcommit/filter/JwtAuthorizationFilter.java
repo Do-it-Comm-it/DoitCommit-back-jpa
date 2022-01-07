@@ -30,7 +30,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         this.memberRepository = memberRepository;
     }
 
-    //TODO refreshToken 검증 요청시 이 필터가 타면 안됨.
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain chain) throws IOException, ServletException {
