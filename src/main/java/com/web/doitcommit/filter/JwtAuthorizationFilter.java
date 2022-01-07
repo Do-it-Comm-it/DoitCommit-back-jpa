@@ -8,6 +8,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -22,10 +23,14 @@ import java.util.Optional;
 @Log4j2
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
+    private AntPathMatcher antPathMatcher;
+    private String pattern;
     private JwtUtil jwtUtil;
     private MemberRepository memberRepository;
 
-    public JwtAuthorizationFilter(JwtUtil jwtUtil, MemberRepository memberRepository) {
+    public JwtAuthorizationFilter(String pattern, JwtUtil jwtUtil, MemberRepository memberRepository) {
+        this.antPathMatcher = new AntPathMatcher();
+        this.pattern = pattern;
         this.jwtUtil = jwtUtil;
         this.memberRepository = memberRepository;
     }
@@ -34,6 +39,13 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain chain) throws IOException, ServletException {
 
+        //인증이 필요 없는 uri 일 경우 바로 통과
+        if(antPathMatcher.match(pattern, request.getRequestURI())){
+            chain.doFilter(request,response);
+            return;
+        }
+
+        System.out.println("인증필터 시작");
         //request 에서 쿠키 얻기.
         Cookie[] cookies = request.getCookies();
 

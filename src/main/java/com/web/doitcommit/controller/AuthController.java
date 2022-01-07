@@ -2,6 +2,7 @@ package com.web.doitcommit.controller;
 
 import com.web.doitcommit.dto.CMRespDto;
 import com.web.doitcommit.jwt.JwtUtil;
+import com.web.doitcommit.redis.RedisService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,20 +18,31 @@ import javax.servlet.http.HttpServletResponse;
 public class AuthController {
 
     private final JwtUtil jwtUtil;
+    private final RedisService redisService;
 
     //TODO uri 설계, response 객체 의논 필요
-    @GetMapping("/refreshToken")
+    @GetMapping("/auth/refreshToken")
     public ResponseEntity<?> verifyRefreshToken(@CookieValue("refreshToken") String refreshToken,
                                                         HttpServletResponse response){
 
         Long memberId = jwtUtil.validateAndExtract(refreshToken);
 
-        //TODO redis 에서 memberId로 refreshToken 얻은 후, 클라이언트로부터 받은 refreshToken 과 같은지 검증 필요
-        //return new ResponseEntity<>(new CMRespDto<>(1,"UnAuthorized", null),HttpStatus.UNAUTHORIZED);
+        if (memberId == null){
+            return new ResponseEntity<>(new CMRespDto<>(1,"UnAuthorized", null),HttpStatus.UNAUTHORIZED);
+        }
+        String findRefreshToken = redisService.getValues(memberId);
+
+        //잘못된 refreshToken 일 경우
+        if(findRefreshToken == null || !findRefreshToken.equals(refreshToken) || refreshToken == null){
+            return new ResponseEntity<>(new CMRespDto<>(1,"UnAuthorized", null),HttpStatus.UNAUTHORIZED);
+        }
 
         //새로운 accessToken, refreshToken 생성
         String newAccessToken = jwtUtil.generateAccessToken(memberId);
         String newRefreshToken = jwtUtil.generateRefreshToken(memberId);
+
+        System.out.println(newAccessToken);
+        System.out.println(newRefreshToken);
         //쿠키에 accessToken, refreshToken 저장
         setCookie(response,"accessToken", newAccessToken);
         setCookie(response,"refreshToken", newRefreshToken);

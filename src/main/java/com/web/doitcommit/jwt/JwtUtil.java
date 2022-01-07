@@ -1,5 +1,7 @@
 package com.web.doitcommit.jwt;
 
+import com.web.doitcommit.handler.exception.CustomException;
+import com.web.doitcommit.handler.exception.InvalidTokenException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -62,13 +64,16 @@ public class JwtUtil implements InitializingBean {
 
         }catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
             log.info("잘못된 JWT 서명입니다.");
+            throw new CustomException("UnAuthorized");
         } catch (ExpiredJwtException e) {
             log.info("만료된 JWT 토큰입니다.");
+            throw new CustomException("UnAuthorized");
         } catch (UnsupportedJwtException e) {
             log.info("지원되지 않는 JWT 토큰입니다.");
+            throw new CustomException("UnAuthorized");
         } catch (IllegalArgumentException e) {
             log.info("JWT 토큰이 잘못되었습니다.");
+            throw new CustomException("UnAuthorized");
         }
-        return null;
     }
 }

@@ -6,6 +6,7 @@ import com.web.doitcommit.domain.member.MemberRepository;
 import com.web.doitcommit.filter.JwtAuthenticationEntryPoint;
 import com.web.doitcommit.filter.JwtAuthorizationFilter;
 import com.web.doitcommit.jwt.JwtUtil;
+import com.web.doitcommit.redis.RedisService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,6 +25,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final OAuth2DetailsService oAuth2DetailsService;
     private final MemberRepository memberRepository;
+    private final RedisService redisService;
 
     @Bean
     public PasswordEncoder encode() {
@@ -37,12 +39,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler(){
-        return new OAuth2AuthenticationSuccessHandler(jwtUtil());
+        return new OAuth2AuthenticationSuccessHandler(jwtUtil(), redisService);
     }
 
     @Bean
     public JwtAuthorizationFilter jwtAuthorizationFilter() {
-        return new JwtAuthorizationFilter(jwtUtil(),memberRepository);
+        return new JwtAuthorizationFilter("/auth/**/*",jwtUtil(),memberRepository);
     }
 
     @Bean

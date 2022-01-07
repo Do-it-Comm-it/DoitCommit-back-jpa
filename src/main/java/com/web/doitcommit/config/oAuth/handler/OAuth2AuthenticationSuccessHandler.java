@@ -2,6 +2,7 @@ package com.web.doitcommit.config.oAuth.handler;
 
 import com.web.doitcommit.config.auth.PrincipalDetails;
 import com.web.doitcommit.jwt.JwtUtil;
+import com.web.doitcommit.redis.RedisService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -19,6 +20,7 @@ public class OAuth2AuthenticationSuccessHandler extends SavedRequestAwareAuthent
     private String redirectUrl;
 
     private final JwtUtil jwtUtil;
+    private final RedisService redisService;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -30,6 +32,9 @@ public class OAuth2AuthenticationSuccessHandler extends SavedRequestAwareAuthent
         //accessToken, refreshToken 토큰 생성
         String accessToken = jwtUtil.generateAccessToken(principalDetails.getMember().getMemberId());
         String refreshToken = jwtUtil.generateRefreshToken(principalDetails.getMember().getMemberId());
+
+        //refreshToken - redis 에 저장
+        redisService.setValues(principalDetails.getMember().getMemberId(), refreshToken);
 
         //accessToken, refreshToken - response 쿠키에 저장
         setCookie(response, "accessToken", accessToken);
@@ -44,6 +49,8 @@ public class OAuth2AuthenticationSuccessHandler extends SavedRequestAwareAuthent
         Cookie cookie = new Cookie(name, jwtToken);
         cookie.setMaxAge(300); // 모든 경로에서 접근 가능 하도록 설정
         cookie.setPath("/");
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
 
         response.addCookie(cookie);
     }
