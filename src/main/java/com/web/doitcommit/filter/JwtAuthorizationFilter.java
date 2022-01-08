@@ -39,6 +39,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain chain) throws IOException, ServletException {
 
+
         //인증이 필요 없는 uri 일 경우 바로 통과
         if(antPathMatcher.match(pattern, request.getRequestURI())){
             chain.doFilter(request,response);
