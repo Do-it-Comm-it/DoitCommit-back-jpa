@@ -7,20 +7,33 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@RequiredArgsConstructor
+@Component
 public class OAuth2AuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 
-    @Value("${app.oauth2.authorized-redirect-url}")
-    private String redirectUrl;
+
+    private String redirectUrl = "http://localhost:3000";
+
+    @Value("${app.token.accessTokenName}")
+    private String accessTokenName;
+
+    @Value("${app.token.refreshTokenName}")
+    private String refreshTokenName;
 
     private final JwtUtil jwtUtil;
     private final RedisService redisService;
+
+    public OAuth2AuthenticationSuccessHandler(JwtUtil jwtUtil, RedisService redisService) {
+
+        this.jwtUtil = jwtUtil;
+        this.redisService = redisService;
+    }
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -37,8 +50,8 @@ public class OAuth2AuthenticationSuccessHandler extends SavedRequestAwareAuthent
         redisService.setValues(principalDetails.getMember().getMemberId(), refreshToken);
 
         //accessToken, refreshToken - response 쿠키에 저장
-        setCookie(response, "accessToken", accessToken);
-        setCookie(response, "refreshToken", refreshToken);
+        setCookie(response, accessTokenName, accessToken);
+        setCookie(response, refreshTokenName, refreshToken);
 
         //redirect
         getRedirectStrategy().sendRedirect(request,response,redirectUrl);
