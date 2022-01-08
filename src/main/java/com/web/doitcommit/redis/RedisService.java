@@ -1,5 +1,6 @@
 package com.web.doitcommit.redis;
 
+import com.web.doitcommit.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -12,9 +13,7 @@ import java.time.Duration;
 @Service
 public class RedisService {
 
-    @Value("${app.token.refreshTokenExpire}")
-    private long refreshTokenExpire;
-
+    private JwtUtil jwtUtil;
     private final RedisTemplate redisTemplate;
 
     /**
@@ -22,7 +21,7 @@ public class RedisService {
      */
     public void setValues(Long memberId, String refreshToken){
         ValueOperations<Long, String> values = redisTemplate.opsForValue();
-        values.set(memberId, refreshToken, Duration.ofMinutes(refreshTokenExpire));  // 2주뒤 메모리에서 삭제된다.
+        values.set(memberId, refreshToken, Duration.ofMinutes(jwtUtil.refreshTokenExpire));  // 2주뒤 메모리에서 삭제된다.
     }
 
     /**

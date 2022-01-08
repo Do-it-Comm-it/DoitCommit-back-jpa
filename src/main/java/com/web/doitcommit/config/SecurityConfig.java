@@ -2,11 +2,8 @@ package com.web.doitcommit.config;
 
 import com.web.doitcommit.config.oAuth.OAuth2DetailsService;
 import com.web.doitcommit.config.oAuth.handler.OAuth2AuthenticationSuccessHandler;
-import com.web.doitcommit.domain.member.MemberRepository;
 import com.web.doitcommit.filter.JwtAuthenticationEntryPoint;
 import com.web.doitcommit.filter.JwtAuthorizationFilter;
-import com.web.doitcommit.jwt.JwtUtil;
-import com.web.doitcommit.redis.RedisService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,32 +21,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final OAuth2DetailsService oAuth2DetailsService;
-    private final MemberRepository memberRepository;
-    private final RedisService redisService;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final JwtAuthorizationFilter jwtAuthorizationFilter;
+    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
 
     @Bean
     public PasswordEncoder encode() {
         return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public JwtUtil jwtUtil(){
-        return new JwtUtil();
-    }
-
-    @Bean
-    public OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler(){
-        return new OAuth2AuthenticationSuccessHandler(jwtUtil(), redisService);
-    }
-
-    @Bean
-    public JwtAuthorizationFilter jwtAuthorizationFilter() {
-        return new JwtAuthorizationFilter("/auth/**/*",jwtUtil(),memberRepository);
-    }
-
-    @Bean
-    public JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint(){
-        return new JwtAuthenticationEntryPoint();
     }
 
     @Override
@@ -65,7 +43,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .userInfoEndpoint()
                 .userService(oAuth2DetailsService)
                 .and()
-                .successHandler(oAuth2AuthenticationSuccessHandler())
+                .successHandler(oAuth2AuthenticationSuccessHandler)
 
                 .and()
                 .authorizeRequests()
@@ -73,9 +51,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().permitAll()
 
                 .and()
-                .addFilterBefore(jwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling()
-                .authenticationEntryPoint(jwtAuthenticationEntryPoint());
+                .authenticationEntryPoint(jwtAuthenticationEntryPoint);
 
     }
 }

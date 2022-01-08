@@ -1,25 +1,27 @@
 package com.web.doitcommit.config.oAuth.handler;
 
 import com.web.doitcommit.config.auth.PrincipalDetails;
+import com.web.doitcommit.jwt.CookieUtil;
 import com.web.doitcommit.jwt.JwtUtil;
 import com.web.doitcommit.redis.RedisService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
-
-import javax.servlet.http.Cookie;
+import org.springframework.stereotype.Component;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @RequiredArgsConstructor
+@Component
 public class OAuth2AuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 
     @Value("${app.oauth2.authorized-redirect-url}")
     private String redirectUrl;
 
     private final JwtUtil jwtUtil;
+    private final CookieUtil cookieUtil;
     private final RedisService redisService;
 
     @Override
@@ -37,22 +39,10 @@ public class OAuth2AuthenticationSuccessHandler extends SavedRequestAwareAuthent
         redisService.setValues(principalDetails.getMember().getMemberId(), refreshToken);
 
         //accessToken, refreshToken - response 쿠키에 저장
-        setCookie(response, "accessToken", accessToken);
-        setCookie(response, "refreshToken", refreshToken);
+        cookieUtil.createCookie(response, jwtUtil.accessTokenName, accessToken, jwtUtil.accessTokenExpire);
+        cookieUtil.createCookie(response, jwtUtil.refreshTokenName, refreshToken,jwtUtil.refreshTokenExpire);
 
         //redirect
         getRedirectStrategy().sendRedirect(request,response,redirectUrl);
     }
-
-    private void setCookie(HttpServletResponse response, String name, String jwtToken) {
-
-        Cookie cookie = new Cookie(name, jwtToken);
-        cookie.setMaxAge(300); // 모든 경로에서 접근 가능 하도록 설정
-        cookie.setPath("/");
-        cookie.setHttpOnly(true);
-        cookie.setSecure(true);
-
-        response.addCookie(cookie);
-    }
-
 }

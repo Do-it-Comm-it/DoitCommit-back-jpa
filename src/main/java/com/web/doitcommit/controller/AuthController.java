@@ -1,6 +1,7 @@
 package com.web.doitcommit.controller;
 
 import com.web.doitcommit.dto.CMRespDto;
+import com.web.doitcommit.jwt.CookieUtil;
 import com.web.doitcommit.jwt.JwtUtil;
 import com.web.doitcommit.redis.RedisService;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 public class AuthController {
 
     private final JwtUtil jwtUtil;
+    private final CookieUtil cookieUtil;
     private final RedisService redisService;
 
     //TODO uri 설계, response 객체 의논 필요
@@ -46,21 +48,10 @@ public class AuthController {
         String newRefreshToken = jwtUtil.generateRefreshToken(memberId);
 
         //쿠키에 accessToken, refreshToken 저장
-        setCookie(response,"accessToken", newAccessToken);
-        setCookie(response,"refreshToken", newRefreshToken);
+        cookieUtil.createCookie(response, jwtUtil.accessTokenName, newAccessToken, jwtUtil.accessTokenExpire);
+        cookieUtil.createCookie(response, jwtUtil.refreshTokenName, newRefreshToken,jwtUtil.refreshTokenExpire);
 
         return new ResponseEntity<>(new CMRespDto<>(1,"토큰 재발급 완료", null), HttpStatus.OK);
-    }
-
-    private void setCookie(HttpServletResponse response, String name, String jwtToken) {
-
-        Cookie cookie = new Cookie(name, jwtToken);
-        cookie.setMaxAge(300); // 모든 경로에서 접근 가능 하도록 설정
-        cookie.setPath("/");
-        cookie.setHttpOnly(true);
-        cookie.setSecure(true);
-
-        response.addCookie(cookie);
     }
 
 }
