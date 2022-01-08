@@ -25,11 +25,15 @@ public class AuthController {
     public ResponseEntity<?> verifyRefreshToken(@CookieValue("refreshToken") String refreshToken,
                                                         HttpServletResponse response){
 
+        //refreshToken 검증
         Long memberId = jwtUtil.validateAndExtract(refreshToken);
 
+        //잘못된 refreshToken 일 경우
         if (memberId == null){
             return new ResponseEntity<>(new CMRespDto<>(1,"UnAuthorized", null),HttpStatus.UNAUTHORIZED);
         }
+
+        //redis 에 등록된 refreshToken 가져오기
         String findRefreshToken = redisService.getValues(memberId);
 
         //잘못된 refreshToken 일 경우
@@ -41,8 +45,6 @@ public class AuthController {
         String newAccessToken = jwtUtil.generateAccessToken(memberId);
         String newRefreshToken = jwtUtil.generateRefreshToken(memberId);
 
-        System.out.println(newAccessToken);
-        System.out.println(newRefreshToken);
         //쿠키에 accessToken, refreshToken 저장
         setCookie(response,"accessToken", newAccessToken);
         setCookie(response,"refreshToken", newRefreshToken);
