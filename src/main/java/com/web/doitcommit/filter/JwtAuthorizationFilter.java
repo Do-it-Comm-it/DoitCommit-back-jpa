@@ -23,8 +23,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Optional;
 
 @Component
 @Log4j2
@@ -33,14 +31,14 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     private AntPathMatcher antPathMatcher;
     private String pattern = "/auth/**/*";
     private JwtUtil jwtUtil;
-    private CookieUtil cookieUtill;
+    private CookieUtil cookieUtil;
     private MemberRepository memberRepository;
 
     @Autowired
-    public JwtAuthorizationFilter(CookieUtil cookieUtill, JwtUtil jwtUtil, MemberRepository memberRepository) {
+    public JwtAuthorizationFilter(CookieUtil cookieUtil, JwtUtil jwtUtil, MemberRepository memberRepository) {
         this.antPathMatcher = new AntPathMatcher();
         this.jwtUtil = jwtUtil;
-        this.cookieUtill = cookieUtill;
+        this.cookieUtil = cookieUtil;
         this.memberRepository = memberRepository;
     }
 
@@ -55,7 +53,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         }
         System.out.println("인증필터 시작");
 
-        Cookie cookie = cookieUtill.getCookie(request, jwtUtil.accessTokenName);
+        Cookie cookie = cookieUtil.getCookie(request, jwtUtil.accessTokenName);
         //accessToken 쿠키가 존재할 경우
         if (cookie != null) {
             String accessToken = cookie.getValue();

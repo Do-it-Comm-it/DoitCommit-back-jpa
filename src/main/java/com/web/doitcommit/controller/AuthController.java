@@ -22,7 +22,6 @@ public class AuthController {
     private final CookieUtil cookieUtil;
     private final RedisService redisService;
 
-    //TODO uri 설계, response 객체 의논 필요
     @GetMapping("/auth/refreshToken")
     public ResponseEntity<?> verifyRefreshToken(@CookieValue("refreshToken") String refreshToken,
                                                         HttpServletResponse response){
