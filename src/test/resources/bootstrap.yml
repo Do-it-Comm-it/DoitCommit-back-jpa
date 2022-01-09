@@ -1,4 +1,4 @@
 aws:
   paramstore:
     enabled: true
-    prfix: /scurity
+    prefix: /scurity
