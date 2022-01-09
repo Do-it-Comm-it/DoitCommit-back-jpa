@@ -39,7 +39,9 @@ dependencies {
 	//redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	//parameter store
-	implementation 'org.springframework.cloud:spring-cloud-starter-aws-parameter-store-config'
+	implementation group: 'org.springframework.cloud', name: 'spring-cloud-aws-parameter-store-config', version: '2.2.5.RELEASE'
+
+
 
 }
 
