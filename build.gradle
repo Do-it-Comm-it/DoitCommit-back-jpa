@@ -38,9 +38,9 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt-jackson:0.11.2'
 	//redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-	//parameter store
-	implementation group: 'org.springframework.cloud', name: 'spring-cloud-aws-parameter-store-config', version: '2.2.5.RELEASE'
+	//secret manager
 	implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap:3.0.3'
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws-secrets-manager-config:2.2.6.RELEASE'
 
 
 

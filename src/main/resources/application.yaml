@@ -4,8 +4,8 @@ server:
 spring:
   datasource:
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
-    url: ${DATABASE_URL}
-    username: ${DATABASE_USERNAME}
+    url: jdbc:sqlserver://do-it-commit-db.database.windows.net:1433;database=do-it-commit
+    username: do-it-commit-admin
     password: ${DATABASE_PASSWORD}
 #  datasource:
 #    url: jdbc:h2:tcp://localhost/~/doitcommit
@@ -33,14 +33,14 @@ spring:
           google:
             client-id: ${GOOGLE_CLIENT_ID}
             client-secret: ${GOOGLE_CLIENT_SECRET}
-            redirect-uri: ${GOOGLE_REDIRECT_URI}
+            redirect-uri: http://localhost:8888/login/oauth2/code/google
             scope:
               - email
               - profile
           github:
             client-id: ${GITHUB_CLIENT_ID}
             client-secret: ${GITHUB_CLIENT_SECRET}
-            redirect-uri: ${GITHUB_REDIRECT_URI}
+            redirect-uri: http://localhost:8888/login/oauth2/code/github
             scope:
               - read:user
 
@@ -49,7 +49,7 @@ app:
   token:
     secretKey: ${JWT_SECRET_KEY}
   oauth2:
-    authorized-redirect-url: ${AUTHORIZED_REDIRECT_URL}
+    authorized-redirect-url: http://localhost:3000
 
 
 

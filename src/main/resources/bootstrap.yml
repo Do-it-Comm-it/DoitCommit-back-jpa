@@ -1,4 +1,7 @@
 aws:
-  paramstore:
-    enabled: true
-    prefix: /security
+  secretsmanager:
+    name: do-it-commit2
+cloud:
+  aws:
+    region:
+      static: ap-northeast-2
