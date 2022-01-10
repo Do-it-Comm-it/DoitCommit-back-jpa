@@ -33,6 +33,9 @@ jobs:
             format: YYYY-MM-DDTHH-mm-ss
             utcOffset: "+09:00"
 
+        - name : Generate deployment package
+          run: zip -r deploy.zip .
+
         - name: Configure AWS credentials
           uses: aws-actions/configure-aws-credentials@v1
           with:
@@ -47,11 +50,8 @@ jobs:
             aws-secret-access-key: ${{ secrets.ACCESS_KEY_SECRET }}
             aws-region: ap-northeast-2
             secrets: |
-                /secret/do-it-commit2
-              parse-json: false
-
-        - name : Generate deployment package
-          run: zip -r deploy.zip .
+              /secret/do-it-commit2
+            parse-json: false
 
         - name : Deploy to EB
           uses: einaregilsson/beanstalk-deploy@v14
