@@ -59,6 +59,7 @@ public class OAuth2DetailsService extends DefaultOAuth2UserService {
                         .oauthId(userInfo.getId())
                         .password(password)
                         .username(userInfo.getName())
+                        .nickname(UUID.randomUUID().toString()) //mssql - unique 조건 중복 null 허용x
                         .email(userInfo.getEmail())
                         .provider(GOOGLE)
                         .build();
@@ -73,6 +74,7 @@ public class OAuth2DetailsService extends DefaultOAuth2UserService {
                         .oauthId(userInfo.getId())
                         .password(password)
                         .username(userInfo.getName())
+                        .nickname(UUID.randomUUID().toString()) //mssql - unique 조건 중복 null 허용x
                         .provider(GITHUB)
                         .githubUrl((String)attributes.get("html_url"))
                         .pictureUrl(userInfo.getImageUrl())
