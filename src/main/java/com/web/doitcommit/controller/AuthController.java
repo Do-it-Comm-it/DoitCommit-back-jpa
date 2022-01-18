@@ -46,6 +46,8 @@ public class AuthController {
         String newAccessToken = jwtUtil.generateAccessToken(memberId);
         String newRefreshToken = jwtUtil.generateRefreshToken(memberId);
 
+        redisService.setValues(memberId, newRefreshToken);
+
         //쿠키에 accessToken, refreshToken 저장
         cookieUtil.createCookie(response, jwtUtil.accessTokenName, newAccessToken, jwtUtil.accessTokenExpire);
         cookieUtil.createCookie(response, jwtUtil.refreshTokenName, newRefreshToken,jwtUtil.refreshTokenExpire);
