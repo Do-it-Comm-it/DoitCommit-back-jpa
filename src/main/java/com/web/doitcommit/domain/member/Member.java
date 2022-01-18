@@ -16,15 +16,15 @@ import java.util.Set;
 @Entity
 public class Member extends BaseEntity {
 
+    public String username;
+
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberId;
 
-    private String username;
-
     @Column(unique = true)
-    private String nickname;
+    public String nickname;
 
-    private String email;
+    public String email;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -42,21 +42,21 @@ public class Member extends BaseEntity {
     @Builder.Default
     private Set<InterestTech> interestTechSet = new HashSet<InterestTech>();
 
-    private String position;
+    public String position;
 
     @Builder.Default
     @Column(nullable = false)
     private String role = "USER";
 
-    private String githubUrl;
+    public String githubUrl;
 
-    private String url1;
+    public String url1;
 
-    private String url2;
+    public String url2;
 
     @Builder.Default
     @Column(nullable = false)
-    private String pictureUrl = "";
+    public String pictureUrl = "";
 
     public void setPicture(String pictureUrl){
         this.pictureUrl = pictureUrl;
