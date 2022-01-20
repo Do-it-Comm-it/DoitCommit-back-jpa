@@ -1,0 +1,63 @@
+server:
+  port: 5000
+
+spring:
+  datasource:
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    url: jdbc:sqlserver://do-it-commit-db.database.windows.net:1433;database=do-it-commit
+    username: do-it-commit-admin
+    password: ${DATABASE_PASSWORD}
+#  datasource:
+#    url: jdbc:h2:tcp://localhost/~/doitcommit
+#    username: sa
+#    driver-class-name: org.h2.Driver
+
+  redis:
+    host: ${REDIS_SERVER}
+    port: 6379
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql : true
+    open-in-view: false
+    show-sql: true
+
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            redirect-uri: http://doitcommit-env.eba-9hrzup34.ap-northeast-2.elasticbeanstalk.com/login/oauth2/code/google
+            scope:
+              - email
+              - profile
+          github:
+            client-id: ${GITHUB_CLIENT_ID}
+            client-secret: ${GITHUB_CLIENT_SECRET}
+            redirect-uri: http://doitcommit-env.eba-9hrzup34.ap-northeast-2.elasticbeanstalk.com/login/oauth2/code/github
+            scope:
+              - read:user
+
+
+app:
+  token:
+    secretKey: ${JWT_SECRET_KEY}
+  oauth2:
+    authorized-redirect-url: http://localhost:3000
+
+
+
+
+
+
+
+
+
+
+

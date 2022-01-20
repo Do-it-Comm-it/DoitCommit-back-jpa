@@ -1,0 +1,53 @@
+server:
+  port: 5000
+
+spring:
+  h2:
+    console:
+      enabled: true
+      settings:
+        web-allow-others: true
+      path: /h2-console
+  datasource:
+    url: jdbc:h2:mem:test
+    username: sa
+    driver-class-name: org.h2.Driver
+
+  redis:
+    host: ${REDIS_SERVER}
+    port: 6379
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        show_sql: true
+    show-sql: true
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            redirect-uri: http://doitcommit-env.eba-9hrzup34.ap-northeast-2.elasticbeanstalk.com/login/oauth2/code/google
+            scope:
+              - email
+              - profile
+          github:
+            client-id: ${GITHUB_CLIENT_ID}
+            client-secret: ${GITHUB_CLIENT_SECRET}
+            redirect-uri: http://doitcommit-env.eba-9hrzup34.ap-northeast-2.elasticbeanstalk.com/login/oauth2/code/github
+            scope:
+              - read:user
+
+app:
+  token:
+    secretKey: ${JWT_SECRET_KEY}
+  oauth2:
+    authorized-redirect-url: http://localhost:3000
+
+
+

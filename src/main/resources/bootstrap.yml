@@ -1,0 +1,7 @@
+aws:
+  secretsmanager:
+    name: do-it-commit2
+cloud:
+  aws:
+    region:
+      static: ap-northeast-2

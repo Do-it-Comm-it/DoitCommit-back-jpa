@@ -26,6 +26,7 @@ class MemberRepositoryTest {
                 .nickname("test")
                 .password("1111")
                 .username("testUsername")
+                .provider(AuthProvider.GOOGLE)
                 .interestTechSet(new HashSet<>(Arrays.asList(InterestTech.Java)))
                 .oauthId("testId")
                 .build();
