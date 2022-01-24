@@ -16,18 +16,19 @@ import javax.servlet.http.HttpServletRequest;
 public class MemberService {
 
     private final MemberRepository memberRepository;
-    private final CookieUtil cookieUtil;
-    private final JwtUtil jwtUtil;
 
-    public MemberDto reqGetMemberInfo(HttpServletRequest request) {
-
-        Cookie cookie = cookieUtil.getCookie(request, jwtUtil.accessTokenName);
-        String accessToken = cookie.getValue();
-        Long memberId = jwtUtil.validateAndExtract(accessToken);
-
+    public Member reqGetMemberInfo(long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(() ->
                 new IllegalArgumentException("존재하지 않은 회원입니다."));
+        return member;
+    }
 
-        return new MemberDto(member);
+    public Boolean reqGetMemberCheck(String nickname) {
+        int count = memberRepository.mNicknameCount(nickname);
+        if (count > 0) {
+            return false;
+        }
+        return true;
+
     }
 }
