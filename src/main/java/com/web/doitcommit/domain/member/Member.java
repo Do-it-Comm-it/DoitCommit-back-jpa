@@ -3,7 +3,6 @@ package com.web.doitcommit.domain.member;
 import com.web.doitcommit.domain.BaseEntity;
 import com.web.doitcommit.domain.interestTech.InterestTech;
 import lombok.*;
-
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -16,7 +15,7 @@ import java.util.Set;
 @Entity
 public class Member extends BaseEntity {
 
-    public String username;
+    private String username;
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberId;
@@ -24,7 +23,7 @@ public class Member extends BaseEntity {
     @Column(unique = true)
     public String nickname;
 
-    public String email;
+    private String email;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -36,27 +35,27 @@ public class Member extends BaseEntity {
     @Column(nullable = false)
     private String password;
 
-    @ElementCollection(fetch = FetchType.LAZY)
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(joinColumns = @JoinColumn(name = "member_id"))
     @Enumerated(EnumType.STRING)
     @Builder.Default
     private Set<InterestTech> interestTechSet = new HashSet<InterestTech>();
 
-    public String position;
+    private String position;
 
     @Builder.Default
     @Column(nullable = false)
     private String role = "USER";
 
-    public String githubUrl;
+    private String githubUrl;
 
-    public String url1;
+    private String url1;
 
-    public String url2;
+    private String url2;
 
     @Builder.Default
     @Column(nullable = false)
-    public String pictureUrl = "";
+    private String pictureUrl = "";
 
     public void setPicture(String pictureUrl){
         this.pictureUrl = pictureUrl;

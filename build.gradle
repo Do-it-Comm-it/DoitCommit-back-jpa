@@ -39,8 +39,8 @@ dependencies {
 	//redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	//secret manager
-	implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap:3.0.3'
-	implementation 'org.springframework.cloud:spring-cloud-starter-aws-secrets-manager-config:2.2.6.RELEASE'
+//	implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap:3.0.3'
+//	implementation 'org.springframework.cloud:spring-cloud-starter-aws-secrets-manager-config:2.2.6.RELEASE'
 
 
 
