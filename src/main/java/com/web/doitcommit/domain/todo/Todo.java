@@ -75,4 +75,8 @@ public class Todo extends BaseEntity {
         this.isFinished = isFinished;
     }
 
+    public void changeTodoDateTime(LocalDateTime todoDateTime){
+        this.todoDateTime = todoDateTime;
+    }
+
 }

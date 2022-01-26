@@ -13,8 +13,6 @@ import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
 @Data
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
 public class TodoRegDto {
 
@@ -33,17 +31,21 @@ public class TodoRegDto {
     @NotBlank
     private Boolean isFixed;
 
-    private LocalDateTime todoDateTime;
+    @NotBlank
+    private LocalDateTime todoDateTime = LocalDateTime.now();
 
     public Todo toEntity(Long principalId){
 
-        return Todo.builder()
+        Todo todo = Todo.builder()
                 .member(Member.builder().memberId(principalId).build())
                 .title(title)
                 .content(content)
                 .type(TodoType.valueOf(type.toUpperCase()))
                 .importance(Importance.valueOf(importance.toUpperCase()))
                 .isFixed(isFixed)
+                .todoDateTime(todoDateTime)
                 .build();
+
+        return todo;
     }
 }

@@ -1,11 +1,15 @@
 package com.web.doitcommit.dto.todo;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 
 @Data
+@NoArgsConstructor
 public class TodoUpdateDto {
 
     @NotNull
@@ -28,4 +32,7 @@ public class TodoUpdateDto {
 
     @NotBlank
     private Boolean isFinished;
+
+    @NotBlank
+    private LocalDateTime todoDateTime = LocalDateTime.now();
 }

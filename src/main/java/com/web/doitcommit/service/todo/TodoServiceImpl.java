@@ -46,6 +46,7 @@ public class TodoServiceImpl implements TodoService{
         todo.changeImportance(Importance.valueOf(todoUpdateDto.getImportance().toUpperCase()));
         todo.changeIsFixed(todoUpdateDto.getIsFixed());
         todo.changeIsFinished(todoUpdateDto.getIsFinished());
+        todo.changeTodoDateTime(todoUpdateDto.getTodoDateTime());
     }
 
     /**
