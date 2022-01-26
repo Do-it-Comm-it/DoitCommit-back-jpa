@@ -46,7 +46,6 @@ public class Todo extends BaseEntity {
     @Column(nullable = false)
     private Boolean isFinished = false;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/ddTHH:mm", timezone = "Asia/Seoul")
     @Builder.Default
     @Column(nullable = false)
     private LocalDateTime todoDateTime = LocalDateTime.now();

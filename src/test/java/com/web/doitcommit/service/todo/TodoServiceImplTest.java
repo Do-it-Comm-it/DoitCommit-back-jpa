@@ -56,7 +56,7 @@ class TodoServiceImplTest {
     void 투두생성_todoDateTime_기입x() throws Exception{
         //given
         Member member = createMember("testEmail", "testNickname", "testUsername", "testOAuthId");
-        TodoRegDto todoRegDto = createTodoRegDto("testTitle", "tetsContent", "STUDY", "Low", false);
+        TodoRegDto todoRegDto = createTodoRegDto("testTitle", "testContent", "STUDY", "Low", false);
 
         //when
         Todo todo = todoService.register(todoRegDto, member.getMemberId());

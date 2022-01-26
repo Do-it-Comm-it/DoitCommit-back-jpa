@@ -35,14 +35,14 @@ spring:
           google:
             client-id: 453703790848-lj72r35it9k1jg2e3ip97ti9u5k6tn8c.apps.googleusercontent.com
             client-secret: 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
-            redirect-uri: http://localhost:8888/login/oauth2/code/google
+            redirect-uri: http://localhost:5000/login/oauth2/code/google
             scope:
               - email
               - profile
           github:
             client-id: Iv1.8767b31cd9c5786c
             client-secret: 9e80c1a56f100cc9fd7e5531b898e8b92a29d7cf
-            redirect-uri: http://localhost:8888/login/oauth2/code/github
+            redirect-uri: http://localhost:5000/login/oauth2/code/github
             scope:
               - read:user
 

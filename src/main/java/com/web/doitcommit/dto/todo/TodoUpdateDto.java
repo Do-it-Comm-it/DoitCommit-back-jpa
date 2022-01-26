@@ -1,5 +1,6 @@
 package com.web.doitcommit.dto.todo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -37,7 +38,7 @@ public class TodoUpdateDto {
     @NotBlank
     private Boolean isFinished;
 
-    //TODO - controller 에서 dto 생성시 기본값 세팅되는지 체크해야함.
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd'T'HH:mm", timezone = "Asia/Seoul")
     @NotBlank
     private LocalDateTime todoDateTime = LocalDateTime.now();
 }

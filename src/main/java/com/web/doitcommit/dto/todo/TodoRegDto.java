@@ -1,5 +1,6 @@
 package com.web.doitcommit.dto.todo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.web.doitcommit.domain.member.Member;
 import com.web.doitcommit.domain.todo.Importance;
 import com.web.doitcommit.domain.todo.Todo;
@@ -33,9 +34,8 @@ public class TodoRegDto {
     @NotBlank
     private Boolean isFixed;
 
-    //TODO - controller 에서 dto 생성시 기본값 세팅되는지 체크해야함.
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd'T'HH:mm", timezone = "Asia/Seoul")
     @Builder.Default //테스트코드에 사용
-    @NotBlank
     private LocalDateTime todoDateTime = LocalDateTime.now();
 
     public Todo toEntity(Long principalId){
