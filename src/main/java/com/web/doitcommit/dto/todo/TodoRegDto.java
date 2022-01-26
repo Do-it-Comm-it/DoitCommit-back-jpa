@@ -13,7 +13,9 @@ import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
 @Data
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class TodoRegDto {
 
     @NotBlank
@@ -31,6 +33,8 @@ public class TodoRegDto {
     @NotBlank
     private Boolean isFixed;
 
+    //TODO - controller 에서 dto 생성시 기본값 세팅되는지 체크해야함.
+    @Builder.Default //테스트코드에 사용
     @NotBlank
     private LocalDateTime todoDateTime = LocalDateTime.now();
 
