@@ -2,7 +2,7 @@ package com.web.doitcommit.service;
 
 import com.web.doitcommit.domain.member.Member;
 import com.web.doitcommit.domain.member.MemberRepository;
-import com.web.doitcommit.dto.MemberInfoDto;
+import com.web.doitcommit.dto.member.MemberInfoDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

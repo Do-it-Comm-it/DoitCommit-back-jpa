@@ -1,4 +1,4 @@
-package com.web.doitcommit.dto;
+package com.web.doitcommit.dto.member;
 
 import com.web.doitcommit.domain.interestTech.InterestTech;
 import lombok.AllArgsConstructor;

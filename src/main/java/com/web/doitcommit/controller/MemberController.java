@@ -3,7 +3,7 @@ package com.web.doitcommit.controller;
 import com.web.doitcommit.config.auth.PrincipalDetails;
 
 import com.web.doitcommit.dto.CMRespDto;
-import com.web.doitcommit.dto.MemberInfoDto;
+import com.web.doitcommit.dto.member.MemberInfoDto;
 import com.web.doitcommit.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
