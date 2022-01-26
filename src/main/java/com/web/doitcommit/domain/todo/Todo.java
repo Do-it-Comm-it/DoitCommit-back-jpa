@@ -1,10 +1,12 @@
 package com.web.doitcommit.domain.todo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.web.doitcommit.domain.BaseEntity;
 import com.web.doitcommit.domain.member.Member;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Builder
 @AllArgsConstructor
@@ -44,5 +46,33 @@ public class Todo extends BaseEntity {
     @Column(nullable = false)
     private Boolean isFinished = false;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/ddTHH:mm", timezone = "Asia/Seoul")
+    @Builder.Default
+    @Column(nullable = false)
+    private LocalDateTime todoDateTime = LocalDateTime.now();
+
+    public void changeTitle(String title){
+        this.title = title;
+    }
+
+    public void changeContent(String Content){
+        this.content = content;
+    }
+
+    public void changeType(TodoType type){
+        this.type = type;
+    }
+
+    public void changeImportance(Importance importance){
+        this.importance = importance;
+    }
+
+    public void changeIsFixed(Boolean isFixed){
+        this.isFixed = isFixed;
+    }
+
+    public void changeIsFinished(Boolean isFinished){
+        this.isFinished = isFinished;
+    }
 
 }
