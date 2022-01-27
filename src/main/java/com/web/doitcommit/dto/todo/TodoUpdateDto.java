@@ -32,10 +32,10 @@ public class TodoUpdateDto {
     @NotBlank
     private String importance;
 
-    @NotBlank
+    @NotNull
     private Boolean isFixed;
 
-    @NotBlank
+    @NotNull
     private Boolean isFinished;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd'T'HH:mm", timezone = "Asia/Seoul")
