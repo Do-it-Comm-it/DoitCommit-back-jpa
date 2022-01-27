@@ -1,0 +1,54 @@
+server:
+  port: 5000
+
+spring:
+#  main:
+#    allow-bean-definition-overriding: true
+#    datasource:
+#      driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+#      url: jdbc:sqlserver://do-it-commit-db.database.windows.net:1433;database=do-it-commit
+#      username: do-it-commit-admin
+#      password: Dndltzjalt*
+  datasource:
+    url: jdbc:h2:tcp://localhost/~/doitcommit
+    username: sa
+    driver-class-name: org.h2.Driver
+
+  redis:
+    host: localhost
+    port: 6379
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql : true
+    open-in-view: false
+    show-sql: true
+
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 453703790848-lj72r35it9k1jg2e3ip97ti9u5k6tn8c.apps.googleusercontent.com
+            client-secret: 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
+            redirect-uri: http://localhost:5000/login/oauth2/code/google
+            scope:
+              - email
+              - profile
+          github:
+            client-id: Iv1.8767b31cd9c5786c
+            client-secret: 9e80c1a56f100cc9fd7e5531b898e8b92a29d7cf
+            redirect-uri: http://localhost:5000/login/oauth2/code/github
+            scope:
+              - read:user
+
+
+app:
+  token:
+    secretKey: 1234rhjknsdkjn2kKJnfkjanhdsfkjsdnaflkasjfnksjdfnksjdfs478415616
+  oauth2:
+    authorized-redirect-url: http://localhost:3000
