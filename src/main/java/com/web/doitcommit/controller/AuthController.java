@@ -4,6 +4,11 @@ import com.web.doitcommit.dto.CMRespDto;
 import com.web.doitcommit.jwt.CookieUtil;
 import com.web.doitcommit.jwt.JwtUtil;
 import com.web.doitcommit.redis.RedisService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +28,18 @@ public class AuthController {
     private final CookieUtil cookieUtil;
     private final RedisService redisService;
 
+    @Operation(summary = "토큰 재발급 API", description = "refresh token으로 access token과 refresh token을 재발급한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(example = "{\n" +
+                    "  \"message\": \"토큰 재발급 완료\",\n" +
+                    "  \"data\": null,\n" +
+                    "  \"code\": 1\n" +
+                    "}"))),
+            @ApiResponse(responseCode = "400", content = @Content(schema = @Schema(example = "{\"error\": \"Bad Request\"}"))),
+            @ApiResponse(responseCode = "401", content = @Content(schema = @Schema(example = "{\"error\": \"Unauthorized\"}"))),
+            @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(example = "{\"error\": \"Not Found\"}"))),
+            @ApiResponse(responseCode = "500",  content = @Content(schema = @Schema(example = "{\"error\": \"Internal Server Error\"}")))
+    })
     @GetMapping("/auth/refreshToken")
     public ResponseEntity<?> verifyRefreshToken(@CookieValue("refreshToken") String refreshToken,
                                                         HttpServletResponse response){
