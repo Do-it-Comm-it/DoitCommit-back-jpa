@@ -38,6 +38,18 @@ public class MemberController {
         return new ResponseEntity<>(new CMRespDto<>(1, "멤버 조회 성공", member), HttpStatus.OK);
     }
 
+    @Operation(summary = "닉네임 중복 체크 API", description = "닉네임 중복체크를 한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(example = "{\n" +
+                    "  \"message\": \"닉네임 중복 조회 성공\",\n" +
+                    "  \"data\": true,\n" +
+                    "  \"code\": 1\n" +
+                    "}"))),
+            @ApiResponse(responseCode = "400", content = @Content(schema = @Schema(example = "{\"error\": \"Bad Request\"}"))),
+            @ApiResponse(responseCode = "401", content = @Content(schema = @Schema(example = "{\"error\": \"Unauthorized\"}"))),
+            @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(example = "{\"error\": \"Not Found\"}"))),
+            @ApiResponse(responseCode = "500",  content = @Content(schema = @Schema(example = "{\"error\": \"Internal Server Error\"}")))
+    })
     @GetMapping("/check")
     public ResponseEntity<?> reqGetMemberCheck(@RequestParam String nickname) {
         Boolean result = memberService.reqGetMemberCheck(nickname);
