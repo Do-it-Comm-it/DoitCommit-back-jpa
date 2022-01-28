@@ -73,6 +73,18 @@ public class AuthController {
         return new ResponseEntity<>(new CMRespDto<>(1,"토큰 재발급 완료", null), HttpStatus.OK);
     }
 
+    @Operation(summary = "로그아웃 API", description = "로그아웃을 한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(example = "{\n" +
+                    "  \"message\": \"로그아웃 성공\",\n" +
+                    "  \"data\": null,\n" +
+                    "  \"code\": 1\n" +
+                    "}"))),
+            @ApiResponse(responseCode = "400", content = @Content(schema = @Schema(example = "{\"error\": \"Bad Request\"}"))),
+            @ApiResponse(responseCode = "401", content = @Content(schema = @Schema(example = "{\"error\": \"Unauthorized\"}"))),
+            @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(example = "{\"error\": \"Not Found\"}"))),
+            @ApiResponse(responseCode = "500",  content = @Content(schema = @Schema(example = "{\"error\": \"Internal Server Error\"}")))
+    })
     @PostMapping("/auth/logout")
     public ResponseEntity<?> doLogout(HttpServletRequest request, HttpServletResponse response) {
         Cookie accessTokenCookie = cookieUtil.getCookie(request, jwtUtil.accessTokenName);
