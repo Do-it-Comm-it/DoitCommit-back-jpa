@@ -5,6 +5,7 @@ import com.web.doitcommit.jwt.CookieUtil;
 import com.web.doitcommit.jwt.JwtUtil;
 import com.web.doitcommit.redis.RedisService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -41,7 +42,7 @@ public class AuthController {
             @ApiResponse(responseCode = "500",  content = @Content(schema = @Schema(example = "{\"error\": \"Internal Server Error\"}")))
     })
     @GetMapping("/auth/refreshToken")
-    public ResponseEntity<?> verifyRefreshToken(@CookieValue("refreshToken") String refreshToken,
+    public ResponseEntity<?> verifyRefreshToken(@Parameter(name = "refreshToken", hidden = true) @CookieValue("refreshToken") String refreshToken,
                                                         HttpServletResponse response){
 
         //refreshToken 검증
