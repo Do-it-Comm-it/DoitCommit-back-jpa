@@ -2,6 +2,7 @@ package com.web.doitcommit.domain.member;
 
 import com.web.doitcommit.domain.BaseEntity;
 import com.web.doitcommit.domain.interestTech.InterestTech;
+import com.web.doitcommit.domain.todo.TodoType;
 import lombok.*;
 import javax.persistence.*;
 import java.util.HashSet;
@@ -35,7 +36,7 @@ public class Member extends BaseEntity {
     @Column(nullable = false)
     private String password;
 
-    @ElementCollection(fetch = FetchType.EAGER)
+    @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(joinColumns = @JoinColumn(name = "member_id"))
     @Enumerated(EnumType.STRING)
     @Builder.Default
@@ -64,4 +65,24 @@ public class Member extends BaseEntity {
     public void setEmail(String email){
         this.email = email;
     }
+
+    public void changeNickname(String nickname){
+        this.nickname = nickname;
+    }
+
+    public void changeNickname(String nickname){
+        this.nickname = nickname;
+    }
+
+    public void changeNickname(String nickname){
+        this.nickname = nickname;
+    }
+
+    public void changeNickname(String nickname){
+        this.nickname = nickname;
+    }
+
+
+
+
 }
