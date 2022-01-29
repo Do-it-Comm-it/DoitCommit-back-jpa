@@ -18,6 +18,9 @@ import java.util.Set;
 @NoArgsConstructor
 public class MemberUpdateDto {
 
+    @Schema(description = "멤버 아이디", nullable = false)
+    private Long memberId;
+
     @Schema(description = "파일정보", nullable = true)
     private MultipartFile file;
 

@@ -1,5 +1,6 @@
 package com.web.doitcommit.dto.member;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.web.doitcommit.domain.interestTech.InterestTech;
 import com.web.doitcommit.domain.member.Member;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -7,7 +8,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.LastModifiedDate;
+
+import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Schema(description = "멤버 정보 dto")
@@ -41,6 +46,14 @@ public class MemberInfoDto {
     @Schema(description = "프로필 사진 URL", nullable = true)
     private String pictureUrl;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd'T'HH:mm", timezone = "Asia/Seoul")
+    @Schema(description = "등록 날짜", nullable = true)
+    private LocalDateTime regDate;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd'T'HH:mm", timezone = "Asia/Seoul")
+    @Schema(description = "수정 날짜", nullable = true)
+    private LocalDateTime modDate;
+
     public MemberInfoDto(Member member) {
         this.nickname = member.getNickname();
         this.email = member.getEmail();
@@ -50,5 +63,7 @@ public class MemberInfoDto {
         this.url1 = member.getUrl1();
         this.url2 = member.getUrl2();
         this.pictureUrl = member.getPictureUrl();
+        this.regDate = member.getRegDate();
+        this.modDate = member.getModDate();
     }
 }
