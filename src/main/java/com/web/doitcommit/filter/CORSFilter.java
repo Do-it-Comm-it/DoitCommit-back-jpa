@@ -19,7 +19,7 @@ public class CORSFilter extends OncePerRequestFilter {
                                     FilterChain filterChain)
             throws ServletException, IOException {
 
-        response.setHeader("Access-Control-Allow-Origin", "https://d1a9z6ocfujq9u.cloudfront.net");
+        response.setHeader("Access-Control-Allow-Origin", "https://www.doit-commit.kro.kr");
         response.setHeader("Access-Control-Allow-Credentials", "true");
         response.setHeader("Access-Control-Allow-Methods", "*");
         response.setHeader("Access-Control-Allow-Max-Age", "3600");

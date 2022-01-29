@@ -33,14 +33,14 @@ spring:
           google:
             client-id: ${GOOGLE_CLIENT_ID}
             client-secret: ${GOOGLE_CLIENT_SECRET}
-            redirect-uri: http://doitcommit-env.eba-9hrzup34.ap-northeast-2.elasticbeanstalk.com/login/oauth2/code/google
+            redirect-uri: https://apis.doit-commit.kro.kr/login/oauth2/code/google
             scope:
               - email
               - profile
           github:
             client-id: ${GITHUB_CLIENT_ID}
             client-secret: ${GITHUB_CLIENT_SECRET}
-            redirect-uri: http://doitcommit-env.eba-9hrzup34.ap-northeast-2.elasticbeanstalk.com/login/oauth2/code/github
+            redirect-uri: https://apis.doit-commit.kro.kr/login/oauth2/code/github
             scope:
               - read:user
 
@@ -49,7 +49,7 @@ app:
   token:
     secretKey: ${JWT_SECRET_KEY}
   oauth2:
-    authorized-redirect-url: https://d1a9z6ocfujq9u.cloudfront.net
+    authorized-redirect-url: https://www.doit-commit.kro.kr
 
 
 
