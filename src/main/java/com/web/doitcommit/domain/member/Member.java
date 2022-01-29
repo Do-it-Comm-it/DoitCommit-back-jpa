@@ -70,16 +70,28 @@ public class Member extends BaseEntity {
         this.nickname = nickname;
     }
 
-    public void changeNickname(String nickname){
-        this.nickname = nickname;
+    public void changeEmail(String email){
+        this.email = email;
     }
 
-    public void changeNickname(String nickname){
-        this.nickname = nickname;
+    public void changeInterestTechSet(Set<InterestTech> interestTechSet){
+        this.interestTechSet = interestTechSet;
     }
 
-    public void changeNickname(String nickname){
-        this.nickname = nickname;
+    public void changeGithubUrl(String githubUrl){
+        this.githubUrl = githubUrl;
+    }
+
+    public void changeUrl1(String url1){
+        this.url1 = url1;
+    }
+
+    public void changeUrl2(String url2){
+        this.url2 = url2;
+    }
+
+    public void changePictureUrl(String pictureUrl){
+        this.pictureUrl = pictureUrl;
     }
 
 
