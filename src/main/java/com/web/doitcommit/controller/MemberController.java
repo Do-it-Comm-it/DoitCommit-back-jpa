@@ -58,7 +58,7 @@ public class MemberController {
     }
 
     @PutMapping(value ="/update", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<?> reqPutMemberUpdate(@RequestBody MemberUpdateDto memberUpdateDto) {
+    public ResponseEntity<?> reqPutMemberUpdate(MemberUpdateDto memberUpdateDto) {
         memberService.reqPutMemberUpdate(memberUpdateDto);
         return new ResponseEntity<>(new CMRespDto<>(1, "회원 수정 성공", null), HttpStatus.OK);
     }

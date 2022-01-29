@@ -11,8 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 @RequiredArgsConstructor
 @Service
 public class MemberService {
@@ -44,7 +42,7 @@ public class MemberService {
         member.changeGithubUrl(memberUpdateDto.getGithubUrl());
         member.changeUrl1(memberUpdateDto.getUrl1());
         member.changeUrl2(memberUpdateDto.getUrl2());
-        member.changePictureUrl(memberUpdateDto.getPictureUrl());
+        //member.changePictureUrl(memberUpdateDto.getPictureUrl());
         return true;
     }
 

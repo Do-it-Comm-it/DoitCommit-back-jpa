@@ -2,7 +2,6 @@ package com.web.doitcommit.domain.member;
 
 import com.web.doitcommit.domain.BaseEntity;
 import com.web.doitcommit.domain.interestTech.InterestTech;
-import com.web.doitcommit.domain.todo.TodoType;
 import lombok.*;
 import javax.persistence.*;
 import java.util.HashSet;
@@ -55,7 +54,7 @@ public class Member extends BaseEntity {
     private String url2;
 
     @Builder.Default
-    @Column(nullable = false)
+    @Column
     private String pictureUrl = "";
 
     public void setPicture(String pictureUrl){
