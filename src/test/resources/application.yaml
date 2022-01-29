@@ -47,7 +47,7 @@ app:
   token:
     secretKey: ${JWT_SECRET_KEY}
   oauth2:
-    authorized-redirect-url: http://doit-front.s3-website.ap-northeast-2.amazonaws.com
+    authorized-redirect-url: https://d1a9z6ocfujq9u.cloudfront.net
 
 
 
