@@ -11,17 +11,17 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @RequiredArgsConstructor
 @Service
 public class MemberService {
 
     private final MemberRepository memberRepository;
 
-    public MemberInfoDto reqGetMemberInfo(long memberId) {
-        Member member = memberRepository.findById(memberId).orElseThrow(() ->
-                new IllegalArgumentException("존재하지 않은 회원입니다."));
+    public MemberInfoDto reqGetMemberInfo(Long memberId) {
+        Member member = memberRepository.findByMemberId(memberId);
         MemberInfoDto memberInfo = new MemberInfoDto(member);
-
         return memberInfo;
     }
 
