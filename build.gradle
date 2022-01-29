@@ -50,6 +50,10 @@ dependencies {
 	//querydsl 추가
 	implementation 'com.querydsl:querydsl-jpa'
 
+	//swagger
+	implementation 'io.springfox:springfox-swagger-ui:3.0.0'
+	implementation 'org.springdoc:springdoc-openapi-ui:1.5.12'
+
 
 
 }
