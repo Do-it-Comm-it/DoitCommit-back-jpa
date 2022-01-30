@@ -57,9 +57,21 @@ public class MemberController {
         return new ResponseEntity<>(new CMRespDto<>(1, "닉네임 중복 조회 성공", result), HttpStatus.OK);
     }
 
+    @Operation(summary = "멤버 정보 수정 API", description = "멤버 정보를 수정한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(example = "{\n" +
+                    "  \"message\": \"멤버 정보 수정 성공\",\n" +
+                    "  \"data\": true,\n" +
+                    "  \"code\": 1\n" +
+                    "}"))),
+            @ApiResponse(responseCode = "400", content = @Content(schema = @Schema(example = "{\"error\": \"Bad Request\"}"))),
+            @ApiResponse(responseCode = "401", content = @Content(schema = @Schema(example = "{\"error\": \"Unauthorized\"}"))),
+            @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(example = "{\"error\": \"Not Found\"}"))),
+            @ApiResponse(responseCode = "500",  content = @Content(schema = @Schema(example = "{\"error\": \"Internal Server Error\"}")))
+    })
     @PutMapping(value ="/update", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<?> reqPutMemberUpdate(MemberUpdateDto memberUpdateDto) {
         memberService.reqPutMemberUpdate(memberUpdateDto);
-        return new ResponseEntity<>(new CMRespDto<>(1, "회원 수정 성공", null), HttpStatus.OK);
+        return new ResponseEntity<>(new CMRespDto<>(1, "멤버정보 수정 성공", true), HttpStatus.OK);
     }
 }

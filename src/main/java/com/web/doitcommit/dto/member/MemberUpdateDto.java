@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,6 +18,7 @@ import java.util.Set;
 @NoArgsConstructor
 public class MemberUpdateDto {
 
+    @NotNull
     @Schema(description = "멤버 아이디", nullable = false)
     private Long memberId;
 

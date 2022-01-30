@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -47,38 +48,39 @@ public class MemberService {
     public Boolean reqPutMemberUpdate(MemberUpdateDto memberUpdateDto) {
         Member member = memberRepository.findById(memberUpdateDto.getMemberId()).orElseThrow(() ->
                 new IllegalArgumentException("존재하지 않은 회원입니다."));
-        //날짜폴더 경로
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-        Date date = new Date();
+        MultipartFile file = memberUpdateDto.getFile();
+        if (file != null) {
+            String path = "D:\\doitcommit\\upload\\"; //폴더 경로 // Windows('\'), Linux, MAC('/')
 
-        String str = sdf.format(date); //오늘날짜를 포맷함
+            //파일 업로드 utill로 리팩토링 예정
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = new Date();
+            String str = sdf.format(date); //오늘날짜를 포맷함
+            String datePath = str.replace("-", File.separator);
 
-        String datePath = str.replace("-", File.separator);
+            //폴더생성
+            File uploadPath = new File(path, datePath);
+            if (!uploadPath.exists()) {
+                try {
+                    uploadPath.mkdirs();
+                } catch (Exception e) {
+                    e.getStackTrace();
+                }
+            }
 
-        /* 폴더 생성 */
-        File uploadPath = new File(uploadFolder, datePath);
+            UUID uuid = UUID.randomUUID();
+            String imageFileName = path + datePath + File.separator + uuid + "_" + memberUpdateDto.getFile().getOriginalFilename();
 
-        if(uploadPath.exists() == false) {
-            uploadPath.mkdirs();
+            Path imageFilePath = Paths.get(imageFileName);
+            member.changePictureUrl(imageFileName);
+
+            try {
+                Files.write(imageFilePath, file.getBytes());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-
-        UUID uuid = UUID.randomUUID();
-        String imageFileName = uploadFolder+uuid+"_"+memberUpdateDto.getFile().getOriginalFilename();
-
-        Path imageFilePath = Paths.get(imageFileName);
-        //통신, IO 예외가 발생할수 있다.
-        try {
-            Files.write(imageFilePath, memberUpdateDto.getFile().getBytes());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-//        // 참고 :  Image 엔티티에 Tag는 주인이 아니다. Image 엔티티로 통해서 Tag를 save할 수 없다.
-//
-//        // 1. Image 저장
-//        Image image = imageUploadDto.toEntity(imageFileName, principalDetails.getUser());
-//        imageRepository.save(image);
 
         member.changeNickname(memberUpdateDto.getNickname());
         member.changeEmail(memberUpdateDto.getEmail());
@@ -86,10 +88,9 @@ public class MemberService {
         member.changeGithubUrl(memberUpdateDto.getGithubUrl());
         member.changeUrl1(memberUpdateDto.getUrl1());
         member.changeUrl2(memberUpdateDto.getUrl2());
-        member.changePictureUrl(imageFileName);
+
         return true;
     }
-
 
 
 }
