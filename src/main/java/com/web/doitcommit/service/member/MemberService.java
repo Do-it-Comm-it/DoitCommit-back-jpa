@@ -1,10 +1,7 @@
-package com.web.doitcommit.service;
+package com.web.doitcommit.service.member;
 
 import com.web.doitcommit.domain.member.Member;
 import com.web.doitcommit.domain.member.MemberRepository;
-import com.web.doitcommit.domain.todo.Importance;
-import com.web.doitcommit.domain.todo.Todo;
-import com.web.doitcommit.domain.todo.TodoType;
 import com.web.doitcommit.dto.member.MemberInfoDto;
 import com.web.doitcommit.dto.member.MemberUpdateDto;
 import lombok.RequiredArgsConstructor;
@@ -45,8 +42,8 @@ public class MemberService {
     }
 
     @Transactional
-    public Boolean reqPutMemberUpdate(MemberUpdateDto memberUpdateDto) {
-        Member member = memberRepository.findById(memberUpdateDto.getMemberId()).orElseThrow(() ->
+    public Boolean reqPutMemberUpdate(MemberUpdateDto memberUpdateDto, Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(() ->
                 new IllegalArgumentException("존재하지 않은 회원입니다."));
 
         MultipartFile file = memberUpdateDto.getFile();

@@ -19,7 +19,7 @@ import java.util.Set;
 public class MemberUpdateDto {
 
     @NotNull
-    @Schema(description = "멤버 아이디", nullable = false)
+    @Schema(description = "멤버 아이디", nullable = true)
     private Long memberId;
 
     @Schema(description = "파일정보", nullable = true)
@@ -36,9 +36,6 @@ public class MemberUpdateDto {
 
     @Schema(description = "포지션", nullable = true)
     private String position;
-
-    @Schema(description = "권한", nullable = true)
-    private String role;
 
     @Schema(description = "깃허브 URL", nullable = true)
     private String githubUrl;
