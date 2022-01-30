@@ -12,4 +12,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     @Query(value = "SELECT count(*) FROM member WHERE nickname = :nickname", nativeQuery = true)
     int mNicknameCount(String nickname);
+
+    @EntityGraph(attributePaths = {"interestTechSet"}, type = EntityGraph.EntityGraphType.LOAD)
+    Member findByMemberId(Long memberId);
 }

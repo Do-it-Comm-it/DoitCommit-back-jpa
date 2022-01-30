@@ -1,6 +1,5 @@
 package com.web.doitcommit.dto.member;
 
-import com.web.doitcommit.domain.interestTech.InterestTech;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,6 +17,10 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MemberUpdateDto {
+
+    @NotNull
+    @Schema(description = "멤버 아이디", nullable = true)
+    private Long memberId;
 
     @Schema(description = "파일정보", nullable = true)
     private MultipartFile file;
@@ -28,13 +32,10 @@ public class MemberUpdateDto {
     private String email;
 
     @Schema(description = "관심기술정보", nullable = true)
-    private Set<InterestTech> interestTechSet = new HashSet<InterestTech>();
+    private Set<String> interestTechSet = new HashSet<>();
 
     @Schema(description = "포지션", nullable = true)
     private String position;
-
-    @Schema(description = "권한", nullable = true)
-    private String role;
 
     @Schema(description = "깃허브 URL", nullable = true)
     private String githubUrl;

@@ -1,6 +1,5 @@
 package com.web.doitcommit.service.todo;
 
-import com.web.doitcommit.domain.interestTech.InterestTech;
 import com.web.doitcommit.domain.member.AuthProvider;
 import com.web.doitcommit.domain.member.Member;
 import com.web.doitcommit.domain.member.MemberRepository;
@@ -216,7 +215,7 @@ class TodoServiceImplTest {
                 .password("1111")
                 .username(username)
                 .provider(AuthProvider.GOOGLE)
-                .interestTechSet(new HashSet<>(Arrays.asList(InterestTech.Java)))
+                .interestTechSet(new HashSet<>(Arrays.asList("java")))
                 .oauthId(oAuthId)
                 .build();
 
