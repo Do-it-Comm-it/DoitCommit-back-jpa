@@ -1,13 +1,11 @@
 package com.web.doitcommit.dto.member;
 
-import com.web.doitcommit.domain.interestTech.InterestTech;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -31,7 +29,7 @@ public class MemberUpdateDto {
     private String email;
 
     @Schema(description = "관심기술정보", nullable = true)
-    private Set<InterestTech> interestTechSet = new HashSet<InterestTech>();
+    private Set<String> interestTechSet = new HashSet<>();
 
     @Schema(description = "포지션", nullable = true)
     private String position;

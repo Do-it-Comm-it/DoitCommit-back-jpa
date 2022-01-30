@@ -1,18 +1,14 @@
 package com.web.doitcommit.dto.member;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.web.doitcommit.domain.interestTech.InterestTech;
 import com.web.doitcommit.domain.member.Member;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.LastModifiedDate;
-
 import java.time.LocalDateTime;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
 @Schema(description = "멤버 정보 dto")
@@ -29,7 +25,7 @@ public class MemberInfoDto {
     private String email;
 
     @Schema(description = "관심기술정보", nullable = true)
-    private Set<InterestTech> interestTechSet = new HashSet<InterestTech>();
+    private Set<String> interestTechSet = new HashSet<>();
 
     @Schema(description = "포지션", nullable = true)
     private String position;

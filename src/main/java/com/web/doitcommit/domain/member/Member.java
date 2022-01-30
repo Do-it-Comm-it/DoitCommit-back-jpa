@@ -1,7 +1,6 @@
 package com.web.doitcommit.domain.member;
 
 import com.web.doitcommit.domain.BaseEntity;
-import com.web.doitcommit.domain.interestTech.InterestTech;
 import lombok.*;
 import javax.persistence.*;
 import java.util.HashSet;
@@ -37,9 +36,8 @@ public class Member extends BaseEntity {
 
     @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(joinColumns = @JoinColumn(name = "member_id"))
-    @Enumerated(EnumType.STRING)
     @Builder.Default
-    private Set<InterestTech> interestTechSet = new HashSet<InterestTech>();
+    private Set<String> interestTechSet = new HashSet<>();
 
     private String position;
 
@@ -73,7 +71,7 @@ public class Member extends BaseEntity {
         this.email = email;
     }
 
-    public void changeInterestTechSet(Set<InterestTech> interestTechSet){
+    public void changeInterestTechSet(Set<String> interestTechSet){
         this.interestTechSet = interestTechSet;
     }
 
