@@ -2,18 +2,20 @@ server:
   port: 5000
 
 spring:
+#  main:
+#    allow-bean-definition-overriding: true
+#    datasource:
+#      driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+#      url: jdbc:sqlserver://do-it-commit-db.database.windows.net:1433;database=do-it-commit
+#      username: do-it-commit-admin
+#      password: Dndltzjalt*
   datasource:
-    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
-    url: jdbc:sqlserver://do-it-commit-db.database.windows.net:1433;database=do-it-commit
-    username: do-it-commit-admin
-    password: ${DATABASE_PASSWORD}
-#  datasource:
-#    url: jdbc:h2:tcp://localhost/~/doitcommit
-#    username: sa
-#    driver-class-name: org.h2.Driver
+    url: jdbc:h2:tcp://localhost/~/doitcommit
+    username: sa
+    driver-class-name: org.h2.Driver
 
   redis:
-    host: ${REDIS_SERVER}
+    host: localhost
     port: 6379
 
   jpa:
@@ -47,15 +49,9 @@ spring:
 
 app:
   token:
-    secretKey: ${JWT_SECRET_KEY}
+    secretKey: 1234rhjknsdkjn2kKJnfkjanhdsfkjsdnaflkasjfnksjdfnksjdfs478415616
   oauth2:
     authorized-redirect-url: https://www.doit-commit.kro.kr
-
-
-
-
-
-
 
 
 

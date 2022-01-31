@@ -9,9 +9,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @RequiredArgsConstructor
@@ -54,5 +55,21 @@ public class AuthController {
 
         return new ResponseEntity<>(new CMRespDto<>(1,"토큰 재발급 완료", null), HttpStatus.OK);
     }
+
+    @PostMapping("/auth/logout")
+    public ResponseEntity<?> doLogout(HttpServletRequest request, HttpServletResponse response) {
+        Cookie accessTokenCookie = cookieUtil.getCookie(request, jwtUtil.accessTokenName);
+        Cookie refreshTokenCookie = cookieUtil.getCookie(request, jwtUtil.refreshTokenName);
+
+        if(accessTokenCookie != null) {
+            cookieUtil.createCookie(response, jwtUtil.accessTokenName,accessTokenCookie.getValue(), 0);
+        }
+        cookieUtil.createCookie(response, jwtUtil.accessTokenName,accessTokenCookie.getValue(), 0);
+        if(refreshTokenCookie != null) {
+            cookieUtil.createCookie(response, jwtUtil.refreshTokenName, refreshTokenCookie.getValue(), 0);
+        }
+        return new ResponseEntity<>(new CMRespDto<>(1,"로그아웃 성공", null),HttpStatus.OK);
+    }
+
 
 }
