@@ -3,6 +3,7 @@ package com.web.doitcommit.controller;
 import com.web.doitcommit.config.auth.PrincipalDetails;
 import com.web.doitcommit.dto.CMRespDto;
 import com.web.doitcommit.dto.todo.TodoRegDto;
+import com.web.doitcommit.dto.todo.TodoResDto;
 import com.web.doitcommit.dto.todo.TodoUpdateDto;
 import com.web.doitcommit.service.todo.TodoService;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RequestMapping("/todos")
 @RequiredArgsConstructor
@@ -21,14 +23,16 @@ public class TodoController {
 
     private final TodoService todoService;
 
-    //TODO 조회 기능 생성 예정
     /**
-     * 투두 리스트 조회
+     * 메인화면 투두리스트 조회
      */
-    @GetMapping
-    public ResponseEntity<?> getTodoList(){
+    @GetMapping("/main")
+    public ResponseEntity<?> getCustomLimitTodoList(@AuthenticationPrincipal PrincipalDetails principalDetails){
 
-        return null;
+        List<TodoResDto> todoResDtoList =
+                todoService.getCustomLimitTodoList(4, principalDetails.getMember().getMemberId());
+
+        return new ResponseEntity<>(new CMRespDto<>(1, "메인화면 투두리스트 가져오기 성공", todoResDtoList),HttpStatus.OK);
     }
 
 
