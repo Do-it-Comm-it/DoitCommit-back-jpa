@@ -54,7 +54,7 @@ public class Todo extends BaseEntity {
         this.title = title;
     }
 
-    public void changeContent(String Content){
+    public void changeContent(String content){
         this.content = content;
     }
 
