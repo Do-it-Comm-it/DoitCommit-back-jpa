@@ -1,6 +1,8 @@
 plugins {
 	id 'org.springframework.boot' version '2.5.7'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	//querydsl 추가
+	id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
 	id 'java'
 }
 
@@ -32,18 +34,26 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	runtimeOnly 'com.h2database:h2'
+
 	//jwt 토큰
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
 	implementation 'io.jsonwebtoken:jjwt-impl:0.11.2'
 	implementation 'io.jsonwebtoken:jjwt-jackson:0.11.2'
+
 	//redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
 	//secret manager
 	implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap:3.0.3'
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws-secrets-manager-config:2.2.6.RELEASE'
+
+	//querydsl 추가
+	implementation 'com.querydsl:querydsl-jpa'
+
 	//swagger
 	implementation 'io.springfox:springfox-swagger-ui:3.0.0'
 	implementation 'org.springdoc:springdoc-openapi-ui:1.5.12'
+
 
 
 }
@@ -51,3 +61,20 @@ dependencies {
 test {
 	useJUnitPlatform()
 }
+
+//querydsl 추가 시작
+def querydslDir = "$buildDir/generated/querydsl"
+querydsl {
+	jpa = true
+	querydslSourcesDir = querydslDir
+}
+sourceSets {
+	main.java.srcDir querydslDir
+}
+configurations {
+	querydsl.extendsFrom compileClasspath
+}
+compileQuerydsl {
+	options.annotationProcessorPath = configurations.querydsl
+}
+//querydsl 추가 끝
