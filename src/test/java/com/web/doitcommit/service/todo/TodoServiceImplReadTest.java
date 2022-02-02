@@ -1,6 +1,5 @@
 package com.web.doitcommit.service.todo;
 
-import com.web.doitcommit.domain.interestTech.InterestTech;
 import com.web.doitcommit.domain.member.AuthProvider;
 import com.web.doitcommit.domain.member.Member;
 import com.web.doitcommit.domain.member.MemberRepository;
@@ -9,8 +8,6 @@ import com.web.doitcommit.domain.todo.Todo;
 import com.web.doitcommit.domain.todo.TodoRepository;
 import com.web.doitcommit.domain.todo.TodoType;
 import com.web.doitcommit.dto.todo.TodoResDto;
-import org.aspectj.lang.annotation.Before;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -129,7 +126,7 @@ public class TodoServiceImplReadTest {
                 .password("1111")
                 .username(username)
                 .provider(AuthProvider.GOOGLE)
-                .interestTechSet(new HashSet<>(Arrays.asList(InterestTech.Java)))
+                .interestTechSet(new HashSet<>(Arrays.asList("Java")))
                 .oauthId(oAuthId)
                 .build();
 
