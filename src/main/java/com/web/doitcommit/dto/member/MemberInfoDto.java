@@ -19,6 +19,7 @@ public class MemberInfoDto {
 
     private String email;
 
+    @Builder.Default
     private Set<InterestTech> interestTechSet = new HashSet<InterestTech>();
 
     private String position;

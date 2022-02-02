@@ -14,7 +14,7 @@ spring:
     driver-class-name: org.h2.Driver
 
   redis:
-    host: localhost
+    host: ${REDIS_SERVER}
     port: 6379
 
   jpa:
@@ -47,7 +47,7 @@ spring:
 
 app:
   token:
-    secretKey: 1234rhjknsdkjn2kKJnfkjanhdsfkjsdnaflkasjfnksjdfnksjdfs478415616
+    secretKey: ${JWT_SECRET_KEY}
   oauth2:
     authorized-redirect-url: https://www.doit-commit.kro.kr
 

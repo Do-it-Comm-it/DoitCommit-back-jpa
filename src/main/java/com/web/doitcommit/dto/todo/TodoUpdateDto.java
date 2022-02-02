@@ -35,6 +35,7 @@ public class TodoUpdateDto {
     @NotNull
     private Boolean isFixed;
 
+    @Builder.Default
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd'T'HH:mm", timezone = "Asia/Seoul")
     private LocalDateTime todoDateTime = LocalDateTime.now();
 }
