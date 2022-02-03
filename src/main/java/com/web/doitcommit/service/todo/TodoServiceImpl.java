@@ -26,11 +26,13 @@ public class TodoServiceImpl implements TodoService{
      */
     @Transactional
     @Override
-    public Todo register(TodoRegDto todoDto, Long principalId) {
+    public TodoResDto register(TodoRegDto todoDto, Long principalId) {
 
         Todo todo = todoDto.toEntity(principalId);
 
-        return todoRepository.save(todo);
+        todoRepository.save(todo);
+
+        return new TodoResDto(todo);
     }
 
     /**

@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface TodoService {
 
-    Todo register(TodoRegDto todoDto, Long principalId);
+    TodoResDto register(TodoRegDto todoDto, Long principalId);
 
     void modify(TodoUpdateDto todoUpdateDto);
 

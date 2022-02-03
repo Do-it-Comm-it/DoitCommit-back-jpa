@@ -71,9 +71,9 @@ public class TodoController {
     public ResponseEntity<?> createTodo(@Valid @RequestBody TodoRegDto todoRegDto, BindingResult bindingResult,
                                         @Parameter(hidden = true) @AuthenticationPrincipal PrincipalDetails principalDetails){
 
-        todoService.register(todoRegDto,principalDetails.getMember().getMemberId());
+        TodoResDto todoResDto = todoService.register(todoRegDto, principalDetails.getMember().getMemberId());
 
-        return new ResponseEntity<>(new CMRespDto<>(1,"투두생성 성공",null), HttpStatus.CREATED);
+        return new ResponseEntity<>(new CMRespDto<>(1,"투두생성 성공",todoResDto), HttpStatus.CREATED);
     }
 
 
