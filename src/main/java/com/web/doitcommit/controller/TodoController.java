@@ -48,9 +48,27 @@ public class TodoController {
         List<TodoResDto> todoResDtoList =
                 todoService.getCustomLimitTodoList(4, principalDetails.getMember().getMemberId());
 
-        return new ResponseEntity<>(new CMRespDto<>(1, "메인화면 투두리스트 가져오기 성공", todoResDtoList),HttpStatus.OK);
+        return new ResponseEntity<>(new CMRespDto<>(1, "메인화면 투두리스트 조회 성공", todoResDtoList),HttpStatus.OK);
     }
 
+    /**
+     * 투두 조회
+     */
+    @Operation(summary = "투두 조회 API", description = "투두 단건 조회한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = TodoResDto.class))),
+            @ApiResponse(responseCode = "400", content = @Content(schema = @Schema(example = "{\"error\": \"Bad Request\"}"))),
+            @ApiResponse(responseCode = "401", content = @Content(schema = @Schema(example = "{\"error\": \"Unauthorized\"}"))),
+            @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(example = "{\"error\": \"Not Found\"}"))),
+            @ApiResponse(responseCode = "500",  content = @Content(schema = @Schema(example = "{\"error\": \"Internal Server Error\"}")))
+    })
+    @GetMapping("/{todoId}")
+    public ResponseEntity<?> getTodo(@PathVariable("todoId") Long todoId){
+
+        TodoResDto todoResDto = todoService.getTodo(todoId);
+
+        return new ResponseEntity<>(new CMRespDto<>(1, "투두 조회 성공", todoResDto),HttpStatus.OK);
+    }
 
     /**
      * 투두 생성

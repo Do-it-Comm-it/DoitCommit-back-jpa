@@ -182,6 +182,25 @@ class TodoServiceImplTest {
         assertThat(e.getMessage()).isEqualTo("No value present");
     }
 
+    @Test
+    void 투두단건_조회() throws Exception{
+        //given
+        //when
+        TodoResDto todoResDto = todoService.getTodo(todoId);
+
+        //then
+        Todo findTodo = todoRepository.findById(todoId).get();
+
+        assertThat(todoResDto.getTodoId()).isEqualTo(findTodo.getTodoId());
+        assertThat(todoResDto.getTitle()).isEqualTo(findTodo.getTitle());
+        assertThat(todoResDto.getContent()).isEqualTo(findTodo.getContent());
+        assertThat(todoResDto.getType()).isEqualTo(findTodo.getType().toString());
+        assertThat(todoResDto.getImportance()).isEqualTo(findTodo.getImportance().toString());
+        assertThat(todoResDto.getIsFixed()).isEqualTo(findTodo.getIsFixed());
+        assertThat(todoResDto.getIsFinished()).isEqualTo(findTodo.getIsFinished());
+        assertThat(todoResDto.getTodoDateTime()).isEqualTo(findTodo.getTodoDateTime());
+    }
+
     private TodoUpdateDto createTodoUpdateDto(Long todoId, String title, String content, String type,
                                               String importance, Boolean isFixed, LocalDateTime todoDateTime) {
         return TodoUpdateDto.builder()

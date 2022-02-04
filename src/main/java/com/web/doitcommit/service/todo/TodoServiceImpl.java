@@ -128,5 +128,17 @@ public class TodoServiceImpl implements TodoService{
         return result.stream().map(todo -> new TodoResDto(todo)).collect(Collectors.toList());
     }
 
+    /**
+     * 투두 단건 조회
+     */
+    @Transactional(readOnly = true)
+    @Override
+    public TodoResDto getTodo(Long todoId) {
+        Todo todo = todoRepository.findById(todoId).orElseThrow(() ->
+                new IllegalArgumentException("존재하지 않는 투두입니다."));
+
+        return new TodoResDto(todo);
+    }
+
 
 }

@@ -23,4 +23,6 @@ public interface TodoService {
 
     List<TodoResDto> getCustomLimitTodoList(int limit, Long principalId);
 
+    TodoResDto getTodo(Long todoId);
+
 }
