@@ -26,11 +26,13 @@ public class TodoServiceImpl implements TodoService{
      */
     @Transactional
     @Override
-    public Todo register(TodoRegDto todoDto, Long principalId) {
+    public TodoResDto register(TodoRegDto todoDto, Long principalId) {
 
         Todo todo = todoDto.toEntity(principalId);
 
-        return todoRepository.save(todo);
+        todoRepository.save(todo);
+
+        return new TodoResDto(todo);
     }
 
     /**
@@ -124,6 +126,18 @@ public class TodoServiceImpl implements TodoService{
         List<Todo> result = todoRepository.getCustomLimitTodoList(limit, principalId);
 
         return result.stream().map(todo -> new TodoResDto(todo)).collect(Collectors.toList());
+    }
+
+    /**
+     * 투두 단건 조회
+     */
+    @Transactional(readOnly = true)
+    @Override
+    public TodoResDto getTodo(Long todoId) {
+        Todo todo = todoRepository.findById(todoId).orElseThrow(() ->
+                new IllegalArgumentException("존재하지 않는 투두입니다."));
+
+        return new TodoResDto(todo);
     }
 
 

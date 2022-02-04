@@ -8,6 +8,7 @@ import com.web.doitcommit.domain.todo.Todo;
 import com.web.doitcommit.domain.todo.TodoRepository;
 import com.web.doitcommit.domain.todo.TodoType;
 import com.web.doitcommit.dto.todo.TodoRegDto;
+import com.web.doitcommit.dto.todo.TodoResDto;
 import com.web.doitcommit.dto.todo.TodoUpdateDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -51,18 +52,31 @@ class TodoServiceImplTest {
         TodoRegDto todoRegDto = createTodoRegDto("testTitle", "testContent", "STUDY", "Low", false, LocalDateTime.now());
 
         //when
-        Todo todo = todoService.register(todoRegDto, member.getMemberId());
+        TodoResDto todoResDto = todoService.register(todoRegDto, member.getMemberId());
 
         //then
-        assertThat(todo.getTodoId()).isNotNull();
-        assertThat(todo.getMember().getMemberId()).isEqualTo(member.getMemberId());
-        assertThat(todo.getTitle()).isEqualTo(todoRegDto.getTitle());
-        assertThat(todo.getContent()).isEqualTo(todoRegDto.getContent());
-        assertThat(todo.getType()).isEqualTo(TodoType.STUDY);
-        assertThat(todo.getImportance()).isEqualTo(Importance.valueOf(todoRegDto.getImportance().toUpperCase()));
-        assertThat(todo.getIsFixed()).isEqualTo(todoRegDto.getIsFixed());
-        assertThat(todo.getIsFinished()).isEqualTo(false);
-        assertThat(todo.getTodoDateTime()).isEqualTo(todoRegDto.getTodoDateTime());
+        Todo findTodo = todoRepository.findById(todoResDto.getTodoId()).get();
+
+        //투두 검증
+        assertThat(findTodo.getTodoId()).isNotNull();
+        assertThat(findTodo.getMember().getMemberId()).isEqualTo(member.getMemberId());
+        assertThat(findTodo.getTitle()).isEqualTo(todoRegDto.getTitle());
+        assertThat(findTodo.getContent()).isEqualTo(todoRegDto.getContent());
+        assertThat(findTodo.getType()).isEqualTo(TodoType.STUDY);
+        assertThat(findTodo.getImportance()).isEqualTo(Importance.valueOf(todoRegDto.getImportance().toUpperCase()));
+        assertThat(findTodo.getIsFixed()).isEqualTo(todoRegDto.getIsFixed());
+        assertThat(findTodo.getIsFinished()).isEqualTo(false);
+        assertThat(findTodo.getTodoDateTime()).isEqualTo(todoRegDto.getTodoDateTime());
+
+        //todoResDto 검증
+        assertThat(todoResDto).isNotNull();
+        assertThat(todoResDto.getTitle()).isEqualTo(todoRegDto.getTitle());
+        assertThat(todoResDto.getContent()).isEqualTo(todoRegDto.getContent());
+        assertThat(todoResDto.getType()).isEqualTo(todoResDto.getType().toUpperCase());
+        assertThat(todoResDto.getImportance()).isEqualTo(todoRegDto.getImportance().toUpperCase());
+        assertThat(todoResDto.getIsFixed()).isEqualTo(todoRegDto.getIsFixed());
+        assertThat(todoResDto.getIsFinished()).isEqualTo(false);
+        assertThat(todoResDto.getTodoDateTime()).isEqualTo(todoRegDto.getTodoDateTime());
     }
 
 
@@ -73,18 +87,31 @@ class TodoServiceImplTest {
         TodoRegDto todoRegDto = createTodoRegDto("testTitle", "testContent", "STUDY", "Low", false);
 
         //when
-        Todo todo = todoService.register(todoRegDto, member.getMemberId());
+        TodoResDto todoResDto = todoService.register(todoRegDto, member.getMemberId());
 
         //then
-        assertThat(todo.getTodoId()).isNotNull();
-        assertThat(todo.getMember().getMemberId()).isEqualTo(member.getMemberId());
-        assertThat(todo.getTitle()).isEqualTo(todoRegDto.getTitle());
-        assertThat(todo.getContent()).isEqualTo(todoRegDto.getContent());
-        assertThat(todo.getType()).isEqualTo(TodoType.STUDY);
-        assertThat(todo.getImportance()).isEqualTo(Importance.valueOf(todoRegDto.getImportance().toUpperCase()));
-        assertThat(todo.getIsFixed()).isEqualTo(todoRegDto.getIsFixed());
-        assertThat(todo.getIsFinished()).isEqualTo(false);
-        assertThat(todo.getTodoDateTime().toLocalDate()).isEqualTo(LocalDateTime.now().toLocalDate());
+        Todo findTodo = todoRepository.findById(todoResDto.getTodoId()).get();
+
+        //투두 검증
+        assertThat(findTodo.getTodoId()).isNotNull();
+        assertThat(findTodo.getMember().getMemberId()).isEqualTo(member.getMemberId());
+        assertThat(findTodo.getTitle()).isEqualTo(todoRegDto.getTitle());
+        assertThat(findTodo.getContent()).isEqualTo(todoRegDto.getContent());
+        assertThat(findTodo.getType()).isEqualTo(TodoType.STUDY);
+        assertThat(findTodo.getImportance()).isEqualTo(Importance.valueOf(todoRegDto.getImportance().toUpperCase()));
+        assertThat(findTodo.getIsFixed()).isEqualTo(todoRegDto.getIsFixed());
+        assertThat(findTodo.getIsFinished()).isEqualTo(false);
+        assertThat(findTodo.getTodoDateTime().toLocalDate()).isEqualTo(LocalDateTime.now().toLocalDate());
+
+        //todoResDto 검증
+        assertThat(todoResDto).isNotNull();
+        assertThat(todoResDto.getTitle()).isEqualTo(todoRegDto.getTitle());
+        assertThat(todoResDto.getContent()).isEqualTo(todoRegDto.getContent());
+        assertThat(todoResDto.getType()).isEqualTo(todoResDto.getType().toUpperCase());
+        assertThat(todoResDto.getImportance()).isEqualTo(todoRegDto.getImportance().toUpperCase());
+        assertThat(todoResDto.getIsFixed()).isEqualTo(todoRegDto.getIsFixed());
+        assertThat(todoResDto.getIsFinished()).isEqualTo(false);
+        assertThat(todoResDto.getTodoDateTime().toLocalDate()).isEqualTo(LocalDateTime.now().toLocalDate());
     }
 
     @Test
@@ -152,6 +179,25 @@ class TodoServiceImplTest {
                 () -> (todoRepository.findById(todoId)).get());
 
         assertThat(e.getMessage()).isEqualTo("No value present");
+    }
+
+    @Test
+    void 투두단건_조회() throws Exception{
+        //given
+        //when
+        TodoResDto todoResDto = todoService.getTodo(todoId);
+
+        //then
+        Todo findTodo = todoRepository.findById(todoId).get();
+
+        assertThat(todoResDto.getTodoId()).isEqualTo(findTodo.getTodoId());
+        assertThat(todoResDto.getTitle()).isEqualTo(findTodo.getTitle());
+        assertThat(todoResDto.getContent()).isEqualTo(findTodo.getContent());
+        assertThat(todoResDto.getType()).isEqualTo(findTodo.getType().toString());
+        assertThat(todoResDto.getImportance()).isEqualTo(findTodo.getImportance().toString());
+        assertThat(todoResDto.getIsFixed()).isEqualTo(findTodo.getIsFixed());
+        assertThat(todoResDto.getIsFinished()).isEqualTo(findTodo.getIsFinished());
+        assertThat(todoResDto.getTodoDateTime()).isEqualTo(findTodo.getTodoDateTime());
     }
 
     private TodoUpdateDto createTodoUpdateDto(Long todoId, String title, String content, String type,

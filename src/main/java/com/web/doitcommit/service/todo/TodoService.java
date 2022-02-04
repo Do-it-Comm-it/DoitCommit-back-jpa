@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface TodoService {
 
-    Todo register(TodoRegDto todoDto, Long principalId);
+    TodoResDto register(TodoRegDto todoDto, Long principalId);
 
     void modify(TodoUpdateDto todoUpdateDto);
 
@@ -22,5 +22,7 @@ public interface TodoService {
     List<TodoResDto> getAllTodoList(Long principalId);
 
     List<TodoResDto> getCustomLimitTodoList(int limit, Long principalId);
+
+    TodoResDto getTodo(Long todoId);
 
 }
