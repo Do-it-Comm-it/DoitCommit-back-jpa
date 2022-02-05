@@ -48,7 +48,9 @@ public class MemberService {
 
         MultipartFile file = memberUpdateDto.getFile();
         if (file != null) {
-            String path = "D:\\doitcommit\\upload\\"; //폴더 경로 // Windows('\'), Linux, MAC('/')
+            //String path = "D:\\doitcommit\\upload\\"; //폴더 경로 // Windows('\'), Linux, MAC('/')
+            //String path = "/var/";
+            String path = System.getProperty("user.dir") + File.separator;
 
             //파일 업로드 utill로 리팩토링 예정
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -59,7 +61,9 @@ public class MemberService {
             //폴더생성
             File uploadPath = new File(path, datePath);
             if (!uploadPath.exists()) {
+                System.out.println(uploadPath.exists());
                 try {
+                    System.out.println(uploadPath.exists());
                     uploadPath.mkdirs();
                 } catch (Exception e) {
                     e.getStackTrace();
