@@ -20,7 +20,7 @@ public class Todo extends BaseEntity {
     private Long todoId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "memer_id", nullable = false)
+    @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
     @Column(nullable = false)

@@ -44,12 +44,25 @@ spring:
               - read:user
 
 
-
 app:
   token:
     secretKey: ${JWT_SECRET_KEY}
   oauth2:
     authorized-redirect-url: https://www.doit-commit.kro.kr
 
+file:
+  path: D:/doitcommit/upload/
 
+springdoc:
+  version: '@project.version@'
+  api-docs:
+    path: /api-docs
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+  swagger-ui:
+    operations-sorter: alpha
+    tags-sorter: alpha
+    path: /swagger-ui.html
+    disable-swagger-default-url: true
+    display-query-params-without-oauth2: true
 

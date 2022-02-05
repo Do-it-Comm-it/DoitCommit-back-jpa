@@ -1,7 +1,6 @@
 package com.web.doitcommit.domain.member;
 
 import com.web.doitcommit.domain.BaseEntity;
-import com.web.doitcommit.domain.interestTech.InterestTech;
 import lombok.*;
 import javax.persistence.*;
 import java.util.HashSet;
@@ -35,11 +34,10 @@ public class Member extends BaseEntity {
     @Column(nullable = false)
     private String password;
 
-    @ElementCollection(fetch = FetchType.EAGER)
+    @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(joinColumns = @JoinColumn(name = "member_id"))
-    @Enumerated(EnumType.STRING)
     @Builder.Default
-    private Set<InterestTech> interestTechSet = new HashSet<InterestTech>();
+    private Set<String> interestTechSet = new HashSet<>();
 
     private String position;
 
@@ -54,7 +52,7 @@ public class Member extends BaseEntity {
     private String url2;
 
     @Builder.Default
-    @Column(nullable = false)
+    @Column
     private String pictureUrl = "";
 
     public void setPicture(String pictureUrl){
@@ -64,4 +62,36 @@ public class Member extends BaseEntity {
     public void setEmail(String email){
         this.email = email;
     }
+
+    public void changeNickname(String nickname){
+        this.nickname = nickname;
+    }
+
+    public void changeEmail(String email){
+        this.email = email;
+    }
+
+    public void changeInterestTechSet(Set<String> interestTechSet){
+        this.interestTechSet = interestTechSet;
+    }
+
+    public void changeGithubUrl(String githubUrl){
+        this.githubUrl = githubUrl;
+    }
+
+    public void changeUrl1(String url1){
+        this.url1 = url1;
+    }
+
+    public void changeUrl2(String url2){
+        this.url2 = url2;
+    }
+
+    public void changePictureUrl(String pictureUrl){
+        this.pictureUrl = pictureUrl;
+    }
+
+
+
+
 }

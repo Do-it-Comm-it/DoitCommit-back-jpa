@@ -1,5 +1,5 @@
 package com.web.doitcommit.domain.todo;
 
 public enum TodoType {
-    STUDY
+    STUDY, DAILY, WORK
 }

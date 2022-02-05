@@ -1,6 +1,5 @@
 package com.web.doitcommit.domain.member;
 
-import com.web.doitcommit.domain.interestTech.InterestTech;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +26,7 @@ class MemberRepositoryTest {
                 .password("1111")
                 .username("testUsername")
                 .provider(AuthProvider.GOOGLE)
-                .interestTechSet(new HashSet<>(Arrays.asList(InterestTech.Java)))
+                .interestTechSet(new HashSet<>(Arrays.asList("java")))
                 .oauthId("testId")
                 .build();
 
