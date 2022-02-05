@@ -4,6 +4,7 @@ import com.web.doitcommit.domain.member.Member;
 import com.web.doitcommit.domain.member.MemberRepository;
 import com.web.doitcommit.dto.member.MemberInfoDto;
 import com.web.doitcommit.dto.member.MemberUpdateDto;
+import com.web.doitcommit.commons.FileHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ import java.util.UUID;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final FileHandler fileHandler;
 
     @Value("${file.path}")
     private String uploadFolder;
@@ -48,39 +50,7 @@ public class MemberService {
 
         MultipartFile file = memberUpdateDto.getFile();
         if (file != null) {
-            //String path = "D:\\doitcommit\\upload\\"; //폴더 경로 // Windows('\'), Linux, MAC('/')
-            //String path = "/var/";
-            String path = System.getProperty("user.dir") + File.separator;
-
-            //파일 업로드 utill로 리팩토링 예정
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            Date date = new Date();
-            String str = sdf.format(date); //오늘날짜를 포맷함
-            String datePath = str.replace("-", File.separator);
-
-            //폴더생성
-            File uploadPath = new File(path, datePath);
-            if (!uploadPath.exists()) {
-                System.out.println(uploadPath.exists());
-                try {
-                    System.out.println(uploadPath.exists());
-                    uploadPath.mkdirs();
-                } catch (Exception e) {
-                    e.getStackTrace();
-                }
-            }
-
-            UUID uuid = UUID.randomUUID();
-            String imageFileName = path + datePath + File.separator + uuid + "_" + memberUpdateDto.getFile().getOriginalFilename();
-
-            Path imageFilePath = Paths.get(imageFileName);
-            member.changePictureUrl(imageFileName);
-
-            try {
-                Files.write(imageFilePath, file.getBytes());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            member.changePictureUrl(fileHandler.fileUpload(file));
         }
 
         member.changeNickname(memberUpdateDto.getNickname());
