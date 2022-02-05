@@ -2,7 +2,10 @@ package com.web.doitcommit.domain.member;
 
 import com.web.doitcommit.domain.BaseEntity;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
+
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -50,10 +53,20 @@ public class Member extends BaseEntity {
     private String url1;
 
     private String url2;
+    //회원 상태 : 1 : 일반, 0 : 탈퇴 중
+    //@ColumnDefault("1")
+    private Integer state = 1;
+
+    private LocalDateTime leaveDate;
 
     @Builder.Default
     @Column
     private String pictureUrl = "";
+
+    @PrePersist
+    public void defaultState() {
+        this.state = this.state == null ? 1 : this.state;
+    }
 
     public void setPicture(String pictureUrl){
         this.pictureUrl = pictureUrl;
