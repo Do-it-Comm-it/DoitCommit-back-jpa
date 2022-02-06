@@ -7,10 +7,12 @@ import com.web.doitcommit.dto.member.MemberUpdateDto;
 import com.web.doitcommit.commons.FileHandler;
 import com.web.doitcommit.handler.exception.CustomValidationException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 
 @RequiredArgsConstructor
 @Service
@@ -23,11 +25,11 @@ public class MemberService {
      * 멤버 정보조회
      */
     public MemberInfoDto reqGetMemberInfo(Long memberId) {
-        try{
+        try {
             Member member = memberRepository.findByMemberId(memberId);
             MemberInfoDto memberInfo = new MemberInfoDto(member);
             return memberInfo;
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new CustomValidationException("존재하지 않은 회원입니다.");
         }
     }
@@ -36,11 +38,10 @@ public class MemberService {
      * 멤버 닉네임 중복 체크
      */
     public Boolean reqGetMemberCheck(String nickname) {
-        int count = memberRepository.mNicknameCount(nickname);
-        if (count > 0) {
-            return false;
+        if (!nickname.isEmpty() && (memberRepository.mNicknameCount(nickname) == 0)) {
+            return true;
         }
-        return true;
+        return false;
     }
 
     /**
@@ -48,23 +49,44 @@ public class MemberService {
      */
     @Transactional
     public Boolean reqPutMemberUpdate(MemberUpdateDto memberUpdateDto, Long memberId) {
-        Member member = memberRepository.findById(memberId).orElseThrow(() ->
+        Member memberEntity = memberRepository.findById(memberId).orElseThrow(() ->
                 new IllegalArgumentException("존재하지 않은 회원입니다."));
 
         MultipartFile file = memberUpdateDto.getFile();
         if (file != null) {
-            member.changePictureUrl(fileHandler.fileUpload(file));
+            memberEntity.changePictureUrl(fileHandler.fileUpload(file));
         }
 
-        member.changeNickname(memberUpdateDto.getNickname());
-        member.changeEmail(memberUpdateDto.getEmail());
-        member.changeInterestTechSet(memberUpdateDto.getInterestTechSet());
-        member.changeGithubUrl(memberUpdateDto.getGithubUrl());
-        member.changeUrl1(memberUpdateDto.getUrl1());
-        member.changeUrl2(memberUpdateDto.getUrl2());
+        memberEntity.changeNickname(memberUpdateDto.getNickname());
+        memberEntity.changeEmail(memberUpdateDto.getEmail());
+        memberEntity.changeInterestTechSet(memberUpdateDto.getInterestTechSet());
+        memberEntity.changeGithubUrl(memberUpdateDto.getGithubUrl());
+        memberEntity.changeUrl1(memberUpdateDto.getUrl1());
+        memberEntity.changeUrl2(memberUpdateDto.getUrl2());
 
         return true;
     }
 
+    @Transactional
+    public Boolean reqPutMemberLeave(Long memberId) {
+        Member memberEntity = memberRepository.findById(memberId).orElseThrow(() ->
+                new IllegalArgumentException("존재하지 않은 회원입니다."));
+        Date date = new Date();
+        LocalDateTime localDate = date.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime();
 
+        memberEntity.changeState(0);
+        memberEntity.changeLeaveDate(localDate);
+        return true;
+    }
+
+    @Transactional
+    public Boolean reqPutMemberLeaveCancel(Long memberId) {
+        Member memberEntity = memberRepository.findById(memberId).orElseThrow(() ->
+                new IllegalArgumentException("존재하지 않은 회원입니다."));
+        memberEntity.changeState(1);
+        memberEntity.changeLeaveDate(null);
+        return true;
+    }
 }

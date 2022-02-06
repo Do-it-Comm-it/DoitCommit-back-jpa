@@ -6,6 +6,7 @@ import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -22,7 +23,7 @@ public class Member extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberId;
 
-    @Column(unique = true)
+    @Column(nullable = false, unique = true)
     public String nickname;
 
     private String email;
@@ -102,6 +103,14 @@ public class Member extends BaseEntity {
 
     public void changePictureUrl(String pictureUrl){
         this.pictureUrl = pictureUrl;
+    }
+
+    public void changeState(int state){
+        this.state = state;
+    }
+
+    public void changeLeaveDate(LocalDateTime leaveDate){
+        this.leaveDate = leaveDate;
     }
 
 
