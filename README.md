@@ -13,7 +13,7 @@
     
 🔍 [Directory](https://github.com/Do-it-Comm-it/DoitCommit-back-jpa/blob/master/README.md#-directory)   
    
-🔍 [산출물](https://github.com/Do-it-Comm-it/DoitCommit-back-jpa/blob/master/README.md#-%EC%82%B0%EC%B6%9C%EB%AC%BC)   
+🔍 [Docs](https://github.com/Do-it-Comm-it/DoitCommit-back-jpa/blob/master/README.md#-%EC%82%B0%EC%B6%9C%EB%AC%BC)   
    
 🔍 [Technical Stack](https://github.com/Do-it-Comm-it/DoitCommit-back-jpa/blob/master/README.md#-technical-stack)   
 
@@ -136,7 +136,7 @@ GUIDER -> PARTNER로서의 확장
 
 </br>
 
-## 🔍 산출물 
+## 🔍 Docs 
 [ERD](https://www.erdcloud.com/d/RJ5M89o9BiSbT9DnW) <br/>
 [figma](https://www.erdcloud.com/d/RJ5M89o9BiSbT9DnW) <br/>
 [API정의서](http://localhost:5000/swagger-ui.html)
