@@ -144,7 +144,7 @@ GUIDER -> PARTNER로서의 확장
 ## 🛠 Technical Stack
 
 ### `frontend`
-`
+```
 - TypeScript
 - React
 - Styled-components
@@ -152,7 +152,7 @@ GUIDER -> PARTNER로서의 확장
 - Babel, webpack
 - prettier
 - ESLINT
-`
+```
 
 ### `backend`
 - Spring boot
