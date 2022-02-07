@@ -143,7 +143,7 @@ GUIDER -> PARTNER로서의 확장
 
 ## 🛠 Technical Stack
 
-***frontend***
+### ***frontend***
 ```
 - TypeScript
 - React
@@ -154,7 +154,7 @@ GUIDER -> PARTNER로서의 확장
 - ESLINT
 ```
      
-***backend***
+### ***backend***
 ```
 - Spring boot
 - Spring Security
@@ -165,7 +165,7 @@ GUIDER -> PARTNER로서의 확장
 - JWT
 ```
 
-### `server`
+### ***server***
 ```
 - AWS Elasctic Beanstalk
 - AWS RDS
