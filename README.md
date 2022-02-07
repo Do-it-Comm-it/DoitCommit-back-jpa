@@ -5,9 +5,9 @@
 ## 🚩 목차
 🔍 [프로젝트 소개](https://github.com/Do-it-Comm-it/DoitCommit-back-jpa/blob/master/README.md#-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-%ED%94%8C%EB%9E%9C)   
    
-🔍 [프로젝트 플랜](https://github.com/Do-it-Comm-it/DoitCommit-back-jpa/blob/master/README.md#-%ED%8C%80%EC%9B%90-%EC%86%8C%EA%B0%9C)  
+🔍 [프로젝트 플랜](https://github.com/Do-it-Comm-it/DoitCommit-back-jpa/blob/master/README.md#-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-%ED%94%8C%EB%9E%9C)  
    
-🔍 [팀원 소개](https://github.com/Do-it-Comm-it/DoitCommit-back-jpa/blob/master/README.md#-branching-%EC%A0%84%EB%9E%B5)   
+🔍 [팀원 소개](https://github.com/Do-it-Comm-it/DoitCommit-back-jpa/blob/master/README.md#-%ED%8C%80%EC%9B%90-%EC%86%8C%EA%B0%9C)   
    
 🔍 [Branching 전략](https://github.com/Do-it-Comm-it/DoitCommit-back-jpa/blob/master/README.md#-branching-%EC%A0%84%EB%9E%B5) 
     
