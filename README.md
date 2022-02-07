@@ -137,7 +137,7 @@ GUIDER -> PARTNER로서의 확장
 
 ## 🔍 Docs 
 [ERD](https://www.erdcloud.com/d/RJ5M89o9BiSbT9DnW) <br/>
-[figma](https://www.erdcloud.com/d/RJ5M89o9BiSbT9DnW) <br/>
+[figma](https://www.figma.com/file/NNCdD64hLUimMCfOtF3MK5/Do-it-Commit!) <br/>
 [API정의서](http://localhost:5000/swagger-ui.html)
 
 </br>
