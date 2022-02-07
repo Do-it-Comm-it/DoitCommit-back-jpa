@@ -18,15 +18,11 @@ import java.util.Set;
 @Entity
 public class Member extends BaseEntity {
 
-    private String username;
-
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberId;
 
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     public String nickname;
-
-    private String email;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -38,6 +34,17 @@ public class Member extends BaseEntity {
     @Column(nullable = false)
     private String password;
 
+    @Builder.Default
+    @Column(nullable = false)
+    private String role = "USER";
+
+    private String username;
+
+    private String email;
+
+    @Builder.Default
+    private String pictureUrl = "";
+
     @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(joinColumns = @JoinColumn(name = "member_id"))
     @Builder.Default
@@ -45,24 +52,17 @@ public class Member extends BaseEntity {
 
     private String position;
 
-    @Builder.Default
-    @Column(nullable = false)
-    private String role = "USER";
-
     private String githubUrl;
 
     private String url1;
 
     private String url2;
+
     //회원 상태 : 1 : 일반, 0 : 탈퇴 중
-    //@ColumnDefault("1")
+    @Builder.Default
     private Integer state = 1;
 
     private LocalDateTime leaveDate;
-
-    @Builder.Default
-    @Column
-    private String pictureUrl = "";
 
     @PrePersist
     public void defaultState() {
