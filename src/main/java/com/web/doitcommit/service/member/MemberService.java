@@ -68,6 +68,9 @@ public class MemberService {
         return true;
     }
 
+    /**
+     * 멤버 탈퇴
+     */
     @Transactional
     public Boolean reqPutMemberLeave(Long memberId) {
         Member memberEntity = memberRepository.findById(memberId).orElseThrow(() ->
@@ -82,6 +85,9 @@ public class MemberService {
         return true;
     }
 
+    /**
+     * 멤버 탈퇴해제
+     */
     @Transactional
     public Boolean reqPutMemberLeaveCancel(Long memberId) {
         Member memberEntity = memberRepository.findById(memberId).orElseThrow(() ->

@@ -93,10 +93,10 @@ public class MemberController {
         return new ResponseEntity<>(new CMRespDto<>(1, "멤버 탍퇴 신청 성공", null), HttpStatus.OK);
     }
 
-    @Operation(summary = "멤버 탈퇴 해지 API", description = "멤버가 탈퇴 신청을 해지한다.")
+    @Operation(summary = "멤버 탈퇴 해제 API", description = "멤버가 탈퇴 신청을 해제한다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(example = "{\n" +
-                    "  \"message\": \"멤버 탈퇴 신청 성공\",\n" +
+                    "  \"message\": \"멤버 탈퇴 해제 성공\",\n" +
                     "  \"data\": true,\n" +
                     "  \"code\": 1\n" +
                     "}"))),
@@ -108,6 +108,6 @@ public class MemberController {
     @PutMapping("/leave/cancel")
     public ResponseEntity<?> reqPutMemberLeaveCancel(@AuthenticationPrincipal PrincipalDetails principalDetails) {
         memberService.reqPutMemberLeaveCancel(principalDetails.getMember().getMemberId());
-        return new ResponseEntity<>(new CMRespDto<>(1, "멤버 탍퇴 신청 해지 성공", null), HttpStatus.OK);
+        return new ResponseEntity<>(new CMRespDto<>(1, "멤버 탍퇴 신청 해제 성공", null), HttpStatus.OK);
     }
 }
