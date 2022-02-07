@@ -109,6 +109,10 @@ public class Member extends BaseEntity {
         this.state = state;
     }
 
+    public void changePosition(String position){
+        this.position = position;
+    }
+
     public void changeLeaveDate(LocalDateTime leaveDate){
         this.leaveDate = leaveDate;
     }
