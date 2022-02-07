@@ -115,13 +115,12 @@ GUIDER -> PARTNER로서의 확장
 │     ├─ config
 │     ├─ filter
 │     ├─ handler
-│     ├─ handler
 │     ├─ jwt
 │     ├─ redis
-│     ├─ domain
+│     ├─ domain dto
+│     ├─ dto
 │     ├─ controller
-│     ├─ service
-│     └─ dto   
+│     └─ service   
 │ 
 ├─ resources
 │     ├─ application.yaml
