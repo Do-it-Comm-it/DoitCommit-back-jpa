@@ -3,7 +3,7 @@
 <br/> 
 
 ## 🚩 목차
-🔍 [프로젝트 소개](https://github.com/Do-it-Comm-it/DoitCommit-back-jpa/blob/master/README.md#-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-%ED%94%8C%EB%9E%9C)   
+🔍 [프로젝트 소개](https://github.com/Do-it-Comm-it/DoitCommit-back-jpa/blob/master/README.md#-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-%EC%86%8C%EA%B0%9C)   
    
 🔍 [프로젝트 플랜](https://github.com/Do-it-Comm-it/DoitCommit-back-jpa/blob/master/README.md#-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-%ED%94%8C%EB%9E%9C)  
    
