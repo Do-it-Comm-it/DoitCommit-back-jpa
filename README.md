@@ -142,7 +142,7 @@ GUIDER -> PARTNER로서의 확장
 </br>
 
 ## 🛠 Technical Stack
-
+<span style="color:red">Red Text</span>
 <span style='background-color: #f5f0ff'>frontend</span>
 ```
 - TypeScript
