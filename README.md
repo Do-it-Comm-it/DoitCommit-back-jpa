@@ -153,8 +153,9 @@ GUIDER -> PARTNER로서의 확장
 - prettier
 - ESLINT
 ```
-
+     
 ### `backend`
+```
 - Spring boot
 - Spring Security
 - SpringData JPA
@@ -162,9 +163,12 @@ GUIDER -> PARTNER로서의 확장
 - Redis
 - Oauth2
 - JWT
+```
 
 ### `server`
+```
 - AWS Elasctic Beanstalk
 - AWS RDS
 - AWS S3 (추후 예정)
 - Github Actions
+```
