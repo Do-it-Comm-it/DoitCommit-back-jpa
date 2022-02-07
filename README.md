@@ -85,8 +85,9 @@ GUIDER -> PARTNER로서의 확장
  ![image](https://user-images.githubusercontent.com/69441691/152711253-348c902b-2058-4b5b-93cf-59eb8d92823f.png)
  
  
- ## 📁 Directory 
-### `frontend`
+ ## 📁 Directory    
+    
+### ◾ ***frontend***
 - `src/`
   - `hooks/` : 훅
   - `components/` : 컴포넌트 폴더
@@ -107,7 +108,7 @@ GUIDER -> PARTNER로서의 확장
 
 </br>
  
-### `backend`
+### ◾ ***backend***
  ```sh
 ├── README.md         
 │
