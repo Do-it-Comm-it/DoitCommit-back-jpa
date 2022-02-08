@@ -4,6 +4,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.PutObjectResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,29 +41,39 @@ public class S3Uploader {
         String folderPath = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
 
         //S3에 저장될 위치 + 저장파일명
-        String storeFile = folderPath + "/" + UUID.randomUUID() + uploadFile.getName();
+        String storeKey = folderPath + "/" + UUID.randomUUID() + uploadFile.getName();
 
         //s3로 업로드
-        String uploadImageUrl = putS3(uploadFile, storeFile);
+        putS3(uploadFile, storeKey);
 
         //File 로 전환되면서 로컬에 생성된 파일을 제거
         removeNewFile(uploadFile);
 
-        return uploadImageUrl;
+        return storeKey;
     }
 
     /**
      * S3파일 삭제
      */
-    public void delete(String pictureUrl) {
-
-        amazonS3.deleteObject(new DeleteObjectRequest(bucket, pictureUrl));
+    public void delete(String storeKey) {
+        try{
+            amazonS3.deleteObject(new DeleteObjectRequest(bucket, storeKey));
+        }catch(Exception e) {
+            log.error("delete file error"+e.getMessage());
+        }
     }
 
+    /**
+     * s3 파일 URL
+     */
+    public String getPictureUrl(String storeKey){
+        return amazonS3.getUrl(bucket,storeKey).toString();
+    }
+
+
     // S3로 업로드
-    private String putS3(File uploadFile, String fileName) {
-        amazonS3.putObject(new PutObjectRequest(bucket, fileName, uploadFile).withCannedAcl(CannedAccessControlList.PublicRead));
-        return amazonS3.getUrl(bucket, fileName).toString();
+    private PutObjectResult putS3(File uploadFile, String storeKey) {
+        return amazonS3.putObject(new PutObjectRequest(bucket, storeKey, uploadFile).withCannedAcl(CannedAccessControlList.PublicRead));
     }
 
     // 로컬에 저장된 이미지 지우기
