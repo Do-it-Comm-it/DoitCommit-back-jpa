@@ -2,6 +2,7 @@ package com.web.doitcommit.s3;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -27,7 +28,9 @@ public class S3Uploader {
 
     private final AmazonS3 amazonS3;
 
-    // S3로 파일 업로드하기
+    /**
+     * S3파일 업로드
+     */
     public String S3Upload(MultipartFile multipartFile) throws IOException {
 
         File uploadFile = convert(multipartFile)  // 파일 변환할 수 없으면 에러
@@ -46,6 +49,14 @@ public class S3Uploader {
         removeNewFile(uploadFile);
 
         return uploadImageUrl;
+    }
+
+    /**
+     * S3파일 삭제
+     */
+    public void delete(String pictureUrl) {
+
+        amazonS3.deleteObject(new DeleteObjectRequest(bucket, pictureUrl));
     }
 
     // S3로 업로드
