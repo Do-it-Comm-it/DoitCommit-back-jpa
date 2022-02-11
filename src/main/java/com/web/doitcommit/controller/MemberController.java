@@ -52,7 +52,7 @@ public class MemberController {
             @ApiResponse(responseCode = "500",  content = @Content(schema = @Schema(example = "{\"error\": \"Internal Server Error\"}")))
     })
     @GetMapping("/check")
-    public ResponseEntity<?> reqGetMemberCheck(@RequestParam(value = "nickname", defaultValue = "") String nickname) {
+    public ResponseEntity<?> reqGetMemberCheck(@RequestParam(value = "nickname") String nickname) {
         Boolean result = memberService.reqGetMemberCheck(nickname);
         return new ResponseEntity<>(new CMRespDto<>(1, "닉네임 중복 조회 성공", result), HttpStatus.OK);
     }

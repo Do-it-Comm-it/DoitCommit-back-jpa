@@ -4,6 +4,7 @@ import com.web.doitcommit.domain.member.Member;
 import com.web.doitcommit.dto.member.MemberInfoDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -14,8 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
-@RequiredArgsConstructor
-@Repository
+@Service
 public class FileHandler {
 
     public String fileUpload(MultipartFile file) {

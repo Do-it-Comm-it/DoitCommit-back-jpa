@@ -58,15 +58,16 @@ public class Member extends BaseEntity {
 
     private String url2;
 
-    //회원 상태 : 1 : 일반, 0 : 탈퇴 중
+    //회원 상태 : activate : 일반, deactivate : 탈퇴 중
     @Builder.Default
-    private Integer state = 1;
+    @Enumerated(EnumType.STRING)
+    private StateType state = StateType.activate;
 
     private LocalDateTime leaveDate;
 
     @PrePersist
     public void defaultState() {
-        this.state = this.state == null ? 1 : this.state;
+        this.state = this.state == null ? StateType.activate : this.state;
     }
 
     public void setPicture(String pictureUrl){
@@ -105,7 +106,7 @@ public class Member extends BaseEntity {
         this.pictureUrl = pictureUrl;
     }
 
-    public void changeState(int state){
+    public void changeState(StateType state){
         this.state = state;
     }
 
