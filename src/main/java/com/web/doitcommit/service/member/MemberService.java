@@ -2,92 +2,100 @@ package com.web.doitcommit.service.member;
 
 import com.web.doitcommit.domain.member.Member;
 import com.web.doitcommit.domain.member.MemberRepository;
+import com.web.doitcommit.domain.member.StateType;
 import com.web.doitcommit.dto.member.MemberInfoDto;
 import com.web.doitcommit.dto.member.MemberUpdateDto;
+import com.web.doitcommit.commons.FileHandler;
+import com.web.doitcommit.handler.exception.CustomValidationException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
-import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final FileHandler fileHandler;
 
-    @Value("${file.path}")
-    private String uploadFolder;
-
+    /**
+     * 멤버 정보조회
+     */
     public MemberInfoDto reqGetMemberInfo(Long memberId) {
-        Member member = memberRepository.findByMemberId(memberId);
-        MemberInfoDto memberInfo = new MemberInfoDto(member);
-        return memberInfo;
-    }
-
-    public Boolean reqGetMemberCheck(String nickname) {
-        int count = memberRepository.mNicknameCount(nickname);
-        if (count > 0) {
-            return false;
+        try {
+            Member member = memberRepository.findByMemberId(memberId);
+            MemberInfoDto memberInfo = new MemberInfoDto(member);
+            return memberInfo;
+        } catch (Exception e) {
+            throw new IllegalArgumentException("존재하지 않은 회원입니다.");
         }
-        return true;
     }
 
+    /**
+     * 멤버 닉네임 중복 체크
+     */
+    public Boolean reqGetMemberCheck(String nickname) {
+        System.out.println(nickname);
+        if (!nickname.isEmpty() && (memberRepository.mNicknameCount(nickname) == 0)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 멤버 정보 수정
+     */
     @Transactional
     public Boolean reqPutMemberUpdate(MemberUpdateDto memberUpdateDto, Long memberId) {
-        Member member = memberRepository.findById(memberId).orElseThrow(() ->
+        Member memberEntity = memberRepository.findById(memberId).orElseThrow(() ->
                 new IllegalArgumentException("존재하지 않은 회원입니다."));
 
         MultipartFile file = memberUpdateDto.getFile();
         if (file != null) {
-            String path = "D:\\doitcommit\\upload\\"; //폴더 경로 // Windows('\'), Linux, MAC('/')
-
-            //파일 업로드 utill로 리팩토링 예정
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            Date date = new Date();
-            String str = sdf.format(date); //오늘날짜를 포맷함
-            String datePath = str.replace("-", File.separator);
-
-            //폴더생성
-            File uploadPath = new File(path, datePath);
-            if (!uploadPath.exists()) {
-                try {
-                    uploadPath.mkdirs();
-                } catch (Exception e) {
-                    e.getStackTrace();
-                }
-            }
-
-            UUID uuid = UUID.randomUUID();
-            String imageFileName = path + datePath + File.separator + uuid + "_" + memberUpdateDto.getFile().getOriginalFilename();
-
-            Path imageFilePath = Paths.get(imageFileName);
-            member.changePictureUrl(imageFileName);
-
-            try {
-                Files.write(imageFilePath, file.getBytes());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            memberEntity.changePictureUrl(fileHandler.fileUpload(file));
         }
 
-        member.changeNickname(memberUpdateDto.getNickname());
-        member.changeEmail(memberUpdateDto.getEmail());
-        member.changeInterestTechSet(memberUpdateDto.getInterestTechSet());
-        member.changeGithubUrl(memberUpdateDto.getGithubUrl());
-        member.changeUrl1(memberUpdateDto.getUrl1());
-        member.changeUrl2(memberUpdateDto.getUrl2());
+        memberEntity.changeNickname(memberUpdateDto.getNickname());
+        memberEntity.changeEmail(memberUpdateDto.getEmail());
+        memberEntity.changePosition(memberUpdateDto.getPosition());
+        memberEntity.changeInterestTechSet(memberUpdateDto.getInterestTechSet());
+        memberEntity.changeGithubUrl(memberUpdateDto.getGithubUrl());
+        memberEntity.changeUrl1(memberUpdateDto.getUrl1());
+        memberEntity.changeUrl2(memberUpdateDto.getUrl2());
 
         return true;
     }
 
+    /**
+     * 멤버 탈퇴
+     */
+    @Transactional
+    public Boolean reqPutMemberLeave(Long memberId) {
+        Member memberEntity = memberRepository.findById(memberId).orElseThrow(() ->
+                new IllegalArgumentException("존재하지 않은 회원입니다."));
+        Date date = new Date();
+        LocalDateTime localDate = date.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime();
 
+        memberEntity.changeState(StateType.deactivate);
+        memberEntity.changeLeaveDate(localDate);
+        return true;
+    }
+
+    /**
+     * 멤버 탈퇴해제
+     */
+    @Transactional
+    public Boolean reqPutMemberLeaveCancel(Long memberId) {
+        Member memberEntity = memberRepository.findById(memberId).orElseThrow(() ->
+                new IllegalArgumentException("존재하지 않은 회원입니다."));
+        memberEntity.changeState(StateType.activate);
+        memberEntity.changeLeaveDate(null);
+        return true;
+    }
 }
