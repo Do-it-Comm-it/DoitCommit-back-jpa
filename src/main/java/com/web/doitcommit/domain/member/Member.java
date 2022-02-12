@@ -1,5 +1,6 @@
 package com.web.doitcommit.domain.member;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.web.doitcommit.domain.BaseEntity;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -44,6 +45,8 @@ public class Member extends BaseEntity {
 
     @Builder.Default
     private String pictureUrl = "";
+
+    private Long pictureNo;
 
     @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(joinColumns = @JoinColumn(name = "member_id"))
@@ -102,8 +105,8 @@ public class Member extends BaseEntity {
         this.url2 = url2;
     }
 
-    public void changePictureUrl(String pictureUrl){
-        this.pictureUrl = pictureUrl;
+    public void changePictureNo(Long pictureNo){
+        this.pictureNo = pictureNo;
     }
 
     public void changeState(StateType state){

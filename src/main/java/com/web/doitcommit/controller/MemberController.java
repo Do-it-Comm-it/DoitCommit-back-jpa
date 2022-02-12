@@ -18,6 +18,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
+import java.io.IOException;
+
 @RequestMapping("/members")
 @RequiredArgsConstructor
 @RestController
@@ -70,7 +72,7 @@ public class MemberController {
             @ApiResponse(responseCode = "500",  content = @Content(schema = @Schema(example = "{\"error\": \"Internal Server Error\"}")))
     })
     @PutMapping(value ="/update", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<?> reqPutMemberUpdate(@Parameter(name = "principalDetails", hidden = true) @AuthenticationPrincipal PrincipalDetails principalDetails, MemberUpdateDto memberUpdateDto) {
+    public ResponseEntity<?> reqPutMemberUpdate(@Parameter(name = "principalDetails", hidden = true) @AuthenticationPrincipal PrincipalDetails principalDetails, MemberUpdateDto memberUpdateDto) throws IOException {
         memberService.reqPutMemberUpdate(memberUpdateDto, principalDetails.getMember().getMemberId());
         return new ResponseEntity<>(new CMRespDto<>(1, "멤버정보 수정 성공", true), HttpStatus.OK);
     }
