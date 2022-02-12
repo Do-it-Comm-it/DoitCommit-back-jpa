@@ -3,8 +3,6 @@ package com.web.doitcommit.domain.files;
 import lombok.*;
 
 import javax.persistence.Entity;
-
-import lombok.*;
 import com.web.doitcommit.domain.BaseEntity;
 import javax.persistence.*;
 
@@ -13,7 +11,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Getter
 @Entity
-public class Files {
+public class Files extends BaseEntity {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
