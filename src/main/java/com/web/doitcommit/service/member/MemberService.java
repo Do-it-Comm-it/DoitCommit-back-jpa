@@ -1,16 +1,19 @@
 package com.web.doitcommit.service.member;
 
+import com.web.doitcommit.domain.files.Files;
 import com.web.doitcommit.domain.member.Member;
 import com.web.doitcommit.domain.member.MemberRepository;
 import com.web.doitcommit.domain.member.StateType;
 import com.web.doitcommit.dto.member.MemberInfoDto;
 import com.web.doitcommit.dto.member.MemberUpdateDto;
-import com.web.doitcommit.commons.FileHandler;
-import com.web.doitcommit.handler.exception.CustomValidationException;
+import com.web.doitcommit.s3.S3Uploader;
+import com.web.doitcommit.service.files.FilesService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
@@ -20,7 +23,8 @@ import java.util.Date;
 public class MemberService {
 
     private final MemberRepository memberRepository;
-    private final FileHandler fileHandler;
+    private final FilesService filesService;
+    private final S3Uploader s3Uploader;
 
     /**
      * 멤버 정보조회
@@ -39,7 +43,6 @@ public class MemberService {
      * 멤버 닉네임 중복 체크
      */
     public Boolean reqGetMemberCheck(String nickname) {
-        System.out.println(nickname);
         if (!nickname.isEmpty() && (memberRepository.mNicknameCount(nickname) == 0)) {
             return true;
         }
@@ -50,15 +53,19 @@ public class MemberService {
      * 멤버 정보 수정
      */
     @Transactional
-    public Boolean reqPutMemberUpdate(MemberUpdateDto memberUpdateDto, Long memberId) {
+    public Boolean reqPutMemberUpdate(MemberUpdateDto memberUpdateDto, Long memberId) throws IOException {
         Member memberEntity = memberRepository.findById(memberId).orElseThrow(() ->
                 new IllegalArgumentException("존재하지 않은 회원입니다."));
 
         MultipartFile file = memberUpdateDto.getFile();
         if (file != null) {
-            memberEntity.changePictureUrl(fileHandler.fileUpload(file));
+            if(memberEntity.getPictureNo() != null){ //기존 파일이 있으면
+                s3Uploader.delete(memberEntity.getPictureNo()); //S3에서 삭제
+                filesService.fileRemove(memberEntity.getPictureNo()); //파일 테이블에서 삭제
+            }
+            Long fileNo = filesService.fileRegister(s3Uploader.S3Upload(file));
+            memberEntity.changePictureNo(fileNo);
         }
-
         memberEntity.changeNickname(memberUpdateDto.getNickname());
         memberEntity.changeEmail(memberUpdateDto.getEmail());
         memberEntity.changePosition(memberUpdateDto.getPosition());
