@@ -5,6 +5,11 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectResult;
+import com.web.doitcommit.domain.files.Files;
+import com.web.doitcommit.domain.files.FilesRepository;
+import com.web.doitcommit.domain.member.AuthProvider;
+import com.web.doitcommit.domain.member.Member;
+import com.web.doitcommit.domain.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,8 +21,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Log4j2
 @RequiredArgsConstructor
@@ -28,20 +32,23 @@ public class S3Uploader {
     private String bucket;
 
     private final AmazonS3 amazonS3;
+    private final FilesRepository filesRepository;
 
     /**
      * S3파일 업로드
      */
-    public String S3Upload(MultipartFile multipartFile) throws IOException {
+    public Files S3Upload(MultipartFile multipartFile) throws IOException {
 
         File uploadFile = convert(multipartFile)  // 파일 변환할 수 없으면 에러
                 .orElseThrow(() -> new IllegalArgumentException("error: MultipartFile -> File convert fail"));
 
         //폴더경로
         String folderPath = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
+        //파일이름
+        String fileNm = UUID.randomUUID() + uploadFile.getName();
 
         //S3에 저장될 위치 + 저장파일명
-        String storeKey = folderPath + "/" + UUID.randomUUID() + uploadFile.getName();
+        String storeKey = folderPath + "/" + fileNm;
 
         //s3로 업로드
         putS3(uploadFile, storeKey);
@@ -49,14 +56,22 @@ public class S3Uploader {
         //File 로 전환되면서 로컬에 생성된 파일을 제거
         removeNewFile(uploadFile);
 
-        return storeKey;
+        Files files = Files.builder()
+                .filePath(folderPath)
+                .fileNm(fileNm)
+                .build();
+
+        return files;
     }
 
     /**
      * S3파일 삭제
      */
-    public void delete(String storeKey) {
+    public void delete(Long fileId) {
         try{
+            Files fileEntity = filesRepository.findById(fileId).orElseThrow(() ->
+                    new IllegalArgumentException("존재하지 않은 파일입니다."));
+            String storeKey = fileEntity.getFilePath() + File.separator + fileEntity.getFileNm();
             amazonS3.deleteObject(new DeleteObjectRequest(bucket, storeKey));
         }catch(Exception e) {
             log.error("delete file error"+e.getMessage());
