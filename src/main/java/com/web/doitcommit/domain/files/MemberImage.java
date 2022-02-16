@@ -5,8 +5,6 @@ import lombok.*;
 
 import javax.persistence.*;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @ToString(exclude = {"member"})
 @DiscriminatorValue("member")
@@ -17,9 +15,11 @@ public class MemberImage extends Image {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
+    protected MemberImage(){}
+
     public MemberImage(Member member, String filePath, String fileNm){
         super(member.getMemberId(), filePath, fileNm);
         this.member = member;
+        member.setMemberImage(this);
     }
-
 }

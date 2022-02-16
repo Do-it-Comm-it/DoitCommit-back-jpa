@@ -116,5 +116,9 @@ public class Member extends BaseEntity {
         this.leaveDate = leaveDate;
     }
 
+    //연관관계 메서드
+    public void setMemberImage(MemberImage memberImage){
+        this.memberImage = memberImage;
+    }
 
 }
