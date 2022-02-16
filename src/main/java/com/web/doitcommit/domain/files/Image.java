@@ -17,10 +17,9 @@ public abstract class Image extends BaseEntity {
     @Id @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long imageId;
 
-    @Column(nullable = false)
-    private String fileNm;
-
     @Column(columnDefinition = "TEXT")
     private String filePath;
 
+    @Column(nullable = false)
+    private String fileNm;
 }

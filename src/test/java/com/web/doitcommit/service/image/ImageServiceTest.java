@@ -2,10 +2,12 @@ package com.web.doitcommit.service.image;
 
 import com.web.doitcommit.domain.files.Image;
 import com.web.doitcommit.domain.files.ImageRepository;
+import com.web.doitcommit.domain.files.MemberImage;
 import com.web.doitcommit.domain.files.MemberImageRepository;
 import com.web.doitcommit.domain.member.AuthProvider;
 import com.web.doitcommit.domain.member.Member;
 import com.web.doitcommit.domain.member.MemberRepository;
+import com.web.doitcommit.s3.S3Uploader;
 import lombok.RequiredArgsConstructor;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -17,7 +19,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.NoSuchElementException;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Transactional
@@ -28,6 +33,7 @@ class ImageServiceTest {
     @Autowired MemberRepository memberRepository;
     @Autowired ImageRepository imageRepository;
     @Autowired MemberImageRepository memberImageRepository;
+    @Autowired S3Uploader s3Uploader;
 
 
     /**
@@ -44,8 +50,41 @@ class ImageServiceTest {
 
         //then
         Image image = imageRepository.findById(imageId).get();
+        MemberImage memberImage = memberImageRepository.findById(imageId).get();
+
+        assertThat(image.getImageId()).isNotNull();
+        assertThat(image.getFilePath()).isNotNull();
+        assertThat(image.getFileNm()).isNotNull();
+        assertThat(memberImage.getMember()).isEqualTo(member);
     }
 
+    @Test
+    void 회원이미지_삭제() throws Exception{
+        //given
+        Member member = createMember("test@naver.com", "testNickname", "testUsername", "asd");
+        MultipartFile imageFile = createImage("updateFile", "updateFilename.jpeg");
+        Map<String, String> fileMap = s3Uploader.S3Upload(imageFile);
+
+        MemberImage memberImage = createMemberImage(member, fileMap.get("filePath"), fileMap.get("fileNm"));
+
+        //when
+        imageService.imageRemove(memberImage.getImageId());
+
+        //then
+        NoSuchElementException e1 = assertThrows(NoSuchElementException.class,
+                () -> (imageRepository.findById(memberImage.getImageId())).get());
+
+        NoSuchElementException e2 = assertThrows(NoSuchElementException.class,
+                () -> (memberImageRepository.findById(memberImage.getImageId())).get());
+
+        assertThat(e1.getMessage()).isEqualTo("No value present");
+        assertThat(e2.getMessage()).isEqualTo("No value present");
+    }
+
+    private MemberImage createMemberImage(Member member, String filePath, String fileNm) {
+        MemberImage memberImage = new MemberImage(member, filePath, fileNm);
+        return memberImageRepository.save(memberImage);
+    }
 
 
     private MultipartFile createImage(String name, String originalFilename) {
