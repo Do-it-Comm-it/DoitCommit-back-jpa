@@ -42,7 +42,7 @@ public class S3Uploader {
         //폴더경로
         String filePath = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
         //파일이름
-        String fileNm = UUID.randomUUID() + uploadFile.getName();
+        String fileNm = uploadFile.getName();
 
         //S3에 저장될 위치 + 저장파일명
         String storeKey = filePath + "/" + fileNm;
@@ -68,9 +68,9 @@ public class S3Uploader {
         try{
             Image imageEntity = imageRepository.findById(imageId).orElseThrow(() ->
                     new IllegalArgumentException("존재하지 않은 파일입니다."));
-
-            String storeKey = imageEntity.getFilePath() + File.separator + imageEntity.getFileNm();
+            String storeKey = imageEntity.getFilePath() + "/" + imageEntity.getFileNm();
             amazonS3.deleteObject(new DeleteObjectRequest(bucket, storeKey));
+
         }catch(Exception e) {
             log.error("delete file error"+e.getMessage());
         }
@@ -79,7 +79,8 @@ public class S3Uploader {
     /**
      * s3 파일 URL
      */
-    public String getPictureUrl(String storeKey){
+    public String getImageUrl(String filePath, String fileNm){
+        String storeKey = filePath + "/" + fileNm;
         return amazonS3.getUrl(bucket,storeKey).toString();
     }
 
