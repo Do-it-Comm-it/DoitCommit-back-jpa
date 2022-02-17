@@ -6,20 +6,20 @@ import javax.persistence.Entity;
 import com.web.doitcommit.domain.BaseEntity;
 import javax.persistence.*;
 
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@ToString
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "dtype")
 @Entity
-public class Files extends BaseEntity {
-    @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(nullable = false)
-    private String fileNm;
+public abstract class Image extends BaseEntity {
+    @Id @GeneratedValue(strategy= GenerationType.IDENTITY)
+    private Long imageId;
 
     @Column(columnDefinition = "TEXT")
     private String filePath;
 
+    @Column(nullable = false)
+    private String fileNm;
 }

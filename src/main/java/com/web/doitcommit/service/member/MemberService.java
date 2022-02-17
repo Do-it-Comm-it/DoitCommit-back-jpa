@@ -1,13 +1,13 @@
 package com.web.doitcommit.service.member;
 
-import com.web.doitcommit.domain.files.Files;
+import com.web.doitcommit.domain.files.ImageRepository;
 import com.web.doitcommit.domain.member.Member;
 import com.web.doitcommit.domain.member.MemberRepository;
 import com.web.doitcommit.domain.member.StateType;
 import com.web.doitcommit.dto.member.MemberInfoDto;
 import com.web.doitcommit.dto.member.MemberUpdateDto;
 import com.web.doitcommit.s3.S3Uploader;
-import com.web.doitcommit.service.files.FilesService;
+import com.web.doitcommit.service.image.ImageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,8 +23,7 @@ import java.util.Date;
 public class MemberService {
 
     private final MemberRepository memberRepository;
-    private final FilesService filesService;
-    private final S3Uploader s3Uploader;
+    private final ImageService imageService;
 
     /**
      * 멤버 정보조회
@@ -57,15 +56,17 @@ public class MemberService {
         Member memberEntity = memberRepository.findById(memberId).orElseThrow(() ->
                 new IllegalArgumentException("존재하지 않은 회원입니다."));
 
-        MultipartFile file = memberUpdateDto.getFile();
-        if (file != null) {
-            if(memberEntity.getPictureNo() != null){ //기존 파일이 있으면
-                s3Uploader.delete(memberEntity.getPictureNo()); //S3에서 삭제
-                filesService.fileRemove(memberEntity.getPictureNo()); //파일 테이블에서 삭제
+        MultipartFile imageFile = memberUpdateDto.getImageFile();
+
+        //이미지 수정할 경우
+        if (imageFile != null) {
+            if(memberEntity.getMemberImage() != null){ //기존 파일이 있으면
+                imageService.imageRemove(memberEntity.getMemberImage().getImageId()); //파일 테이블에서 삭제
             }
-            Long fileNo = filesService.fileRegister(s3Uploader.S3Upload(file));
-            memberEntity.changePictureNo(fileNo);
+            //새로운 이미지 저장
+            imageService.imageMemberRegister(memberEntity, imageFile);
         }
+
         memberEntity.changeNickname(memberUpdateDto.getNickname());
         memberEntity.changeEmail(memberUpdateDto.getEmail());
         memberEntity.changePosition(memberUpdateDto.getPosition());

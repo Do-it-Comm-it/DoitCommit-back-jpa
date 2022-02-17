@@ -5,11 +5,8 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectResult;
-import com.web.doitcommit.domain.files.Files;
-import com.web.doitcommit.domain.files.FilesRepository;
-import com.web.doitcommit.domain.member.AuthProvider;
-import com.web.doitcommit.domain.member.Member;
-import com.web.doitcommit.domain.member.MemberRepository;
+import com.web.doitcommit.domain.files.Image;
+import com.web.doitcommit.domain.files.ImageRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,23 +29,23 @@ public class S3Uploader {
     private String bucket;
 
     private final AmazonS3 amazonS3;
-    private final FilesRepository filesRepository;
+    private final ImageRepository imageRepository;
 
     /**
      * S3파일 업로드
      */
-    public Files S3Upload(MultipartFile multipartFile) throws IOException {
+    public Map<String,String> S3Upload(MultipartFile multipartFile) throws IOException {
 
         File uploadFile = convert(multipartFile)  // 파일 변환할 수 없으면 에러
                 .orElseThrow(() -> new IllegalArgumentException("error: MultipartFile -> File convert fail"));
 
         //폴더경로
-        String folderPath = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
+        String filePath = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
         //파일이름
-        String fileNm = UUID.randomUUID() + uploadFile.getName();
+        String fileNm = uploadFile.getName();
 
         //S3에 저장될 위치 + 저장파일명
-        String storeKey = folderPath + "/" + fileNm;
+        String storeKey = filePath + "/" + fileNm;
 
         //s3로 업로드
         putS3(uploadFile, storeKey);
@@ -56,23 +53,24 @@ public class S3Uploader {
         //File 로 전환되면서 로컬에 생성된 파일을 제거
         removeNewFile(uploadFile);
 
-        Files files = Files.builder()
-                .filePath(folderPath)
-                .fileNm(fileNm)
-                .build();
+        Map<String,String> fileMap = new HashMap<>();
 
-        return files;
+        fileMap.put("filePath", filePath);
+        fileMap.put("fileNm", fileNm);
+
+        return fileMap;
     }
 
     /**
      * S3파일 삭제
      */
-    public void delete(Long fileId) {
+    public void delete(Long imageId) {
         try{
-            Files fileEntity = filesRepository.findById(fileId).orElseThrow(() ->
+            Image imageEntity = imageRepository.findById(imageId).orElseThrow(() ->
                     new IllegalArgumentException("존재하지 않은 파일입니다."));
-            String storeKey = fileEntity.getFilePath() + File.separator + fileEntity.getFileNm();
+            String storeKey = imageEntity.getFilePath() + "/" + imageEntity.getFileNm();
             amazonS3.deleteObject(new DeleteObjectRequest(bucket, storeKey));
+
         }catch(Exception e) {
             log.error("delete file error"+e.getMessage());
         }
@@ -81,7 +79,8 @@ public class S3Uploader {
     /**
      * s3 파일 URL
      */
-    public String getPictureUrl(String storeKey){
+    public String getImageUrl(String filePath, String fileNm){
+        String storeKey = filePath + "/" + fileNm;
         return amazonS3.getUrl(bucket,storeKey).toString();
     }
 

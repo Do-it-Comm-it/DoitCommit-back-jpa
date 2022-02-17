@@ -1,6 +1,8 @@
 package com.web.doitcommit.domain.member;
 
 import com.web.doitcommit.domain.BaseEntity;
+import com.web.doitcommit.domain.files.Image;
+import com.web.doitcommit.domain.files.MemberImage;
 import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -42,7 +44,8 @@ public class Member extends BaseEntity {
     @Builder.Default
     private String pictureUrl = "";
 
-    private Long pictureNo;
+    @OneToOne(mappedBy = "member",fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private MemberImage memberImage;
 
     @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(joinColumns = @JoinColumn(name = "member_id"))
@@ -101,10 +104,6 @@ public class Member extends BaseEntity {
         this.url2 = url2;
     }
 
-    public void changePictureNo(Long pictureNo){
-        this.pictureNo = pictureNo;
-    }
-
     public void changeState(StateType state){
         this.state = state;
     }
@@ -117,7 +116,9 @@ public class Member extends BaseEntity {
         this.leaveDate = leaveDate;
     }
 
-
-
+    //연관관계 메서드
+    public void setMemberImage(MemberImage memberImage){
+        this.memberImage = memberImage;
+    }
 
 }
