@@ -10,7 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@ToString(exclude = {"parent"})
+@ToString
 @Entity
 public class BoardCategory {
 
@@ -19,20 +19,5 @@ public class BoardCategory {
 
     @Column(nullable = false)
     private String categoryName;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="parent_id")
-    private BoardCategory parent;
-
-    @Builder.Default
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.REMOVE)
-    private List<BoardCategory> childList = new ArrayList<>();
-
-    //연관관계 메서드
-    public void setParent(BoardCategory parent){
-        this.parent = parent;
-        parent.getChildList().add(this);
-    }
-
-
+    
 }
