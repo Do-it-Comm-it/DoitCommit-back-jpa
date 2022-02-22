@@ -30,8 +30,12 @@ public class MemberService {
      */
     public MemberInfoDto reqGetMemberInfo(Long memberId) {
         try {
-            Member member = memberRepository.findByMemberId(memberId);
-            MemberInfoDto memberInfo = new MemberInfoDto(member);
+            Member memberEntity = memberRepository.findByMemberId(memberId);
+            MemberInfoDto memberInfo = new MemberInfoDto(memberEntity);
+            if(memberEntity.getMemberImage() != null){ //이미지파일이 있으면
+                memberInfo.setPictureUrl(imageService.getImage(memberEntity.getMemberImage().getFilePath(), memberEntity.getMemberImage().getFileNm()));
+            }
+
             return memberInfo;
         } catch (Exception e) {
             throw new IllegalArgumentException("존재하지 않은 회원입니다.");

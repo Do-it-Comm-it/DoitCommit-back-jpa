@@ -50,4 +50,11 @@ public class ImageService {
         s3Uploader.delete(imageId);
         imageRepository.deleteById(imageId);
     }
+
+    /**
+     * 이미지 조회
+     */
+    public String getImage(String filePath, String fileNm) {
+        return s3Uploader.getImageUrl(filePath, fileNm);
+    }
 }
