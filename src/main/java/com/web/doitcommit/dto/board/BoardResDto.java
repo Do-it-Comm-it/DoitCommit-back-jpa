@@ -2,13 +2,9 @@ package com.web.doitcommit.dto.board;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.web.doitcommit.domain.board.Board;
-import com.web.doitcommit.domain.todo.Todo;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.Set;
 
 @Schema(description = "게시글 조회 dto")
@@ -18,8 +14,8 @@ public class BoardResDto {
     @Schema(description = "게시글 번호")
     private Long boardId;
 
-    @Schema(description = "닉네임")
-    private String nickname;
+    @Schema(description = "글쓴이")
+    private String writer;
 
     @Schema(description = "카테고리 아이디")
     private String categoryId;
@@ -34,7 +30,7 @@ public class BoardResDto {
     private int boardCnt;
 
     @Schema(description = "태그", nullable = true)
-    private Set<String> tag = new HashSet<>();
+    private Set<String> tag;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm", timezone = "Asia/Seoul")
     @Schema(description = "등록 날짜", nullable = true)
@@ -46,7 +42,7 @@ public class BoardResDto {
 
     public BoardResDto(Board board){
         boardId = board.getBoardId();
-        nickname = board.getMember().nickname;
+        writer = board.getMember().getNickname();
         tag = board.getTag();
         categoryId = board.getCategoryId();
         boardTitle = board.getBoardTitle();
