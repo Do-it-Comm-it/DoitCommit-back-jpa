@@ -5,6 +5,8 @@ import com.web.doitcommit.domain.member.Member;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Builder
 @AllArgsConstructor
@@ -17,7 +19,7 @@ public class Board extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long boardId;
 
-    @ManyToOne(cascade = CascadeType.MERGE, targetEntity = Member.class)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", updatable = false)
     private Member member;
 
@@ -29,6 +31,11 @@ public class Board extends BaseEntity {
 
     @Column(columnDefinition = "TEXT")
     private String boardContent;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(joinColumns = @JoinColumn(name = "board_id"))
+    @Builder.Default
+    private Set<String> tag = new HashSet<>();
 
     @Builder.Default
     @Column(nullable = false)
