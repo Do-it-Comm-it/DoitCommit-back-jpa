@@ -36,15 +36,15 @@ insert into board (board_cnt, board_title, board_content, category_id, member_id
 insert into board (board_cnt, board_title, board_content, category_id, member_id) values (0, '타이틀', '글내용', 2, 1);
 insert into board (board_cnt, board_title, board_content, category_id, member_id) values (0, 'ㅇㅇㅇㅇ', '글내용', 2, 1);
 
-insert into board_tag (board_id, tag) values (176, '직장인');
-insert into board_tag (board_id, tag) values (176, '공대생');
-insert into board_tag (board_id, tag) values (176, '취준생');
-insert into board_tag (board_id, tag) values (177, '직장인');
-insert into board_tag (board_id, tag) values (177, '공대생');
-insert into board_tag (board_id, tag) values (177, '취준생');
-insert into board_tag (board_id, tag) values (178, '직장인');
-insert into board_tag (board_id, tag) values (178, '공대생');
-insert into board_tag (board_id, tag) values (178, '취준생');
+insert into board_tag (board_id, tag) values (1, '직장인');
+insert into board_tag (board_id, tag) values (1, '공대생');
+insert into board_tag (board_id, tag) values (1, '취준생');
+insert into board_tag (board_id, tag) values (2, '직장인');
+insert into board_tag (board_id, tag) values (2, '공대생');
+insert into board_tag (board_id, tag) values (2, '취준생');
+insert into board_tag (board_id, tag) values (3, '직장인');
+insert into board_tag (board_id, tag) values (3, '공대생');
+insert into board_tag (board_id, tag) values (4, '취준생');
 
 
 
