@@ -41,7 +41,6 @@ public class BoardRegDto {
                 .boardTitle(boardTitle)
                 .boardContent(boardContent)
                 .build();
-
         return board;
     }
 }

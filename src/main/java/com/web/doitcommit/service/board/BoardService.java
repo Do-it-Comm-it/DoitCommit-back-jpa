@@ -17,7 +17,7 @@ public class BoardService {
     private final BoardRepository boardRepository;
 
     /**
-     * 게시글 조회
+     * 게시판 목록 조회
      */
     @Transactional(readOnly = true)
     public List<BoardResDto> getBoardList() {

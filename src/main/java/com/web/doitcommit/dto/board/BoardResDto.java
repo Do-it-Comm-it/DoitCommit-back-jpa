@@ -3,12 +3,12 @@ package com.web.doitcommit.dto.board;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.web.doitcommit.domain.board.Board;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
+import lombok.Getter;
 import java.time.LocalDateTime;
 import java.util.Set;
 
 @Schema(description = "게시글 조회 dto")
-@Data
+@Getter
 public class BoardResDto {
 
     @Schema(description = "게시글 번호")
