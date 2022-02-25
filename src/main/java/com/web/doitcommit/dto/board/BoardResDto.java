@@ -26,6 +26,9 @@ public class BoardResDto {
     @Schema(description = "글내용")
     private String boardContent;
 
+    @Schema(description = "썸네일")
+    private String thumbnail;
+
     @Schema(description = "조회수")
     private int boardCnt;
 
@@ -47,6 +50,7 @@ public class BoardResDto {
         categoryId = board.getCategoryId();
         boardTitle = board.getBoardTitle();
         boardContent = board.getBoardContent();
+        thumbnail = board.getThumbnail();
         boardCnt = board.getBoardCnt();
         regDate = board.getRegDate();
         modDate = board.getModDate();
