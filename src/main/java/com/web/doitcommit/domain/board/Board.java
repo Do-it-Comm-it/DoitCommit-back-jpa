@@ -1,6 +1,11 @@
 package com.web.doitcommit.domain.board;
 
 import com.web.doitcommit.domain.BaseEntity;
+import com.web.doitcommit.domain.heart.Heart;
+import com.web.doitcommit.domain.BoardCategory;
+import com.web.doitcommit.domain.member.Member;
+import lombok.*;
+import org.hibernate.annotations.BatchSize;
 import com.web.doitcommit.domain.comment.Comment;
 import lombok.*;
 import javax.persistence.*;
@@ -54,6 +59,10 @@ public class Board extends BaseEntity {
     @Column(nullable = false)
     private int boardCnt = 0;
 
+    @BatchSize(size = 500)
+    @Builder.Default
+    @OneToMany(mappedBy = "board",fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<Heart> heartList = new ArrayList<>();
     @Builder.Default
     @OneToMany(mappedBy = "board",fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Comment> commentList = new ArrayList<>();
