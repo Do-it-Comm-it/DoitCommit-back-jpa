@@ -1,6 +1,14 @@
 package com.web.doitcommit.domain.board;
 
 import com.web.doitcommit.domain.BaseEntity;
+import com.web.doitcommit.domain.comment.Comment;
+import lombok.*;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+import com.web.doitcommit.domain.BoardCategory;
+import com.web.doitcommit.domain.member.Member;
+import lombok.*;
 import com.web.doitcommit.domain.bookmark.Bookmark;
 import com.web.doitcommit.domain.BoardCategory;
 import com.web.doitcommit.domain.member.Member;
@@ -47,6 +55,9 @@ public class Board extends BaseEntity {
     private int boardCnt = 0;
 
     @Builder.Default
+    @OneToMany(mappedBy = "board",fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<Comment> commentList = new ArrayList<>();
+
     @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Bookmark> bookmarkList = new ArrayList<>();
 }
