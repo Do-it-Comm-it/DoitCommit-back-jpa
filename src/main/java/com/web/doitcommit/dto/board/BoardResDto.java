@@ -44,7 +44,6 @@ public class BoardResDto {
         boardId = board.getBoardId();
         writer = board.getMember().getNickname();
         tag = board.getTag();
-        categoryId = board.getCategoryId();
         boardTitle = board.getBoardTitle();
         boardContent = board.getBoardContent();
         boardCnt = board.getBoardCnt();

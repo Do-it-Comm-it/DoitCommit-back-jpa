@@ -24,9 +24,6 @@ public class Board extends BaseEntity {
     private Member member;
 
     @Column(nullable = false)
-    private String categoryId;
-
-    @Column(nullable = false)
     private String boardTitle;
 
     @Column(columnDefinition = "TEXT")

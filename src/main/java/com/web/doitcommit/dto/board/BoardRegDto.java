@@ -37,7 +37,6 @@ public class BoardRegDto {
     public Board toEntity(Long principalId){
         Board board = Board.builder()
                 .member(Member.builder().memberId(principalId).build())
-                .categoryId(categoryId)
                 .boardTitle(boardTitle)
                 .boardContent(boardContent)
                 .build();
