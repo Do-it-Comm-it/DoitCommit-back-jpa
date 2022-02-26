@@ -9,7 +9,14 @@ import java.util.List;
 import com.web.doitcommit.domain.BoardCategory;
 import com.web.doitcommit.domain.member.Member;
 import lombok.*;
+import com.web.doitcommit.domain.bookmark.Bookmark;
+import com.web.doitcommit.domain.BoardCategory;
+import com.web.doitcommit.domain.member.Member;
+import lombok.*;
+import org.hibernate.annotations.BatchSize;
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -50,4 +57,7 @@ public class Board extends BaseEntity {
     @Builder.Default
     @OneToMany(mappedBy = "board",fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Comment> commentList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<Bookmark> bookmarkList = new ArrayList<>();
 }
