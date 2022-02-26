@@ -1,11 +1,14 @@
 package com.web.doitcommit.domain.board;
 
 import com.web.doitcommit.domain.BaseEntity;
+import com.web.doitcommit.domain.bookmark.Bookmark;
 import com.web.doitcommit.domain.BoardCategory;
 import com.web.doitcommit.domain.member.Member;
 import lombok.*;
-
+import org.hibernate.annotations.BatchSize;
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -42,4 +45,8 @@ public class Board extends BaseEntity {
     @Builder.Default
     @Column(nullable = false)
     private int boardCnt = 0;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<Bookmark> bookmarkList = new ArrayList<>();
 }
