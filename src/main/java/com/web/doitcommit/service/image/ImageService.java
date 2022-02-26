@@ -1,6 +1,5 @@
 package com.web.doitcommit.service.image;
 
-import com.web.doitcommit.domain.files.Image;
 import com.web.doitcommit.domain.files.ImageRepository;
 import com.web.doitcommit.domain.files.MemberImage;
 import com.web.doitcommit.domain.files.MemberImageRepository;
