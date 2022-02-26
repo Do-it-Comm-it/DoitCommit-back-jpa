@@ -47,6 +47,9 @@ public class Board extends BaseEntity {
     @Column(nullable = false)
     private String boardTitle;
 
+    @Column
+    private String thumbnail;
+
     @Column(columnDefinition = "TEXT")
     private String boardContent;
 

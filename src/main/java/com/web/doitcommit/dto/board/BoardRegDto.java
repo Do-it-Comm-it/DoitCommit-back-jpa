@@ -31,6 +31,9 @@ public class BoardRegDto {
     @NotBlank
     private String boardContent;
 
+    @Schema(description = "내용")
+    private String thumbnail;
+
     @Schema(description = "조회수")
     private int boardCnt;
 
@@ -39,6 +42,7 @@ public class BoardRegDto {
                 .member(Member.builder().memberId(principalId).build())
                 .boardTitle(boardTitle)
                 .boardContent(boardContent)
+                .thumbnail(thumbnail)
                 .build();
         return board;
     }
