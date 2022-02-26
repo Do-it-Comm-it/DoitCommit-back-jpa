@@ -2,6 +2,7 @@ package com.web.doitcommit.domain.board;
 
 import com.web.doitcommit.domain.BaseEntity;
 import com.web.doitcommit.domain.heart.Heart;
+import com.web.doitcommit.domain.BoardCategory;
 import com.web.doitcommit.domain.member.Member;
 import lombok.*;
 import org.hibernate.annotations.BatchSize;
@@ -26,6 +27,10 @@ public class Board extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", updatable = false)
     private Member member;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id", nullable = false)
+    private BoardCategory boardCategory;
 
     @Column(nullable = false)
     private String boardTitle;
