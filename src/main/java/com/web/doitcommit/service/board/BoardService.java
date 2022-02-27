@@ -22,9 +22,7 @@ public class BoardService {
     @Transactional(readOnly = true)
     public List<BoardResDto> getBoardList(int pageNo, int pageSize) {
         List<Board> result = boardRepository.getCustomBoardList(pageNo, pageSize);
-        System.out.println("result"+result);
         return result.stream().map(board -> new BoardResDto(board)).collect(Collectors.toList());
-        //return result;
     }
 
 
