@@ -18,7 +18,7 @@ public class BoardResDto {
     private String writer;
 
     @Schema(description = "카테고리 아이디")
-    private String categoryId;
+    private Long categoryId;
 
     @Schema(description = "글제목")
     private String boardTitle;
@@ -49,6 +49,7 @@ public class BoardResDto {
         tag = board.getTag();
         boardTitle = board.getBoardTitle();
         boardContent = board.getBoardContent();
+        categoryId = board.getBoardCategory().getCategoryId();
         thumbnail = board.getThumbnail();
         boardCnt = board.getBoardCnt();
         regDate = board.getRegDate();

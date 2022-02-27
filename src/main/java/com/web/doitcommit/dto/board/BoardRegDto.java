@@ -13,12 +13,9 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 public class BoardRegDto {
 
-    @Schema(description = "게시글 번호")
-    private Long boardId;
-
     @Schema(description = "카테고리 아이디")
     @NotBlank
-    private String categoryId;
+    private Long categoryId;
 
     @Schema(description = "닉네임")
     private String nickname;
@@ -31,18 +28,11 @@ public class BoardRegDto {
     @NotBlank
     private String boardContent;
 
-    @Schema(description = "내용")
-    private String thumbnail;
-
-    @Schema(description = "조회수")
-    private int boardCnt;
-
     public Board toEntity(Long principalId){
         Board board = Board.builder()
                 .member(Member.builder().memberId(principalId).build())
                 .boardTitle(boardTitle)
                 .boardContent(boardContent)
-                .thumbnail(thumbnail)
                 .build();
         return board;
     }
