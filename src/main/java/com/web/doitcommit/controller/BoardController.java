@@ -33,8 +33,10 @@ public class BoardController {
             @ApiResponse(responseCode = "500",  content = @Content(schema = @Schema(example = "{\"error\": \"Internal Server Error\"}")))
     })
     @GetMapping("/list")
-    public ResponseEntity<?> getBoardList(){
-        List<BoardResDto> boardResDtoList = boardService.getBoardList();
+    public ResponseEntity<?> getBoardList(
+            @RequestParam(value = "pageNo") int pageNo,
+            @RequestParam(value = "pageSize") int pageSize) {
+        List<BoardResDto> boardResDtoList = boardService.getBoardList(pageNo, pageSize);
         return new ResponseEntity<>(new CMRespDto<>(1, "게시판 리스트 조회 성공", boardResDtoList),HttpStatus.OK);
     }
 

@@ -20,10 +20,14 @@ public class BoardService {
      * 게시판 목록 조회
      */
     @Transactional(readOnly = true)
-    public List<BoardResDto> getBoardList() {
-        List<Board> result = boardRepository.findAll();
+    public List<BoardResDto> getBoardList(int pageNo, int pageSize) {
+        List<Board> result = boardRepository.getCustomBoardList(pageNo, pageSize);
+        System.out.println("result"+result);
         return result.stream().map(board -> new BoardResDto(board)).collect(Collectors.toList());
+        //return result;
     }
+
+
 
 
 }
