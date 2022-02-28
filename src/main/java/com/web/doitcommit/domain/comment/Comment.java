@@ -29,9 +29,11 @@ public class Comment extends BaseEntity {
     @JoinColumn(name = "board_id", nullable = false)
     private Board board;
 
-    private String content;
+    @Builder.Default
+    private String content = "";
 
-    private Boolean isExist;
+    @Builder.Default
+    private Boolean isExist = true;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "parent_id")
