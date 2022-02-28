@@ -19,7 +19,7 @@ import java.util.List;
 public class Comment extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long comment_id;
+    private Long commentId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -48,7 +48,7 @@ public class Comment extends BaseEntity {
         this.content = content;
     }
 
-    public void removeComment(){
+    public void remove(){
         this.isExist = false;
     }
 
