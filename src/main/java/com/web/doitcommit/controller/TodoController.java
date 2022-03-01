@@ -171,7 +171,7 @@ public class TodoController {
     @Operation(summary = "투두 삭제 API", description = "todo를 삭제한다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(example = "{\n" +
-                    "  \"message\": \"투두 삭제 성공 성공\",\n" +
+                    "  \"message\": \"투두 삭제 성공\",\n" +
                     "  \"data\": null,\n" +
                     "  \"code\": 1\n" +
                     "}"))),
