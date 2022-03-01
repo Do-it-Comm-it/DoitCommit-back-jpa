@@ -19,7 +19,7 @@ import java.util.List;
 public class Comment extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long comment_id;
+    private Long commentId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -29,9 +29,11 @@ public class Comment extends BaseEntity {
     @JoinColumn(name = "board_id", nullable = false)
     private Board board;
 
-    private String content;
+    @Builder.Default
+    private String content = "";
 
-    private Boolean isExist;
+    @Builder.Default
+    private Boolean isExist = true;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "parent_id")
@@ -46,7 +48,7 @@ public class Comment extends BaseEntity {
         this.content = content;
     }
 
-    public void removeComment(){
+    public void remove(){
         this.isExist = false;
     }
 
