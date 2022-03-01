@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.sql.SQLIntegrityConstraintViolationException;
+
 @RestController
 @ControllerAdvice
 public class ControllerExceptionHandler {
@@ -24,6 +26,11 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<CMRespDto<?>> apiException(CustomException e){
 
+        return new ResponseEntity<>(new CMRespDto<>(-1,e.getMessage(),null), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
+    public ResponseEntity<CMRespDto<?>> apiSQLIntegrityConstraintViolationException(SQLIntegrityConstraintViolationException e){
         return new ResponseEntity<>(new CMRespDto<>(-1,e.getMessage(),null), HttpStatus.BAD_REQUEST);
     }
 
