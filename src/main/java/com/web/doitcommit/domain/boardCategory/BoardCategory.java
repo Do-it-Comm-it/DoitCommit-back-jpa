@@ -1,4 +1,4 @@
-package com.web.doitcommit.domain;
+package com.web.doitcommit.domain.boardCategory;
 
 import lombok.*;
 
