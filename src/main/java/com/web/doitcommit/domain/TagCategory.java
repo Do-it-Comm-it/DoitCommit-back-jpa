@@ -1,11 +1,11 @@
-package com.web.doitcommit.domain.boardCategory;
+package com.web.doitcommit.domain;
 
 import lombok.*;
 import javax.persistence.*;
 
 /**
- * 게시판 유형 카테고리입니다
- * ex) 공지사항, 커뮤니티
+ * 태그 종류 카테고리입니다
+ * ex) 직장인, 공대생, 취준생 등
  */
 @Builder
 @AllArgsConstructor
@@ -13,12 +13,12 @@ import javax.persistence.*;
 @Getter
 @ToString
 @Entity
-public class BoardCategory {
+public class TagCategory {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long categoryId;
+    private Long tagId;
 
     @Column(unique = true, nullable = false)
-    private String categoryName;
-    
+    private String tagName;
+
 }

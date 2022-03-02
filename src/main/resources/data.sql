@@ -1,7 +1,18 @@
+-- 테스트 아이디
 insert into member (nickname,oauth_id,password,provider,role) values ('test2','1111111','1111111','GOOGLE','USER');
 
+-- 게시판 카테고리
 insert into board_category (category_name) values ('공지사항');
 insert into board_category (category_name) values ('커뮤니티');
+
+-- 해시태그 카테고리
+insert into tag_category (tag_name) values ('직장인');
+insert into tag_category (tag_name) values ('공대생');
+insert into tag_category (tag_name) values ('취준생');
+insert into tag_category (tag_name) values ('고민');
+insert into tag_category (tag_name) values ('질문');
+
+-- 공지사항 게시글
 insert into board (board_cnt, board_title, board_content, category_id, member_id) values (0, '공지사항첫번째글제목', '첫번째글내용', 1, 1);
 insert into board (board_cnt, board_title, board_content, category_id, member_id) values (0, '공지사항두번째글제목', '두번째글제목', 1, 1);
 insert into board (board_cnt, board_title, board_content, category_id, member_id) values (0, '공지사항두번째글제목', '세번째글제목', 1, 1);
@@ -18,6 +29,7 @@ insert into board (board_cnt, board_title, board_content, category_id, member_id
 insert into board (board_cnt, board_title, board_content, category_id, member_id) values (0, '타이틀', '글내용', 1, 1);
 insert into board (board_cnt, board_title, board_content, category_id, member_id) values (0, 'ㅇㅇㅇㅇㅇ', '글내용', 1, 1);
 
+-- 커뮤니티 게시글
 insert into board (board_cnt, board_title, board_content, category_id, member_id) values (0, '커뮤니티첫번째글제목', '첫번째글내용', 2, 1);
 insert into board (board_cnt, board_title, board_content, category_id, member_id) values (0, '커뮤니티두번째글제목', '두번째글제목', 2, 1);
 insert into board (board_cnt, board_title, board_content, category_id, member_id) values (0, '공지사항세번째글제목', '세번째글제목', 2, 1);
@@ -36,6 +48,7 @@ insert into board (board_cnt, board_title, board_content, category_id, member_id
 insert into board (board_cnt, board_title, board_content, category_id, member_id) values (0, '타이틀', '글내용', 2, 1);
 insert into board (board_cnt, board_title, board_content, category_id, member_id) values (0, 'ㅇㅇㅇㅇ', '글내용', 2, 1);
 
+-- 해시태그 등록
 insert into board_tag (board_id, tag) values (1, '직장인');
 insert into board_tag (board_id, tag) values (1, '공대생');
 insert into board_tag (board_id, tag) values (1, '취준생');
