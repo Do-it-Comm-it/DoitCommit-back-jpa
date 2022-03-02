@@ -2,6 +2,7 @@ package com.web.doitcommit.service.board;
 
 import com.web.doitcommit.domain.board.Board;
 import com.web.doitcommit.domain.board.BoardRepository;
+import com.web.doitcommit.dto.board.BoardRegDto;
 import com.web.doitcommit.dto.board.BoardResDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,16 @@ public class BoardService {
     public List<BoardResDto> getBoardList(int pageNo, int pageSize) {
         List<Board> result = boardRepository.getCustomBoardList(pageNo, pageSize);
         return result.stream().map(board -> new BoardResDto(board)).collect(Collectors.toList());
+    }
+
+    /**
+     * 게시글 등록
+     */
+    @Transactional(readOnly = true)
+    public BoardResDto createBoard(BoardRegDto boardRegDto, Long principalId) {
+        Board board = boardRegDto.toEntity(principalId);
+        boardRepository.save(board);
+        return new BoardResDto(board);
     }
 
 
