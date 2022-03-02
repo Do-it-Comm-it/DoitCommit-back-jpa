@@ -1,6 +1,7 @@
 package com.web.doitcommit.dto.board;
 
 import com.web.doitcommit.domain.board.Board;
+import com.web.doitcommit.domain.boardCategory.BoardCategory;
 import com.web.doitcommit.domain.member.Member;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
@@ -30,6 +31,7 @@ public class BoardRegDto {
 
     public Board toEntity(Long principalId){
         Board board = Board.builder()
+                .boardCategory(BoardCategory.builder().categoryId(categoryId).build())
                 .member(Member.builder().memberId(principalId).build())
                 .boardTitle(boardTitle)
                 .boardContent(boardContent)
