@@ -1,15 +1,14 @@
-package com.web.doitcommit.service.heart;
+package com.web.doitcommit.service.bookmark;
 
 import com.web.doitcommit.domain.board.Board;
 import com.web.doitcommit.domain.board.BoardRepository;
 import com.web.doitcommit.domain.boardCategory.BoardCategory;
 import com.web.doitcommit.domain.boardCategory.BoardCategoryRepository;
-import com.web.doitcommit.domain.heart.Heart;
-import com.web.doitcommit.domain.heart.HeartRepository;
+import com.web.doitcommit.domain.bookmark.Bookmark;
+import com.web.doitcommit.domain.bookmark.BookmarkRepository;
 import com.web.doitcommit.domain.member.AuthProvider;
 import com.web.doitcommit.domain.member.Member;
 import com.web.doitcommit.domain.member.MemberRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,13 +24,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @Transactional
 @SpringBootTest
-class HeartServiceImplTest {
-
-    @Autowired HeartService heartService;
+class BookmarkServiceImplTest {
+    @Autowired BookmarkService bookmarkService;
     @Autowired MemberRepository memberRepository;
     @Autowired BoardRepository boardRepository;
     @Autowired BoardCategoryRepository boardCategoryRepository;
-    @Autowired HeartRepository heartRepository;
+    @Autowired BookmarkRepository bookmarkRepository;
 
     private Member member;
     private Board board;
@@ -52,19 +50,19 @@ class HeartServiceImplTest {
     }
 
     /**
-     * 좋아요
+     * 북마크 추가
      */
     @Test
-    void 좋아요_추가() throws Exception{
+    void 북마크_추가() throws Exception{
         //given
         //when
-        Heart heart = heartService.heart(member.getMemberId(), board.getBoardId());
+        Bookmark bookmark = bookmarkService.createBookmark(member.getMemberId(), board.getBoardId());
 
         //then
-        Heart findHeart = heartRepository.findById(heart.getHeartId()).get();
-        assertThat(findHeart.getHeartId()).isNotNull();
-        assertThat(findHeart.getMember().getMemberId()).isEqualTo(member.getMemberId());
-        assertThat(findHeart.getBoard().getBoardId()).isEqualTo(board.getBoardId());
+        Bookmark findBookmark = bookmarkRepository.findById(bookmark.getBookmarkId()).get();
+        assertThat(findBookmark.getBookmarkId()).isNotNull();
+        assertThat(findBookmark.getMember().getMemberId()).isEqualTo(member.getMemberId());
+        assertThat(findBookmark.getBoard().getBoardId()).isEqualTo(board.getBoardId());
     }
 
     /**
@@ -73,22 +71,23 @@ class HeartServiceImplTest {
     @Test
     void 좋아요_취소() throws Exception{
         //given
-        Heart heart = createHeart(member, board);
+        Bookmark bookmark = createBookmark(member, board);
+
         //when
-        heartService.cancelHeart(member.getMemberId(),board.getBoardId());
+        bookmarkService.cancelBookmark(member.getMemberId(),board.getBoardId());
 
         //then
         NoSuchElementException e = assertThrows(NoSuchElementException.class,
-                () -> heartRepository.findById(heart.getHeartId()).get());
+                () -> bookmarkRepository.findById(bookmark.getBookmarkId()).get());
 
         assertThat(e.getMessage()).isEqualTo("No value present");
     }
 
-    private Heart createHeart(Member member, Board board) {
-        Heart heart = Heart.builder().member(member).build();
-        heart.setBoard(board);
-        heartRepository.save(heart);
-        return heart;
+    private Bookmark createBookmark(Member member, Board board) {
+        Bookmark bookmark = Bookmark.builder().member(member).build();
+        bookmark.setBoard(board);
+
+        return bookmarkRepository.save(bookmark);
     }
 
     private Board createBoard(Member member, BoardCategory boardCategory, String title,
@@ -123,5 +122,4 @@ class HeartServiceImplTest {
 
         return memberRepository.save(member);
     }
-
 }
