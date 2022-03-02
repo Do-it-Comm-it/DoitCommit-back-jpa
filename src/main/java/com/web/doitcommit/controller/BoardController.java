@@ -47,6 +47,9 @@ public class BoardController {
         return new ResponseEntity<>(new CMRespDto<>(1, "게시판 리스트 조회 성공", boardResDtoList),HttpStatus.OK);
     }
 
+    /**
+     * 게시글 등록
+     */
     @Operation(summary = "게시글 등록 API", description = "게시글을 등록한다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(example = "{\n" +
