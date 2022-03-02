@@ -15,7 +15,6 @@ import javax.validation.constraints.NotBlank;
 public class BoardRegDto {
 
     @Schema(description = "카테고리 아이디")
-    @NotBlank
     private Long categoryId;
 
     @Schema(description = "닉네임")
@@ -32,7 +31,7 @@ public class BoardRegDto {
     public Board toEntity(Long principalId){
         Board board = Board.builder()
                 .boardCategory(BoardCategory.builder().categoryId(categoryId).build())
-                .member(Member.builder().memberId(principalId).build())
+                .member(Member.builder().memberId(principalId).nickname(nickname).build())
                 .boardTitle(boardTitle)
                 .boardContent(boardContent)
                 .build();

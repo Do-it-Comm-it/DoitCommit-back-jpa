@@ -29,7 +29,7 @@ public class BoardService {
     /**
      * 게시글 등록
      */
-    @Transactional(readOnly = true)
+    @Transactional
     public BoardResDto createBoard(BoardRegDto boardRegDto, Long principalId) {
         Board board = boardRegDto.toEntity(principalId);
         boardRepository.save(board);
