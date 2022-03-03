@@ -36,6 +36,20 @@ public class BoardService {
         return new BoardResDto(board);
     }
 
+    /**
+     * 태그 목록 조회
+     */
+    @Transactional(readOnly = true)
+    public String[] getBoardList() {
+        List<String> result = boardRepository.getCustomTagList();
+        String[] tagArr = new String[result.size()];
+        int size = 0;
+        for(String temp : result){
+            tagArr[size++] = temp;
+        }
+        return tagArr;
+    }
+
 
 
 
