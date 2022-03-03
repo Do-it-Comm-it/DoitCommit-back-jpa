@@ -66,7 +66,28 @@ public class BoardController {
     public ResponseEntity<?> createBoard(@Valid @RequestBody BoardRegDto boardRegDto, BindingResult bindingResult,
                                          @Parameter(hidden = true) @AuthenticationPrincipal PrincipalDetails principalDetails){
         BoardResDto boardResDto = boardService.createBoard(boardRegDto, principalDetails.getMember().getMemberId());
-        return new ResponseEntity<>(new CMRespDto<>(1, "게시글 등록 성공", boardResDto),HttpStatus.OK);
+        return new ResponseEntity<>(new CMRespDto<>(1, "게시글 등록 성공", boardResDto),HttpStatus.CREATED);
+    }
+
+    /**
+     * 태그 목록 조회
+     */
+    @Operation(summary = "태그 목록 조회 API", description = "태그 목록 조회을 조회한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(example = "{\n" +
+                    "  \"message\": \"태그 목록 조회 성공\",\n" +
+                    "  \"data\": [],\n" +
+                    "  \"code\": 1\n" +
+                    "}"))),
+            @ApiResponse(responseCode = "400", content = @Content(schema = @Schema(example = "{\"error\": \"Bad Request\"}"))),
+            @ApiResponse(responseCode = "401", content = @Content(schema = @Schema(example = "{\"error\": \"Unauthorized\"}"))),
+            @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(example = "{\"error\": \"Not Found\"}"))),
+            @ApiResponse(responseCode = "500",  content = @Content(schema = @Schema(example = "{\"error\": \"Internal Server Error\"}")))
+    })
+    @GetMapping("/tag")
+    public ResponseEntity<?> getTagList() {
+        String[] TagList = boardService.getBoardList();
+        return new ResponseEntity<>(new CMRespDto<>(1, "태그 리스트 조회 성공", TagList),HttpStatus.OK);
     }
 
 
