@@ -1,6 +1,7 @@
 package com.web.doitcommit.domain.board;
 
 import com.web.doitcommit.domain.BaseEntity;
+import com.web.doitcommit.domain.files.BoardImage;
 import com.web.doitcommit.domain.heart.Heart;
 import com.web.doitcommit.domain.boardCategory.BoardCategory;
 import com.web.doitcommit.domain.member.Member;
@@ -54,6 +55,9 @@ public class Board extends BaseEntity {
     @Column(nullable = false)
     private int boardCnt = 0;
 
+    @OneToMany(mappedBy = "board",fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<BoardImage> boardImage = new ArrayList<>();
+
     @BatchSize(size = 500)
     @Builder.Default
     @OneToMany(mappedBy = "board",fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
@@ -66,4 +70,16 @@ public class Board extends BaseEntity {
     @Builder.Default
     @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Bookmark> bookmarkList = new ArrayList<>();
+
+    //연관관계 메서드
+    public void setBoardImage(BoardImage boardImage){
+        this.boardImage.add(boardImage);
+    }
+
+    public void setBoardId(Long boardId){
+        this.boardId = boardId;
+    }
+
+
+
 }
