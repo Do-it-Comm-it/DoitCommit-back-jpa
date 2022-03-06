@@ -6,6 +6,8 @@ import com.web.doitcommit.domain.member.Member;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import javax.validation.constraints.NotBlank;
+import java.util.HashSet;
+import java.util.Set;
 
 @Schema(description = "게시글 등록 dto")
 @Getter
@@ -17,9 +19,6 @@ public class BoardRegDto {
     @Schema(description = "카테고리 아이디")
     private Long categoryId;
 
-    @Schema(description = "닉네임")
-    private String nickname;
-
     @Schema(description = "글제목")
     @NotBlank
     private String boardTitle;
@@ -28,12 +27,16 @@ public class BoardRegDto {
     @NotBlank
     private String boardContent;
 
+    @Schema(description = "태그", nullable = true)
+    private Set<String> tag = new HashSet<>();
+
     public Board toEntity(Long principalId){
         Board board = Board.builder()
                 .boardCategory(BoardCategory.builder().categoryId(categoryId).build())
-                .member(Member.builder().memberId(principalId).nickname(nickname).build())
+                .member(Member.builder().memberId(principalId).build())
                 .boardTitle(boardTitle)
                 .boardContent(boardContent)
+                .tag(tag)
                 .build();
         return board;
     }
