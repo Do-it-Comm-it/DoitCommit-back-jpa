@@ -1,5 +1,6 @@
 package com.web.doitcommit.domain.files;
 
+import com.web.doitcommit.domain.board.Board;
 import lombok.*;
 
 import javax.persistence.Entity;
@@ -22,4 +23,10 @@ public abstract class Image extends BaseEntity {
 
     @Column(nullable = false)
     private String fileNm;
+
+    public Image(String filePath, String fileNm) {
+        this.filePath = filePath;
+        this.fileNm = fileNm;
+
+    }
 }
