@@ -1,7 +1,5 @@
 package com.web.doitcommit.domain.board;
 
-import com.web.doitcommit.domain.TagCategory;
-
 import java.util.List;
 
 public interface BoardRepositoryQuerydsl {
