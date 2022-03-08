@@ -24,7 +24,7 @@ public class ImageController {
     private final ImageService imageService;
 
     /**
-     * 이미지를 S3와 DB에 저장하고 S3 url로 반환하는 컨트롤러
+     * 이미지를 S3 url로 반환하는 컨트롤러
      */
     @Operation(summary = "이미지->S3 url 반환 API", description = "이미지를 S3 url로 반환한다.")
     @ApiResponses({
@@ -39,8 +39,8 @@ public class ImageController {
             @ApiResponse(responseCode = "500",  content = @Content(schema = @Schema(example = "{\"error\": \"Internal Server Error\"}")))
     })
     @PostMapping(value ="", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<?> createBoard(MultipartFile imageFile) throws IOException {
+    public ResponseEntity<?> createBoardS3(MultipartFile imageFile) throws IOException {
         Map<String, Object> result = imageService.imageBoardRegister(imageFile);
-        return new ResponseEntity<>(new CMRespDto<>(1, "이미지 저장 및 S3 url 반환 성공", result), HttpStatus.CREATED);
+        return new ResponseEntity<>(new CMRespDto<>(1, "S3 url 반환 성공", result), HttpStatus.CREATED);
     }
 }
