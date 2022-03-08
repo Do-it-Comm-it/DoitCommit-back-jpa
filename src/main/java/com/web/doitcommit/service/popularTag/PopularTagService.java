@@ -44,9 +44,20 @@ public class PopularTagService {
         redisService.delPopularTag(LocalDate.now().minusDays(1L).toString());
     }
 
+    /**
+     * 상단 8개 인기태그 리스트
+     */
+    @Transactional(readOnly = true)
+    public List<PoplarTagResDto> getLimitPopularTagList(){
+
+        List<Object[]> result = redisService.getValues(LocalDate.now().toString());
+
+        return result.stream().map(arr -> new PoplarTagResDto(
+                (String) arr[0], ((BigInteger)arr[1]).intValue())).collect(Collectors.toList());
+    }
 
     /**
-     * 7일간의 인기태그 ALL 리스트
+     * 7일간의 {tag, count} 모든 태그 리스트
      */
     @Transactional(readOnly = true)
     public List<PoplarTagResDto> getAllPopularTagList(){
