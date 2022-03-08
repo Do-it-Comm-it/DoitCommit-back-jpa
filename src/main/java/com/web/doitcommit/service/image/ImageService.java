@@ -1,6 +1,5 @@
 package com.web.doitcommit.service.image;
 
-import com.web.doitcommit.domain.board.Board;
 import com.web.doitcommit.domain.files.*;
 import com.web.doitcommit.domain.member.Member;
 import com.web.doitcommit.s3.S3Uploader;
@@ -18,7 +17,6 @@ import java.util.Map;
 public class ImageService {
 
     private final MemberImageRepository memberImageRepository;
-    private final BoardImageRepository boardImageRepository;
     private final S3Uploader s3Uploader;
     private final ImageRepository imageRepository;
 
@@ -27,18 +25,15 @@ public class ImageService {
     */
     @Transactional
     public Long imageMemberRegister(Member member, MultipartFile imageFile) throws IOException {
-
         Map<String, String> fileMap = s3Uploader.S3Upload(imageFile);
-
         MemberImage memberImage = new MemberImage(member, fileMap.get("filePath"), fileMap.get("fileNm"));
-
         memberImageRepository.save(memberImage);
 
         return memberImage.getImageId();
     }
 
     /**
-     * 게시글 이미지 저장 및 s3 url 반환
+     * s3 url 반환
      */
     @Transactional
     public Map<String, Object> imageBoardRegister(MultipartFile imageFile) throws IOException {
@@ -46,27 +41,28 @@ public class ImageService {
         String filePath = fileMap.get("filePath");
         String fileNm = fileMap.get("fileNm");
 
-        Board board = new Board();
-        board.setBoardId(1L);
-
-        BoardImage boardImage = new BoardImage(board, filePath, fileNm);
-        boardImageRepository.save(boardImage);
-
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("url", getImage(filePath, fileNm));
-        resultMap.put("imageId", boardImage.getImageId());
+        resultMap.put("fileMap", fileMap);
         return resultMap;
     }
 
-
-
     /**
-     * 이미지 삭제
+     * 이미지 삭제 (DB, S3)
      */
     @Transactional
     public void imageRemove(Long imageId) {
         s3Uploader.delete(imageId);
         imageRepository.deleteById(imageId);
+    }
+
+    /**
+     * 이미지 삭제 (S3)
+     */
+    @Transactional
+    public void imageRemove(String storeKey) {
+        System.out.println(storeKey);
+        s3Uploader.delete(storeKey);
     }
 
     /**
