@@ -12,15 +12,18 @@ import javax.persistence.*;
 @Entity
 public class BoardImage extends Image {
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "board_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "board_id",  nullable = false)
     private Board board;
 
     protected BoardImage(){}
 
     public BoardImage(Board board, String filePath, String fileNm){
-        super(filePath, fileNm);
+        super(board.getBoardId(), filePath, fileNm);
         this.board = board;
         board.setBoardImage(this);
+        //board.getBoardImage().add(this);
     }
+
+
 }
