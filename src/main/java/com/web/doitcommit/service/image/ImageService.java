@@ -1,7 +1,9 @@
 package com.web.doitcommit.service.image;
 
+import com.web.doitcommit.domain.board.Board;
 import com.web.doitcommit.domain.files.*;
 import com.web.doitcommit.domain.member.Member;
+import com.web.doitcommit.dto.board.ImageRegDto;
 import com.web.doitcommit.s3.S3Uploader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,7 @@ import java.util.Map;
 public class ImageService {
 
     private final MemberImageRepository memberImageRepository;
+    private final BoardImageRepository boardImageRepository;
     private final S3Uploader s3Uploader;
     private final ImageRepository imageRepository;
 
@@ -30,6 +33,20 @@ public class ImageService {
         memberImageRepository.save(memberImage);
 
         return memberImage.getImageId();
+    }
+
+    /**
+     * 게시글 이미지 저장 (DB)
+     */
+    @Transactional
+    public void imageBoardDbRegister(Board board, ImageRegDto[] imageArr) throws IOException {
+        if(imageArr.length != 0){
+            for(int i = 0; i< imageArr.length; i++) {
+                BoardImage boardImage = new BoardImage(board, imageArr[i].getFilePath(), imageArr[i].getFileNm());
+                boardImageRepository.save(boardImage);
+            }
+        }
+
     }
 
     /**

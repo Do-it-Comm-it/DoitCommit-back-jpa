@@ -1,7 +1,6 @@
 package com.web.doitcommit.domain.member;
 
 import com.web.doitcommit.domain.BaseEntity;
-import com.web.doitcommit.domain.files.Image;
 import com.web.doitcommit.domain.files.MemberImage;
 import lombok.*;
 import javax.persistence.*;
