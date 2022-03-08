@@ -74,11 +74,10 @@ public class Board extends BaseEntity {
     //연관관계 메서드
     public void setBoardImage(BoardImage boardImage){
         this.boardImage.add(boardImage);
+
     }
 
-    public void setBoardId(Long boardId){
-        this.boardId = boardId;
-    }
+
 
 
 
