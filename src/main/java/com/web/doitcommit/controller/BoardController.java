@@ -19,6 +19,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 
 @RequestMapping("/board")
@@ -64,9 +65,9 @@ public class BoardController {
     })
     @PostMapping("")
     public ResponseEntity<?> createBoard(@Valid @RequestBody BoardRegDto boardRegDto, BindingResult bindingResult,
-                                         @Parameter(hidden = true) @AuthenticationPrincipal PrincipalDetails principalDetails){
-        BoardResDto boardResDto = boardService.createBoard(boardRegDto, principalDetails.getMember().getMemberId());
-        return new ResponseEntity<>(new CMRespDto<>(1, "게시글 등록 성공", boardResDto),HttpStatus.CREATED);
+                                         @Parameter(hidden = true) @AuthenticationPrincipal PrincipalDetails principalDetails) throws IOException {
+        boardService.createBoard(boardRegDto, principalDetails.getMember().getMemberId());
+        return new ResponseEntity<>(new CMRespDto<>(1, "게시글 등록 성공", null),HttpStatus.CREATED);
     }
 
     /**
