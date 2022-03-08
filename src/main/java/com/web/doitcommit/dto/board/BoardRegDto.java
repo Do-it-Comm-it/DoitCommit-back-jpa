@@ -30,6 +30,12 @@ public class BoardRegDto {
     @Schema(description = "태그", nullable = true)
     private Set<String> tag = new HashSet<>();
 
+    @Schema(description = "실제 등록할 이미지 배열", nullable = true)
+    private ImageRegDto[] imageArr;
+
+    @Schema(description = "s3로 반환한 전체 이미지 배열", nullable = true)
+    private ImageRegDto[] allImageArr;
+
     public Board toEntity(Long principalId){
         Board board = Board.builder()
                 .boardCategory(BoardCategory.builder().categoryId(categoryId).build())
