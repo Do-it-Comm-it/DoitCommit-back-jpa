@@ -8,13 +8,10 @@ import com.web.doitcommit.domain.member.Member;
 import lombok.*;
 import org.hibernate.annotations.BatchSize;
 import com.web.doitcommit.domain.comment.Comment;
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-
 import com.web.doitcommit.domain.bookmark.Bookmark;
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -74,11 +71,8 @@ public class Board extends BaseEntity {
     //연관관계 메서드
     public void setBoardImage(BoardImage boardImage){
         this.boardImage.add(boardImage);
-
     }
-
-
-
-
-
+    public void changeBoardCnt(){
+        this.boardCnt += 1;
+    }
 }
