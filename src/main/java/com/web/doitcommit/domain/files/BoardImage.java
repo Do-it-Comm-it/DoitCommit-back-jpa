@@ -22,8 +22,5 @@ public class BoardImage extends Image {
         super(board.getBoardId(), filePath, fileNm);
         this.board = board;
         board.setBoardImage(this);
-        //board.getBoardImage().add(this);
     }
-
-
 }
