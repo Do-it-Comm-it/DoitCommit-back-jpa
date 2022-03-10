@@ -25,13 +25,12 @@ public class ImageService {
 
     /**
      * 회원이미지 저장
-    */
+     */
     @Transactional
     public Long imageMemberRegister(Member member, MultipartFile imageFile) throws IOException {
         Map<String, String> fileMap = s3Uploader.S3Upload(imageFile);
         MemberImage memberImage = new MemberImage(member, fileMap.get("filePath"), fileMap.get("fileNm"));
         memberImageRepository.save(memberImage);
-
         return memberImage.getImageId();
     }
 
@@ -39,29 +38,11 @@ public class ImageService {
      * 게시글 이미지 저장 (DB)
      */
     @Transactional
-    public void imageBoardDbRegister(Board board, ImageRegDto[] imageArr) throws IOException {
-        if(imageArr.length != 0){
-            for(int i = 0; i< imageArr.length; i++) {
-                BoardImage boardImage = new BoardImage(board, imageArr[i].getFilePath(), imageArr[i].getFileNm());
-                boardImageRepository.save(boardImage);
-            }
+    public void imageBoardDbRegister(Board board, ImageRegDto[] imageArr) {
+        for (int i = 0; i < imageArr.length; i++) {
+            BoardImage boardImage = new BoardImage(board, imageArr[i].getFilePath(), imageArr[i].getFileNm());
+            boardImageRepository.save(boardImage);
         }
-
-    }
-
-    /**
-     * s3 url 반환
-     */
-    @Transactional
-    public Map<String, Object> imageBoardRegister(MultipartFile imageFile) throws IOException {
-        Map<String, String> fileMap = s3Uploader.S3Upload(imageFile);
-        String filePath = fileMap.get("filePath");
-        String fileNm = fileMap.get("fileNm");
-
-        Map<String, Object> resultMap = new HashMap<>();
-        resultMap.put("url", getImage(filePath, fileNm));
-        resultMap.put("fileMap", fileMap);
-        return resultMap;
     }
 
     /**
@@ -78,7 +59,6 @@ public class ImageService {
      */
     @Transactional
     public void imageRemove(String storeKey) {
-        System.out.println(storeKey);
         s3Uploader.delete(storeKey);
     }
 
@@ -87,5 +67,20 @@ public class ImageService {
      */
     public String getImage(String filePath, String fileNm) {
         return s3Uploader.getImageUrl(filePath, fileNm);
+    }
+
+    /**
+     * s3 url 반환
+     */
+    @Transactional
+    public Map<String, Object> imageBoardRegister(MultipartFile imageFile) throws IOException {
+        Map<String, String> fileMap = s3Uploader.S3Upload(imageFile);
+        String filePath = fileMap.get("filePath");
+        String fileNm = fileMap.get("fileNm");
+
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("url", getImage(filePath, fileNm));
+        resultMap.put("fileMap", fileMap);
+        return resultMap;
     }
 }
