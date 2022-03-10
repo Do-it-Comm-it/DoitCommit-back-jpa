@@ -2,12 +2,14 @@ package com.web.doitcommit.redis;
 
 import com.web.doitcommit.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
+import java.time.LocalDate;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -33,9 +35,33 @@ public class RedisService {
     }
 
     /**
-     * redies 삭제
+     * redis 삭제
      */
     public void delValues(Long memberId) {
         redisTemplate.delete(memberId);
+    }
+
+    /**
+     * redis 저장 - {날짜 : popularTagList}
+     */
+    public void setList(List<Object[]> popularTagList){
+        ListOperations<String, List<Object[]>> listOperations = redisTemplate.opsForList();
+        listOperations.rightPushAll(LocalDate.now().toString(), popularTagList);
+
+    }
+
+    /**
+     * redis 날짜별 인기태그 조회
+     */
+    public List<Object[]> getValues(String date){
+        ListOperations<String, List<Object[]>> listOperations = redisTemplate.opsForList();
+        return listOperations.leftPop(date);
+    }
+
+    /**
+     * redis 날짜별 인기태그 삭제
+     */
+    public void delPopularTag(String date){
+        redisTemplate.delete(date);
     }
 }
