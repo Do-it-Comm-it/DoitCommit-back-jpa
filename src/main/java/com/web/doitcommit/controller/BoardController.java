@@ -3,6 +3,7 @@ package com.web.doitcommit.controller;
 import com.web.doitcommit.config.auth.PrincipalDetails;
 import com.web.doitcommit.dto.CMRespDto;
 import com.web.doitcommit.dto.board.BoardRegDto;
+import com.web.doitcommit.dto.board.BoardListResDto;
 import com.web.doitcommit.dto.board.BoardResDto;
 import com.web.doitcommit.service.board.BoardService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,7 +35,7 @@ public class BoardController {
      */
     @Operation(summary = "게시판 목록 조회 API", description = "게시판 목록 정보를 조회한다.")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", content = @Content(array = @ArraySchema(schema = @Schema(implementation = BoardResDto.class)))),
+            @ApiResponse(responseCode = "200", content = @Content(array = @ArraySchema(schema = @Schema(implementation = BoardListResDto.class)))),
             @ApiResponse(responseCode = "400", content = @Content(schema = @Schema(example = "{\"error\": \"Bad Request\"}"))),
             @ApiResponse(responseCode = "401", content = @Content(schema = @Schema(example = "{\"error\": \"Unauthorized\"}"))),
             @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(example = "{\"error\": \"Not Found\"}"))),
@@ -44,8 +45,8 @@ public class BoardController {
     public ResponseEntity<?> getBoardList(
             @RequestParam(value = "pageNo") int pageNo,
             @RequestParam(value = "pageSize") int pageSize) {
-        List<BoardResDto> boardResDtoList = boardService.getBoardList(pageNo, pageSize);
-        return new ResponseEntity<>(new CMRespDto<>(1, "게시판 리스트 조회 성공", boardResDtoList),HttpStatus.OK);
+        List<BoardListResDto> boardListResDtoList = boardService.getBoardList(pageNo, pageSize);
+        return new ResponseEntity<>(new CMRespDto<>(1, "게시판 리스트 조회 성공", boardListResDtoList),HttpStatus.OK);
     }
 
     /**
@@ -71,6 +72,23 @@ public class BoardController {
     }
 
     /**
+     * 게시글 조회
+     */
+    @Operation(summary = "게시글 조회 API", description = "게시글을 조회한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = BoardResDto.class))),
+            @ApiResponse(responseCode = "400", content = @Content(schema = @Schema(example = "{\"error\": \"Bad Request\"}"))),
+            @ApiResponse(responseCode = "401", content = @Content(schema = @Schema(example = "{\"error\": \"Unauthorized\"}"))),
+            @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(example = "{\"error\": \"Not Found\"}"))),
+            @ApiResponse(responseCode = "500",  content = @Content(schema = @Schema(example = "{\"error\": \"Internal Server Error\"}")))
+    })
+    @GetMapping("")
+    public ResponseEntity<?> GetBoard(@Parameter(name = "boardId") Long boardId) {
+        BoardResDto boardResDto = boardService.GetBoard(boardId);
+        return new ResponseEntity<>(new CMRespDto<>(1, "게시글 조회 성공", boardResDto), HttpStatus.OK);
+    }
+
+    /**
      * 태그 목록 조회
      */
     @Operation(summary = "태그 목록 조회 API", description = "태그 목록 조회을 조회한다.")
@@ -87,7 +105,7 @@ public class BoardController {
     })
     @GetMapping("/tag")
     public ResponseEntity<?> getTagList() {
-        String[] TagList = boardService.getBoardList();
+        String[] TagList = boardService.getBoardTagList();
         return new ResponseEntity<>(new CMRespDto<>(1, "태그 리스트 조회 성공", TagList),HttpStatus.OK);
     }
 
