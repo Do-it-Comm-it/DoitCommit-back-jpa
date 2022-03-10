@@ -1,6 +1,7 @@
 package com.web.doitcommit.domain.board;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.web.doitcommit.domain.QTagCategory;
 import org.springframework.util.CollectionUtils;
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
@@ -15,6 +16,9 @@ public class BoardRepositoryImpl implements BoardRepositoryQuerydsl {
         this.queryFactory = new JPAQueryFactory(entityManager);
     }
 
+    /**
+     * 게시판 목록 조회
+     */
     @Override
     public List<Board> getCustomBoardList(int pageNo, int pageSize) {
         List<Long> ids = queryFactory
@@ -34,6 +38,20 @@ public class BoardRepositoryImpl implements BoardRepositoryQuerydsl {
                 .from(board)
                 .where(board.boardId.in(ids))
                 .orderBy(board.boardId.desc())
+                .fetch();
+    }
+
+    /**
+     * 태그 목록 조회
+     */
+    @Override
+    public List<String> getCustomTagList() {
+        QTagCategory tagCategory = QTagCategory.tagCategory;
+
+        return queryFactory
+                .select(tagCategory.tagName)
+                .from(tagCategory)
+                .orderBy(tagCategory.tagName.asc())
                 .fetch();
     }
 }

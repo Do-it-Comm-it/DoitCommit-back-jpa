@@ -77,6 +77,18 @@ public class S3Uploader {
     }
 
     /**
+     * S3파일 삭제 (storeKey로 삭제)
+     */
+    public void delete(String storeKey) {
+        try{
+            amazonS3.deleteObject(new DeleteObjectRequest(bucket, storeKey));
+
+        }catch(Exception e) {
+            log.error("delete file error"+e.getMessage());
+        }
+    }
+
+    /**
      * s3 파일 URL
      */
     public String getImageUrl(String filePath, String fileNm){
