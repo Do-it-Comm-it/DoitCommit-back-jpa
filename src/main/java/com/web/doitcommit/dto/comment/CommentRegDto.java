@@ -10,7 +10,10 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.List;
+import java.util.Set;
 
+@Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -22,19 +25,7 @@ public class CommentRegDto {
     @NotBlank
     private String content;
 
-    private Long parentId;
-
-    public Comment toEntity(Board board, Long principalId, Comment parent){
-        Comment comment = Comment.builder()
-                .member(Member.builder().memberId(principalId).build())
-                .content(content)
-                .isExist(true)
-                .build();
-        comment.setBoard(board);
-        comment.setParent(parent);
-
-        return comment;
-    }
+    private Set<Long> memberIdSet;
 
     public Comment toEntity(Board board, Long principalId){
         Comment comment = Comment.builder()

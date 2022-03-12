@@ -8,7 +8,7 @@ public interface CommentService {
 
     Comment register(CommentRegDto commentRegDto, Long principalId);
 
-    void modify(CommentUpdateDto commentUpdateDto, Long principalId);
+    void modify(CommentUpdateDto commentUpdateDto);
 
     Long remove(Long commentId);
 
