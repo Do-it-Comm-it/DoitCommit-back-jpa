@@ -14,6 +14,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 @Transactional
 @RequiredArgsConstructor
 @Service
@@ -21,6 +25,7 @@ public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
     private final BoardRepository boardRepository;
+    private final TagMemberRepository tagMemberRepository;
 
     /**
      * 댓글 작성
@@ -62,7 +67,54 @@ public class CommentServiceImpl implements CommentService {
                 new CustomException("존재하지 않는 댓글입니다."));
 
         comment.changeContent(commentUpdateDto.getContent());
+
+        Set<TagMember> findTagMember = comment.getTagMemberSet();
+
+        Set<Long> findMemberIdSetOfTagMember = findTagMember.stream().map(tagMember -> {
+            return tagMember.getMember().getMemberId();
+        }).collect(Collectors.toSet());
+
+        Set<Long> memberIdSet = commentUpdateDto.getMemberIdSet();
+
+        Set<Long> memberIdSet2 = memberIdSet;
+
+        if(memberIdSet != null && !memberIdSet.isEmpty()){
+            memberIdSet.remove(findMemberIdSetOfTagMember);
+        }
+
+        if(memberIdSet2 != null && !memberIdSet2.isEmpty()){
+            findMemberIdSetOfTagMember.retainAll(memberIdSet2);
+        }
+
+
+        //신규 태그 추가
+        if(memberIdSet != null && !memberIdSet.isEmpty()){
+            for (Long id : memberIdSet){
+                TagMember tagMember = TagMember.builder()
+                        .member(Member.builder().memberId(id).build())
+                        .build();
+                comment.addTagMember(tagMember);
+            }
+        }
+
+        //삭제된 태그 tagMember 삭제
+//        comment.getTagMemberSet().forEach(tagMember -> {
+//            for (Long id : findMemberIdSetOfTagMember){
+//                if (tagMember.getMember().getMemberId().equals(id)){
+//                    comment.getTagMemberSet().remove(tagMember);
+//                    break;
+//                }
+//            }
+//        });
+        if (!findMemberIdSetOfTagMember.isEmpty()) {
+            tagMemberRepository.deleteAllByMemberIdInQuery(findMemberIdSetOfTagMember);
+        }
+
+
+
+
     }
+
 
     /**
      * 댓글 삭제

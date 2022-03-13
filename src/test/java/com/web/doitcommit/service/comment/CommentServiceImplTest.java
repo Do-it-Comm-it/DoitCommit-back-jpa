@@ -5,17 +5,20 @@ import com.web.doitcommit.domain.board.BoardRepository;
 import com.web.doitcommit.domain.boardCategory.BoardCategory;
 import com.web.doitcommit.domain.boardCategory.BoardCategoryRepository;
 import com.web.doitcommit.domain.comment.Comment;
+import com.web.doitcommit.domain.comment.CommentRepository;
 import com.web.doitcommit.domain.comment.TagMember;
 import com.web.doitcommit.domain.comment.TagMemberRepository;
 import com.web.doitcommit.domain.member.AuthProvider;
 import com.web.doitcommit.domain.member.Member;
 import com.web.doitcommit.domain.member.MemberRepository;
 import com.web.doitcommit.dto.comment.CommentRegDto;
+import com.web.doitcommit.dto.comment.CommentUpdateDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
@@ -33,12 +36,13 @@ class CommentServiceImplTest {
     @Autowired BoardRepository boardRepository;
     @Autowired BoardCategoryRepository boardCategoryRepository;
     @Autowired TagMemberRepository tagMemberRepository;
+    @Autowired CommentRepository commentRepository;
 
     private Member member;
     private Board board;
     private Set<Long> tagMemberIdSet;
 
-    @BeforeEach
+    //@BeforeEach
     void before(){
         Member member = createMember("before@naver.com", "beforeNickname", "beforeUsername", "beforeOAuthId");
         this.member = member;
@@ -76,8 +80,6 @@ class CommentServiceImplTest {
                 createCommentRegDto(board.getBoardId(), "testContent", tagMemberIdSet);
 
         //when
-        System.out.println("-------------------");
-        System.out.println("마지막 insert");
         Comment comment = commentService.register(commentRegDto, member.getMemberId());
 
         //then
@@ -91,6 +93,62 @@ class CommentServiceImplTest {
         Set<TagMember> findTagMemberSet = tagMemberRepository.findByComment(comment);
       
         assertThat(comment.getTagMemberSet()).isEqualTo(findTagMemberSet);
+    }
+
+    @Commit
+    @Test
+    void 댓글수정() throws Exception{
+        //given
+        Set<TagMember> tagMemberSet = new HashSet<>();
+/*
+        tagMemberIdSet.forEach(id ->{
+            //tagMember 생성
+            TagMember tagMember = TagMember.builder()
+                    .member(Member.builder().memberId(id).build())
+                    .build();
+
+            //tagMember 추가
+            tagMemberSet.add(tagMember);
+        });
+
+
+        Comment comment = createComment(member, board, "testContent", tagMemberSet);*/
+
+        CommentUpdateDto commentUpdateDto =
+                createUpdateDto(1L, "updateContent", null);
+        //when
+        commentService.modify(commentUpdateDto);
+
+        //then
+        Comment findComment = commentRepository.findById(1L).get();
+        Set<TagMember> result = tagMemberRepository.findByComment(findComment);
+        for (TagMember tagMember : result){
+            System.out.println(tagMember);
+        }
+
+        System.out.println(findComment);
+    }
+
+    private Comment createComment(Member member, Board board, String content, Set<TagMember> tagMemberSet) {
+
+        Comment comment = Comment.builder()
+                .member(member)
+                .board(board)
+                .content(content)
+                .build();
+
+        tagMemberSet.forEach(tagMember -> comment.addTagMember(tagMember));
+
+        return commentRepository.save(comment);
+    }
+
+    private CommentUpdateDto createUpdateDto(Long commentId, String content, Set<Long> tagMemberIdSet) {
+
+        return CommentUpdateDto.builder()
+                .commentId(commentId)
+                .content(content)
+                .memberIdSet(tagMemberIdSet)
+                .build();
     }
 
     private CommentRegDto createCommentRegDto(Long boardId, String content, Set<Long> tagMemberIdSet) {
