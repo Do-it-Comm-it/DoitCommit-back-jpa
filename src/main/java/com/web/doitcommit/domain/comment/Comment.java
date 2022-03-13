@@ -8,13 +8,15 @@ import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@ToString(exclude = {"member","board","parent"})
+@ToString(exclude = {"member","board"})
 @Entity
 public class Comment extends BaseEntity {
 
@@ -29,20 +31,17 @@ public class Comment extends BaseEntity {
     @JoinColumn(name = "board_id", nullable = false)
     private Board board;
 
+    @BatchSize(size = 100)
+    @Builder.Default
+    @OneToMany(mappedBy = "comment", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<TagMember> tagMemberSet = new HashSet<>();
+
     @Builder.Default
     private String content = "";
 
     @Builder.Default
     private Boolean isExist = true;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "parent_id")
-    private Comment parent;
-
-    @BatchSize(size = 100)
-    @Builder.Default
-    @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
-    private List<Comment> childList  = new ArrayList<>();
 
     public void changeContent(String content){
         this.content = content;
@@ -58,9 +57,8 @@ public class Comment extends BaseEntity {
         board.getCommentList().add(this);
     }
 
-    public void setParent(Comment parent){
-        this.parent = parent;
-        parent.getChildList().add(this);
+    public void addTagMember(TagMember tagMember){
+        this.tagMemberSet.add(tagMember);
+        tagMember.setComment(this);
     }
-
 }
