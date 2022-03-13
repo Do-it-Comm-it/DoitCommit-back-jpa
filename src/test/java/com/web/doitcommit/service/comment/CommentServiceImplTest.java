@@ -5,24 +5,28 @@ import com.web.doitcommit.domain.board.BoardRepository;
 import com.web.doitcommit.domain.boardCategory.BoardCategory;
 import com.web.doitcommit.domain.boardCategory.BoardCategoryRepository;
 import com.web.doitcommit.domain.comment.Comment;
+import com.web.doitcommit.domain.comment.CommentRepository;
 import com.web.doitcommit.domain.comment.TagMember;
 import com.web.doitcommit.domain.comment.TagMemberRepository;
+import com.web.doitcommit.domain.files.MemberImage;
+import com.web.doitcommit.domain.files.MemberImageRepository;
 import com.web.doitcommit.domain.member.AuthProvider;
 import com.web.doitcommit.domain.member.Member;
 import com.web.doitcommit.domain.member.MemberRepository;
 import com.web.doitcommit.dto.comment.CommentRegDto;
+import com.web.doitcommit.dto.member.TagMemberResDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @Transactional
 @SpringBootTest
@@ -33,6 +37,8 @@ class CommentServiceImplTest {
     @Autowired BoardRepository boardRepository;
     @Autowired BoardCategoryRepository boardCategoryRepository;
     @Autowired TagMemberRepository tagMemberRepository;
+    @Autowired CommentRepository commentRepository;
+    @Autowired MemberImageRepository memberImageRepository;
 
     private Member member;
     private Board board;
@@ -91,6 +97,60 @@ class CommentServiceImplTest {
         Set<TagMember> findTagMemberSet = tagMemberRepository.findByComment(comment);
       
         assertThat(comment.getTagMemberSet()).isEqualTo(findTagMemberSet);
+    }
+
+    /**
+     * board 1
+     * comment 2 - 게시글 작성자 1(프로필사진x), 일반 회원 1 (프로필사진o)
+     */
+    @Commit
+    @Test
+    void 회원태그_리스트_조회() throws Exception{
+        //given
+        //게시글 작성자 댓글 생성
+        createComment(member,board,"testContent");
+
+        //일반 회원 생성
+        Member createMember = createMember("testMember@naver.com", "testNickname", "testUsername",
+                "adf111");
+        //일반 회원 프로필 사진 생성
+        MemberImage createMemberImage = createMemberImage(createMember, "testFilePath", "testFileNm");
+        //일반 회원 댓글 생성
+        createComment(createMember,board,"testContent");
+
+
+        //when
+        List<TagMemberResDto> tagMemberList = commentService.getTagMemberList(board.getBoardId());
+
+        //then
+        assertThat(tagMemberList.size()).isEqualTo(2);
+
+        assertThat(tagMemberList.get(0).getMemberId()).isEqualTo(member.getMemberId());
+        assertThat(tagMemberList.get(0).getNickname()).isEqualTo(member.getNickname());
+        assertThat(tagMemberList.get(0).getImageResDto()).isNull();
+
+        assertThat(tagMemberList.get(1).getMemberId()).isEqualTo(createMember.getMemberId());
+        assertThat(tagMemberList.get(1).getNickname()).isEqualTo(createMember.getNickname());
+        assertThat(tagMemberList.get(1).getImageResDto().getFilePath()).isEqualTo(createMemberImage.getFilePath());
+        assertThat(tagMemberList.get(1).getImageResDto().getFileNm()).isEqualTo(createMemberImage.getFileNm());
+
+        for (TagMemberResDto tagMemberResDto : tagMemberList){
+            System.out.println(tagMemberResDto);
+        }
+    }
+
+    private MemberImage createMemberImage(Member member, String filePath, String testFileNm) {
+        MemberImage memberImage = new MemberImage(member, filePath, testFileNm);
+        return memberImageRepository.save(memberImage);
+    }
+
+    private Comment createComment(Member member, Board board, String content) {
+        Comment comment = Comment.builder()
+                .member(member)
+                .board(board)
+                .content(content)
+                .build();
+        return commentRepository.save(comment);
     }
 
     private CommentRegDto createCommentRegDto(Long boardId, String content, Set<Long> tagMemberIdSet) {
