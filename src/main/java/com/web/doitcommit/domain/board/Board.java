@@ -2,6 +2,7 @@ package com.web.doitcommit.domain.board;
 
 import com.web.doitcommit.domain.BaseEntity;
 import com.web.doitcommit.domain.files.BoardImage;
+import com.web.doitcommit.domain.hashtag.BoardHashtag;
 import com.web.doitcommit.domain.heart.Heart;
 import com.web.doitcommit.domain.boardCategory.BoardCategory;
 import com.web.doitcommit.domain.member.Member;
@@ -12,8 +13,6 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import com.web.doitcommit.domain.bookmark.Bookmark;
-import java.util.HashSet;
-import java.util.Set;
 
 @Builder
 @AllArgsConstructor
@@ -43,11 +42,6 @@ public class Board extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String boardContent;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(joinColumns = @JoinColumn(name = "board_id"))
-    @Builder.Default
-    private Set<String> tag = new HashSet<>();
-
     @Builder.Default
     @Column(nullable = false)
     private int boardCnt = 0;
@@ -68,10 +62,19 @@ public class Board extends BaseEntity {
     @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Bookmark> bookmarkList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "board",fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<BoardHashtag> boardHashtag = new ArrayList<>();
+
     //연관관계 메서드
     public void setBoardImage(BoardImage boardImage){
         this.boardImage.add(boardImage);
     }
+
+    //연관관계 메서드
+    public void setBoardHashtag(BoardHashtag boardHashtag){
+        this.boardHashtag.add(boardHashtag);
+    }
+
     public void changeBoardCnt(){
         this.boardCnt += 1;
     }
