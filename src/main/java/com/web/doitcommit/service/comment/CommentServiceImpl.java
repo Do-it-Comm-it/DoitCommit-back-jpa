@@ -6,13 +6,19 @@ import com.web.doitcommit.domain.comment.Comment;
 import com.web.doitcommit.domain.comment.CommentRepository;
 import com.web.doitcommit.domain.comment.TagMember;
 import com.web.doitcommit.domain.comment.TagMemberRepository;
+import com.web.doitcommit.domain.files.Image;
+import com.web.doitcommit.domain.files.MemberImage;
 import com.web.doitcommit.domain.member.Member;
 import com.web.doitcommit.dto.comment.CommentRegDto;
 import com.web.doitcommit.dto.comment.CommentUpdateDto;
+import com.web.doitcommit.dto.member.TagMemberResDto;
 import com.web.doitcommit.handler.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Transactional
 @RequiredArgsConstructor
@@ -78,5 +84,20 @@ public class CommentServiceImpl implements CommentService {
         comment.remove();
 
         return comment.getCommentId();
+    }
+
+    /**
+     * 회원 태그 리스트 조회
+     */
+    @Transactional(readOnly = true)
+    @Override
+    public List<TagMemberResDto> getTagMemberList(Long boardId) {
+        List<Object[]> result = commentRepository.getTagMemberList(boardId);
+
+        List<TagMemberResDto> tagMemberResDtoList = result.stream().map(arr ->
+                new TagMemberResDto((Long) arr[0], (String) arr[1], (Image) arr[2]))
+                .collect(Collectors.toList());
+
+        return tagMemberResDtoList;
     }
 }
