@@ -2,6 +2,9 @@ package com.web.doitcommit.service.board;
 
 import com.web.doitcommit.domain.board.Board;
 import com.web.doitcommit.domain.board.BoardRepository;
+import com.web.doitcommit.domain.hashtag.BoardHashtag;
+import com.web.doitcommit.domain.hashtag.BoardHashtagRepository;
+import com.web.doitcommit.domain.hashtag.TagCategory;
 import com.web.doitcommit.dto.board.BoardRegDto;
 import com.web.doitcommit.dto.board.BoardListResDto;
 import com.web.doitcommit.dto.board.BoardResDto;
@@ -19,6 +22,7 @@ import java.util.stream.Collectors;
 public class BoardService {
 
     private final BoardRepository boardRepository;
+    private final BoardHashtagRepository boardHashtagRepository;
     private final ImageService imageService;
 
 
@@ -37,7 +41,16 @@ public class BoardService {
     @Transactional
     public void createBoard(BoardRegDto boardRegDto, Long principalId) {
         Board boardEntity = boardRegDto.toEntity(principalId);
+
         Board board = boardRepository.save(boardEntity);
+
+        if(boardRegDto.getBoardHashtag() !=null){
+            for (int i = 0; i < boardRegDto.getBoardHashtag().size(); i++) {
+                TagCategory tagCategory = new TagCategory(boardRegDto.getBoardHashtag().get(i));
+                BoardHashtag boardHashtag = new BoardHashtag(board,tagCategory);
+                boardHashtagRepository.save(boardHashtag);
+            }
+        }
 
         ImageRegDto[] allImageArr = new ImageRegDto[0];
         if(boardRegDto.getAllImageArr() !=null){
@@ -102,7 +115,12 @@ public class BoardService {
         Board boardEntity = boardRepository.findById(boardId).orElseThrow(() ->
                 new IllegalArgumentException("존재하지않는 게시글입니다."));
         boardEntity.changeBoardCnt();
-        return new BoardResDto(boardEntity);
+        BoardResDto boardResDto = new BoardResDto(boardEntity);
+
+        if(boardEntity.getBoardHashtag() != null){
+            boardResDto.setBoardHashtag(boardEntity.getBoardHashtag());
+        }
+        return boardResDto;
     }
 
     /**
