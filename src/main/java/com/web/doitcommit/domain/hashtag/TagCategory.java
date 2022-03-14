@@ -1,6 +1,7 @@
-package com.web.doitcommit.domain;
+package com.web.doitcommit.domain.hashtag;
 
 import lombok.*;
+
 import javax.persistence.*;
 
 /**
@@ -21,4 +22,7 @@ public class TagCategory {
     @Column(unique = true, nullable = false)
     private String tagName;
 
+    public TagCategory(Long tagId) {
+        this.tagId = tagId;
+    }
 }
