@@ -1,7 +1,7 @@
 package com.web.doitcommit.domain.board;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.web.doitcommit.domain.QTagCategory;
+import com.web.doitcommit.domain.hashtag.QTagCategory;
 import org.springframework.util.CollectionUtils;
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
