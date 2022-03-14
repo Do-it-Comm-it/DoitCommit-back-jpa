@@ -13,15 +13,15 @@ import javax.persistence.*;
 @Table(
         uniqueConstraints = {
                 @UniqueConstraint(
-                        name="tag_member_uk",
+                        name="member_tag_uk",
                         columnNames={"comment_id", "member_id"}
                 )
         }
 )
-public class TagMember {
+public class MemberTag {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long tagMemberId;
+    private Long memberTagId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "comment_id", nullable = false)

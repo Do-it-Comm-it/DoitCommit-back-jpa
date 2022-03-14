@@ -6,16 +6,15 @@ import com.web.doitcommit.domain.boardCategory.BoardCategory;
 import com.web.doitcommit.domain.boardCategory.BoardCategoryRepository;
 import com.web.doitcommit.domain.comment.Comment;
 import com.web.doitcommit.domain.comment.CommentRepository;
-import com.web.doitcommit.domain.comment.TagMember;
-import com.web.doitcommit.domain.comment.TagMemberRepository;
+import com.web.doitcommit.domain.comment.MemberTag;
+import com.web.doitcommit.domain.comment.MemberTagRepository;
 import com.web.doitcommit.domain.files.MemberImage;
 import com.web.doitcommit.domain.files.MemberImageRepository;
 import com.web.doitcommit.domain.member.AuthProvider;
 import com.web.doitcommit.domain.member.Member;
 import com.web.doitcommit.domain.member.MemberRepository;
 import com.web.doitcommit.dto.comment.CommentRegDto;
-import com.web.doitcommit.dto.member.TagMemberResDto;
-import org.assertj.core.api.Assertions;
+import com.web.doitcommit.dto.memberTag.MemberTagResDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,13 +35,13 @@ class CommentServiceImplTest {
     @Autowired MemberRepository memberRepository;
     @Autowired BoardRepository boardRepository;
     @Autowired BoardCategoryRepository boardCategoryRepository;
-    @Autowired TagMemberRepository tagMemberRepository;
+    @Autowired MemberTagRepository memberTagRepository;
     @Autowired CommentRepository commentRepository;
     @Autowired MemberImageRepository memberImageRepository;
 
     private Member member;
     private Board board;
-    private Set<Long> tagMemberIdSet;
+    private Set<Long> memberTagIdSet;
 
     @BeforeEach
     void before(){
@@ -61,16 +60,16 @@ class CommentServiceImplTest {
         this.board = board;
 
         //회원 태그 리스트
-        Set<Long> tagMemberIdSet = new HashSet<>();
+        Set<Long> memberTagIdSet = new HashSet<>();
 
         IntStream.rangeClosed(1,3).forEach(i -> {
             Member newMember = createMember("before" + i + "@naver.com", "beforeNickname" + i,
                     "beforeUsername" + i, "beforeOAuthId" + i);
 
-            tagMemberIdSet.add(memberRepository.save(newMember).getMemberId());
+            memberTagIdSet.add(memberRepository.save(newMember).getMemberId());
         });
 
-        this.tagMemberIdSet = tagMemberIdSet;
+        this.memberTagIdSet = memberTagIdSet;
     }
 
 
@@ -79,11 +78,9 @@ class CommentServiceImplTest {
         //given
 
         CommentRegDto commentRegDto =
-                createCommentRegDto(board.getBoardId(), "testContent", tagMemberIdSet);
+                createCommentRegDto(board.getBoardId(), "testContent", memberTagIdSet);
 
         //when
-        System.out.println("-------------------");
-        System.out.println("마지막 insert");
         Comment comment = commentService.register(commentRegDto, member.getMemberId());
 
         //then
@@ -93,17 +90,16 @@ class CommentServiceImplTest {
         assertThat(comment.getContent()).isEqualTo(commentRegDto.getContent());
         assertThat(comment.getIsExist()).isTrue();
 
-        //tagMember
-        Set<TagMember> findTagMemberSet = tagMemberRepository.findByComment(comment);
+        //memberTag
+        Set<MemberTag> findMemberTagSet = memberTagRepository.findByComment(comment);
       
-        assertThat(comment.getTagMemberSet()).isEqualTo(findTagMemberSet);
+        assertThat(comment.getMemberTagSet()).isEqualTo(findMemberTagSet);
     }
 
     /**
      * board 1
      * comment 2 - 게시글 작성자 1(프로필사진x), 일반 회원 1 (프로필사진o)
      */
-    @Commit
     @Test
     void 회원태그_리스트_조회() throws Exception{
         //given
@@ -120,22 +116,22 @@ class CommentServiceImplTest {
 
 
         //when
-        List<TagMemberResDto> tagMemberList = commentService.getTagMemberList(board.getBoardId());
+        List<MemberTagResDto> memberTagResList = commentService.getMemberTagList(board.getBoardId());
 
         //then
-        assertThat(tagMemberList.size()).isEqualTo(2);
+        assertThat(memberTagResList.size()).isEqualTo(2);
 
-        assertThat(tagMemberList.get(0).getMemberId()).isEqualTo(member.getMemberId());
-        assertThat(tagMemberList.get(0).getNickname()).isEqualTo(member.getNickname());
-        assertThat(tagMemberList.get(0).getImageResDto()).isNull();
+        assertThat(memberTagResList.get(0).getMemberId()).isEqualTo(member.getMemberId());
+        assertThat(memberTagResList.get(0).getNickname()).isEqualTo(member.getNickname());
+        assertThat(memberTagResList.get(0).getImageResDto()).isNull();
 
-        assertThat(tagMemberList.get(1).getMemberId()).isEqualTo(createMember.getMemberId());
-        assertThat(tagMemberList.get(1).getNickname()).isEqualTo(createMember.getNickname());
-        assertThat(tagMemberList.get(1).getImageResDto().getFilePath()).isEqualTo(createMemberImage.getFilePath());
-        assertThat(tagMemberList.get(1).getImageResDto().getFileNm()).isEqualTo(createMemberImage.getFileNm());
+        assertThat(memberTagResList.get(1).getMemberId()).isEqualTo(createMember.getMemberId());
+        assertThat(memberTagResList.get(1).getNickname()).isEqualTo(createMember.getNickname());
+        assertThat(memberTagResList.get(1).getImageResDto().getFilePath()).isEqualTo(createMemberImage.getFilePath());
+        assertThat(memberTagResList.get(1).getImageResDto().getFileNm()).isEqualTo(createMemberImage.getFileNm());
 
-        for (TagMemberResDto tagMemberResDto : tagMemberList){
-            System.out.println(tagMemberResDto);
+        for (MemberTagResDto memberTagResDto : memberTagResList){
+            System.out.println(memberTagResDto);
         }
     }
 
@@ -153,11 +149,11 @@ class CommentServiceImplTest {
         return commentRepository.save(comment);
     }
 
-    private CommentRegDto createCommentRegDto(Long boardId, String content, Set<Long> tagMemberIdSet) {
+    private CommentRegDto createCommentRegDto(Long boardId, String content, Set<Long> memberTagIdSet) {
         return CommentRegDto.builder()
                 .boardId(boardId)
                 .content(content)
-                .memberIdSet(tagMemberIdSet)
+                .memberIdSet(memberTagIdSet)
                 .build();
     }
 
