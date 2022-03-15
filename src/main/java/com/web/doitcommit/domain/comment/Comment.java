@@ -7,9 +7,7 @@ import lombok.*;
 import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Builder
@@ -33,8 +31,10 @@ public class Comment extends BaseEntity {
 
     @BatchSize(size = 100)
     @Builder.Default
-    @OneToMany(mappedBy = "comment", fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST,CascadeType.REMOVE})
-    private Set<TagMember> tagMemberSet = new HashSet<>();
+
+    @OneToMany(mappedBy = "comment", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST,CascadeType.REMOVE})
+    private Set<MemberTag> memberTagSet = new HashSet<>();
+
 
     @Builder.Default
     private String content = "";
@@ -57,8 +57,8 @@ public class Comment extends BaseEntity {
         board.getCommentList().add(this);
     }
 
-    public void addTagMember(TagMember tagMember){
-        this.tagMemberSet.add(tagMember);
-        tagMember.setComment(this);
+    public void addMemberTag(MemberTag memberTag){
+        this.memberTagSet.add(memberTag);
+        memberTag.setComment(this);
     }
 }

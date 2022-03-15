@@ -4,11 +4,13 @@ import com.web.doitcommit.domain.board.Board;
 import com.web.doitcommit.domain.board.BoardRepository;
 import com.web.doitcommit.domain.comment.Comment;
 import com.web.doitcommit.domain.comment.CommentRepository;
-import com.web.doitcommit.domain.comment.TagMember;
-import com.web.doitcommit.domain.comment.TagMemberRepository;
+import com.web.doitcommit.domain.comment.MemberTag;
+import com.web.doitcommit.domain.comment.MemberTagRepository;
+import com.web.doitcommit.domain.files.Image;
 import com.web.doitcommit.domain.member.Member;
 import com.web.doitcommit.dto.comment.CommentRegDto;
 import com.web.doitcommit.dto.comment.CommentUpdateDto;
+import com.web.doitcommit.dto.memberTag.MemberTagResDto;
 import com.web.doitcommit.handler.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Transactional
@@ -25,7 +28,7 @@ public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
     private final BoardRepository boardRepository;
-    private final TagMemberRepository tagMemberRepository;
+    private final MemberTagRepository memberTagRepository;
 
     /**
      * 댓글 작성
@@ -43,13 +46,13 @@ public class CommentServiceImpl implements CommentService {
         if (commentRegDto.getMemberIdSet() != null && !commentRegDto.getMemberIdSet().isEmpty()){
 
             commentRegDto.getMemberIdSet().forEach(id ->{
-                //tagMember 생성
-                TagMember tagMember = TagMember.builder()
+                //memberTag 생성
+                MemberTag memberTag = MemberTag.builder()
                         .member(Member.builder().memberId(id).build())
                         .build();
 
-                //tagMember 추가
-                comment.addTagMember(tagMember);
+                //memberTag 추가
+                comment.addMemberTag(memberTag);
             });
         }
 
@@ -68,7 +71,7 @@ public class CommentServiceImpl implements CommentService {
 
         comment.changeContent(commentUpdateDto.getContent());
 
-        Set<TagMember> findTagMember = comment.getTagMemberSet();
+        Set<MemberTag> findTagMember = comment.getMemberTagSet();
 
         Set<Long> findMemberIdSetOfTagMember = findTagMember.stream().map(tagMember -> {
             return tagMember.getMember().getMemberId();
@@ -90,10 +93,10 @@ public class CommentServiceImpl implements CommentService {
         //신규 태그 추가
         if(memberIdSet != null && !memberIdSet.isEmpty()){
             for (Long id : memberIdSet){
-                TagMember tagMember = TagMember.builder()
+                MemberTag tagMember = MemberTag.builder()
                         .member(Member.builder().memberId(id).build())
                         .build();
-                comment.addTagMember(tagMember);
+                comment.addMemberTag(tagMember);
             }
         }
 
@@ -107,7 +110,7 @@ public class CommentServiceImpl implements CommentService {
 //            }
 //        });
         if (!findMemberIdSetOfTagMember.isEmpty()) {
-            tagMemberRepository.deleteAllByMemberIdInQuery(findMemberIdSetOfTagMember);
+            memberTagRepository.deleteAllByMemberIdInQuery(findMemberIdSetOfTagMember);
         }
 
 
@@ -130,5 +133,20 @@ public class CommentServiceImpl implements CommentService {
         comment.remove();
 
         return comment.getCommentId();
+    }
+
+    /**
+     * 회원 태그 리스트 조회
+     */
+    @Transactional(readOnly = true)
+    @Override
+    public List<MemberTagResDto> getMemberTagList(Long boardId) {
+        List<Object[]> result = commentRepository.getMemberTagList(boardId);
+
+        List<MemberTagResDto> memberTagResDtoList = result.stream().map(arr ->
+                new MemberTagResDto((Long) arr[0], (String) arr[1], (Image) arr[2]))
+                .collect(Collectors.toList());
+
+        return memberTagResDtoList;
     }
 }

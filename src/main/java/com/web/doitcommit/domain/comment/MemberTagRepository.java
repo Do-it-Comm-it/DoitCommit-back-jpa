@@ -8,12 +8,12 @@ import org.springframework.data.repository.query.Param;
 import javax.persistence.ManyToOne;
 import java.util.Set;
 
-public interface TagMemberRepository extends JpaRepository<TagMember,Long> {
+public interface MemberTagRepository extends JpaRepository<MemberTag,Long> {
 
-    Set<TagMember> findByComment(Comment comment);
+    Set<MemberTag> findByComment(Comment comment);
 
     @Modifying
-    @Query("delete from TagMember tm where tm.member.memberId in :memberIds")
+    @Query("delete from MemberTag mt where mt.member.memberId in :memberIds")
     void deleteAllByMemberIdInQuery(@Param("memberIds") Set<Long> memberIdSet);
 
 
