@@ -5,6 +5,7 @@ import com.web.doitcommit.dto.CMRespDto;
 import com.web.doitcommit.dto.board.BoardRegDto;
 import com.web.doitcommit.dto.board.BoardListResDto;
 import com.web.doitcommit.dto.board.BoardResDto;
+import com.web.doitcommit.dto.board.TagCategoryResDto;
 import com.web.doitcommit.service.board.BoardService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -105,8 +106,8 @@ public class BoardController {
     })
     @GetMapping("/tag")
     public ResponseEntity<?> getTagList() {
-        String[] TagList = boardService.getBoardTagList();
-        return new ResponseEntity<>(new CMRespDto<>(1, "태그 리스트 조회 성공", TagList),HttpStatus.OK);
+        List<TagCategoryResDto> tagCategoryResDto = boardService.getBoardTagList();
+        return new ResponseEntity<>(new CMRespDto<>(1, "태그 리스트 조회 성공", tagCategoryResDto),HttpStatus.OK);
     }
 
 
