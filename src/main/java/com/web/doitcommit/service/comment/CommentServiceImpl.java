@@ -40,7 +40,7 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = commentRegDto.toEntity(board,principalId);
 
         //회원 태그가 있는 경우
-        if (commentRegDto.getMemberIdSet() != null || !commentRegDto.getMemberIdSet().isEmpty()){
+        if (commentRegDto.getMemberIdSet() != null && !commentRegDto.getMemberIdSet().isEmpty()){
 
             commentRegDto.getMemberIdSet().forEach(id ->{
                 //tagMember 생성
