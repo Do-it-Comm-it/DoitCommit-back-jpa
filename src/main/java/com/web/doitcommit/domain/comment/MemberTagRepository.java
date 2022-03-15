@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Set;
 
-public interface TagMemberRepository extends JpaRepository<TagMember,Long> {
+public interface MemberTagRepository extends JpaRepository<MemberTag,Long> {
 
-    Set<TagMember> findByComment(Comment comment);
+    Set<MemberTag> findByComment(Comment comment);
 }

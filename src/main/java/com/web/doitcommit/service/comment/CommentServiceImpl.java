@@ -4,14 +4,12 @@ import com.web.doitcommit.domain.board.Board;
 import com.web.doitcommit.domain.board.BoardRepository;
 import com.web.doitcommit.domain.comment.Comment;
 import com.web.doitcommit.domain.comment.CommentRepository;
-import com.web.doitcommit.domain.comment.TagMember;
-import com.web.doitcommit.domain.comment.TagMemberRepository;
+import com.web.doitcommit.domain.comment.MemberTag;
 import com.web.doitcommit.domain.files.Image;
-import com.web.doitcommit.domain.files.MemberImage;
 import com.web.doitcommit.domain.member.Member;
 import com.web.doitcommit.dto.comment.CommentRegDto;
 import com.web.doitcommit.dto.comment.CommentUpdateDto;
-import com.web.doitcommit.dto.member.TagMemberResDto;
+import com.web.doitcommit.dto.memberTag.MemberTagResDto;
 import com.web.doitcommit.handler.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -44,13 +42,13 @@ public class CommentServiceImpl implements CommentService {
         if (commentRegDto.getMemberIdSet() != null || !commentRegDto.getMemberIdSet().isEmpty()){
 
             commentRegDto.getMemberIdSet().forEach(id ->{
-                //tagMember 생성
-                TagMember tagMember = TagMember.builder()
+                //memberTag 생성
+                MemberTag memberTag = MemberTag.builder()
                         .member(Member.builder().memberId(id).build())
                         .build();
 
-                //tagMember 추가
-                comment.addTagMember(tagMember);
+                //memberTag 추가
+                comment.addMemberTag(memberTag);
             });
         }
 
@@ -91,13 +89,13 @@ public class CommentServiceImpl implements CommentService {
      */
     @Transactional(readOnly = true)
     @Override
-    public List<TagMemberResDto> getTagMemberList(Long boardId) {
-        List<Object[]> result = commentRepository.getTagMemberList(boardId);
+    public List<MemberTagResDto> getMemberTagList(Long boardId) {
+        List<Object[]> result = commentRepository.getMemberTagList(boardId);
 
-        List<TagMemberResDto> tagMemberResDtoList = result.stream().map(arr ->
-                new TagMemberResDto((Long) arr[0], (String) arr[1], (Image) arr[2]))
+        List<MemberTagResDto> memberTagResDtoList = result.stream().map(arr ->
+                new MemberTagResDto((Long) arr[0], (String) arr[1], (Image) arr[2]))
                 .collect(Collectors.toList());
 
-        return tagMemberResDtoList;
+        return memberTagResDtoList;
     }
 }

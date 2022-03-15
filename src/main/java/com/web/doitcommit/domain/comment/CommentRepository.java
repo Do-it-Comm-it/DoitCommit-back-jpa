@@ -13,5 +13,5 @@ public interface CommentRepository extends JpaRepository<Comment,Long> {
             "left join MemberImage mi on mi.member.memberId = m.memberId " +
             "left join Image i on i.imageId = mi.imageId " +
             "where c.board.boardId = :boardId")
-    List<Object[]> getTagMemberList(@Param("boardId") Long boardId);
+    List<Object[]> getMemberTagList(@Param("boardId") Long boardId);
 }
