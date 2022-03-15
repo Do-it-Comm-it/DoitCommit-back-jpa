@@ -134,6 +134,20 @@ class CommentServiceImplTest {
         System.out.println(findComment);
     }
 
+    @Test
+    void 댓글삭제() throws Exception{
+        //given
+        Comment comment = createComment(member, board, "testContent");
+
+        //when
+        Long removedCommentId = commentService.remove(comment.getCommentId());
+
+        //then
+        Comment removedComment = commentRepository.findById(removedCommentId).get();
+        assertThat(removedComment.getCommentId()).isNotNull();
+        assertThat(removedComment.getIsExist()).isFalse();
+    }
+
     /**
      * board 1
      * comment 2 - 게시글 작성자 1(프로필사진x), 일반 회원 1 (프로필사진o)

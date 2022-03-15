@@ -112,12 +112,7 @@ public class CommentServiceImpl implements CommentService {
         if (!findMemberIdSetOfTagMember.isEmpty()) {
             memberTagRepository.deleteAllByMemberIdInQuery(findMemberIdSetOfTagMember);
         }
-
-
-
-
     }
-
 
     /**
      * 댓글 삭제
