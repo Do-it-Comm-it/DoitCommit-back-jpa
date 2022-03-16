@@ -6,6 +6,7 @@ import com.web.doitcommit.domain.boardCategory.BoardCategory;
 import com.web.doitcommit.domain.boardCategory.BoardCategoryRepository;
 import com.web.doitcommit.domain.comment.Comment;
 import com.web.doitcommit.domain.comment.CommentRepository;
+
 import com.web.doitcommit.domain.comment.MemberTag;
 import com.web.doitcommit.domain.comment.MemberTagRepository;
 import com.web.doitcommit.domain.files.MemberImage;
@@ -14,8 +15,10 @@ import com.web.doitcommit.domain.member.AuthProvider;
 import com.web.doitcommit.domain.member.Member;
 import com.web.doitcommit.domain.member.MemberRepository;
 import com.web.doitcommit.dto.comment.CommentRegDto;
+import com.web.doitcommit.dto.comment.CommentUpdateDto;
 import com.web.doitcommit.dto.memberTag.MemberTagResDto;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -96,15 +99,64 @@ class CommentServiceImplTest {
         assertThat(comment.getMemberTagSet()).isEqualTo(findMemberTagSet);
     }
 
+
+    @Disabled
+    @Test
+    void 댓글수정() throws Exception{
+        //given
+        Set<MemberTag> tagMemberSet = new HashSet<>();
+/*
+        tagMemberIdSet.forEach(id ->{
+            //tagMember 생성
+            TagMember tagMember = TagMember.builder()
+                    .member(Member.builder().memberId(id).build())
+                    .build();
+
+            //tagMember 추가
+            tagMemberSet.add(tagMember);
+        });
+
+
+        Comment comment = createComment(member, board, "testContent", tagMemberSet);*/
+
+        CommentUpdateDto commentUpdateDto =
+                createUpdateDto(1L, "updateContent", null);
+        //when
+        commentService.modify(commentUpdateDto);
+
+        //then
+        Comment findComment = commentRepository.findById(1L).get();
+        Set<MemberTag> result = memberTagRepository.findByComment(findComment);
+        for (MemberTag tagMember : result){
+            System.out.println(tagMember);
+        }
+
+        System.out.println(findComment);
+    }
+
+    @Test
+    void 댓글삭제() throws Exception{
+        //given
+        Comment comment = createComment(member, board, "testContent");
+
+        //when
+        Long removedCommentId = commentService.remove(comment.getCommentId());
+
+        //then
+        Comment removedComment = commentRepository.findById(removedCommentId).get();
+        assertThat(removedComment.getCommentId()).isNotNull();
+        assertThat(removedComment.getIsExist()).isFalse();
+    }
+
     /**
      * board 1
      * comment 2 - 게시글 작성자 1(프로필사진x), 일반 회원 1 (프로필사진o)
      */
     @Test
-    void 회원태그_리스트_조회() throws Exception{
+    void 회원태그_리스트_조회 () throws Exception {
         //given
         //게시글 작성자 댓글 생성
-        createComment(member,board,"testContent");
+        createComment(member, board, "testContent");
 
         //일반 회원 생성
         Member createMember = createMember("testMember@naver.com", "testNickname", "testUsername",
@@ -112,7 +164,7 @@ class CommentServiceImplTest {
         //일반 회원 프로필 사진 생성
         MemberImage createMemberImage = createMemberImage(createMember, "testFilePath", "testFileNm");
         //일반 회원 댓글 생성
-        createComment(createMember,board,"testContent");
+        createComment(createMember, board, "testContent");
 
 
         //when
@@ -130,17 +182,18 @@ class CommentServiceImplTest {
         assertThat(memberTagResList.get(1).getImageResDto().getFilePath()).isEqualTo(createMemberImage.getFilePath());
         assertThat(memberTagResList.get(1).getImageResDto().getFileNm()).isEqualTo(createMemberImage.getFileNm());
 
-        for (MemberTagResDto memberTagResDto : memberTagResList){
+        for (MemberTagResDto memberTagResDto : memberTagResList) {
             System.out.println(memberTagResDto);
         }
     }
 
-    private MemberImage createMemberImage(Member member, String filePath, String testFileNm) {
+    private MemberImage createMemberImage (Member member, String filePath, String testFileNm){
         MemberImage memberImage = new MemberImage(member, filePath, testFileNm);
         return memberImageRepository.save(memberImage);
     }
 
-    private Comment createComment(Member member, Board board, String content) {
+    private Comment createComment (Member member, Board board, String content){
+
         Comment comment = Comment.builder()
                 .member(member)
                 .board(board)
@@ -149,44 +202,67 @@ class CommentServiceImplTest {
         return commentRepository.save(comment);
     }
 
-    private CommentRegDto createCommentRegDto(Long boardId, String content, Set<Long> memberTagIdSet) {
-        return CommentRegDto.builder()
-                .boardId(boardId)
-                .content(content)
-                .memberIdSet(memberTagIdSet)
-                .build();
-    }
+        private Comment createComment (Member member, Board board, String content, Set<MemberTag> memberTagSet){
 
-    private Board createBoard(Member member, BoardCategory boardCategory, String title,
-                              String content, Set<String> tagSet) {
-        Board board = Board.builder()
-                .member(member)
-                .boardCategory(boardCategory)
-                .boardTitle(title)
-                .boardContent(content)
-                .tag(tagSet)
-                .build();
+            Comment comment = Comment.builder()
+                    .member(member)
+                    .board(board)
+                    .content(content)
+                    .build();
+            memberTagSet.forEach(memberTag -> comment.addMemberTag(memberTag));
 
-        return boardRepository.save(board);
-    }
+            return commentRepository.save(comment);
+        }
 
-    private BoardCategory createBoardCategory(String categoryName) {
-        BoardCategory category = BoardCategory.builder().categoryName(categoryName).build();
+        private CommentUpdateDto createUpdateDto (Long commentId, String content, Set <Long> tagMemberIdSet){
 
-        return boardCategoryRepository.save(category);
-    }
+            return CommentUpdateDto.builder()
+                    .commentId(commentId)
+                    .content(content)
+                    .memberIdSet(tagMemberIdSet)
+                    .build();
+        }
 
-    private Member createMember(String email, String nickname, String username, String oAuthId) {
-        Member member = Member.builder()
-                .email(email)
-                .nickname(nickname)
-                .password("1111")
-                .username(username)
-                .provider(AuthProvider.GOOGLE)
-                .interestTechSet(new HashSet<>(Arrays.asList("java")))
-                .oauthId(oAuthId)
-                .build();
 
-        return memberRepository.save(member);
-    }
+        private CommentRegDto createCommentRegDto (Long boardId, String content, Set < Long > memberTagIdSet){
+
+            return CommentRegDto.builder()
+                    .boardId(boardId)
+                    .content(content)
+                    .memberIdSet(memberTagIdSet)
+                    .build();
+        }
+
+        private Board createBoard (Member member, BoardCategory boardCategory, String title, String
+        content, Set < String > tagSet){
+            Board board = Board.builder()
+                    .member(member)
+                    .boardCategory(boardCategory)
+                    .boardTitle(title)
+                    .boardContent(content)
+                    .tag(tagSet)
+                    .build();
+
+            return boardRepository.save(board);
+        }
+
+        private BoardCategory createBoardCategory (String categoryName){
+            BoardCategory category = BoardCategory.builder().categoryName(categoryName).build();
+
+            return boardCategoryRepository.save(category);
+        }
+
+        private Member createMember (String email, String nickname, String username, String oAuthId){
+            Member member = Member.builder()
+                    .email(email)
+                    .nickname(nickname)
+                    .password("1111")
+                    .username(username)
+                    .provider(AuthProvider.GOOGLE)
+                    .interestTechSet(new HashSet<>(Arrays.asList("java")))
+                    .oauthId(oAuthId)
+                    .build();
+
+            return memberRepository.save(member);
+        }
 }
