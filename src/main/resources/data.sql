@@ -11,6 +11,19 @@ insert into tag_category (tag_name) values ('공대생');
 insert into tag_category (tag_name) values ('취준생');
 insert into tag_category (tag_name) values ('고민');
 insert into tag_category (tag_name) values ('질문');
+insert into tag_category (tag_name) values ('개발자');
+insert into tag_category (tag_name) values ('학생');
+insert into tag_category (tag_name) values ('비전공자');
+insert into tag_category (tag_name) values ('전공자');
+insert into tag_category (tag_name) values ('토이프로젝트');
+insert into tag_category (tag_name) values ('공모전');
+insert into tag_category (tag_name) values ('취업');
+insert into tag_category (tag_name) values ('취준');
+insert into tag_category (tag_name) values ('면접');
+insert into tag_category (tag_name) values ('디자이너');
+insert into tag_category (tag_name) values ('기획자');
+insert into tag_category (tag_name) values ('프론트');
+insert into tag_category (tag_name) values ('백엔드');
 
 -- 공지사항 게시글
 insert into board (board_cnt, board_title, board_content, category_id, member_id) values (0, '공지사항첫번째글제목', '첫번째글내용', 1, 1);
