@@ -8,17 +8,24 @@ import com.web.doitcommit.domain.comment.MemberTag;
 import com.web.doitcommit.domain.comment.MemberTagRepository;
 import com.web.doitcommit.domain.files.Image;
 import com.web.doitcommit.domain.member.Member;
+import com.web.doitcommit.dto.comment.CommentListDto;
 import com.web.doitcommit.dto.comment.CommentRegDto;
+import com.web.doitcommit.dto.comment.CommentResDto;
 import com.web.doitcommit.dto.comment.CommentUpdateDto;
 import com.web.doitcommit.dto.memberTag.MemberTagResDto;
+import com.web.doitcommit.dto.page.ScrollResultDto;
 import com.web.doitcommit.handler.exception.CustomException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Transactional
@@ -131,6 +138,22 @@ public class CommentServiceImpl implements CommentService {
     }
 
     /**
+     * 댓글 리스트 조회
+     */
+    @Transactional(readOnly = true)
+    @Override
+    public CommentListDto getCommentList(Long boardId, Pageable pageable) {
+
+        Page<Object[]> result = commentRepository.getCommentList(boardId, pageable);
+
+        Function<Object[], CommentResDto> fn = (arr -> new CommentResDto((Comment) arr[0], (Image) arr[1]));
+
+        ScrollResultDto<CommentResDto, Object[]> commentResDtoList = new ScrollResultDto<>(result, fn);
+
+        return new CommentListDto(result.getTotalElements(), commentResDtoList, getMemberTagList(boardId));
+    }
+
+    /**
      * 회원 태그 리스트 조회
      */
     @Transactional(readOnly = true)
@@ -138,10 +161,8 @@ public class CommentServiceImpl implements CommentService {
     public List<MemberTagResDto> getMemberTagList(Long boardId) {
         List<Object[]> result = commentRepository.getMemberTagList(boardId);
 
-        List<MemberTagResDto> memberTagResDtoList = result.stream().map(arr ->
+        return  result.stream().map(arr ->
                 new MemberTagResDto((Long) arr[0], (String) arr[1], (Image) arr[2]))
                 .collect(Collectors.toList());
-
-        return memberTagResDtoList;
     }
 }

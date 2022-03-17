@@ -173,12 +173,12 @@ class CommentServiceImplTest {
         //then
         assertThat(memberTagResList.size()).isEqualTo(2);
 
-        assertThat(memberTagResList.get(0).getMemberId()).isEqualTo(member.getMemberId());
-        assertThat(memberTagResList.get(0).getNickname()).isEqualTo(member.getNickname());
+        assertThat(memberTagResList.get(0).getId()).isEqualTo(member.getMemberId().toString());
+        assertThat(memberTagResList.get(0).getDisplay()).isEqualTo(member.getNickname());
         assertThat(memberTagResList.get(0).getImageResDto()).isNull();
 
-        assertThat(memberTagResList.get(1).getMemberId()).isEqualTo(createMember.getMemberId());
-        assertThat(memberTagResList.get(1).getNickname()).isEqualTo(createMember.getNickname());
+        assertThat(memberTagResList.get(1).getId()).isEqualTo(createMember.getMemberId().toString());
+        assertThat(memberTagResList.get(1).getDisplay()).isEqualTo(createMember.getNickname());
         assertThat(memberTagResList.get(1).getImageResDto().getFilePath()).isEqualTo(createMemberImage.getFilePath());
         assertThat(memberTagResList.get(1).getImageResDto().getFileNm()).isEqualTo(createMemberImage.getFileNm());
 

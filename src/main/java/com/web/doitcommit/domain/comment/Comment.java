@@ -31,10 +31,8 @@ public class Comment extends BaseEntity {
 
     @BatchSize(size = 100)
     @Builder.Default
-
     @OneToMany(mappedBy = "comment", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST,CascadeType.REMOVE})
     private Set<MemberTag> memberTagSet = new HashSet<>();
-
 
     @Builder.Default
     private String content = "";
