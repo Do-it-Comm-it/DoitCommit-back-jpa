@@ -7,6 +7,7 @@ import com.web.doitcommit.domain.hashtag.BoardHashtagRepository;
 import com.web.doitcommit.domain.hashtag.TagCategory;
 import com.web.doitcommit.domain.hashtag.TagCategoryRepository;
 import com.web.doitcommit.dto.board.*;
+import com.web.doitcommit.handler.exception.CustomException;
 import com.web.doitcommit.service.image.ImageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -112,13 +113,13 @@ public class BoardService {
     @Transactional(readOnly = true)
     public BoardResDto GetBoard(Long boardId) {
         Board boardEntity = boardRepository.findById(boardId).orElseThrow(() ->
-                new IllegalArgumentException("존재하지않는 게시글입니다."));
+                new CustomException("존재하지 않는 게시글입니다."));
         boardEntity.changeBoardCnt();
         BoardResDto boardResDto = new BoardResDto(boardEntity);
-
-        if(boardEntity.getBoardHashtag() != null){
-            boardResDto.setBoardHashtag(boardEntity.getBoardHashtag());
-        }
+        //List<Object> boardHashtags = boardRepository.getPostTagList(boardId);
+//        if(boardHashtag != null){
+//            boardResDto.setBoardHashtag(boardHashtags);
+//        }
         return boardResDto;
     }
 
