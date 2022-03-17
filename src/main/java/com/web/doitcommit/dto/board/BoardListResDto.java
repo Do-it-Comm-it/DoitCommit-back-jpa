@@ -47,7 +47,7 @@ public class BoardListResDto {
     public BoardListResDto(Board board){
         boardId = board.getBoardId();
         writer = board.getMember().getNickname();
-        boardHashtag = board.getBoardHashtag();
+//        boardHashtag = board.getBoardHashtag();
         boardTitle = board.getBoardTitle();
         boardContent = board.getBoardContent();
         categoryId = board.getBoardCategory().getCategoryId();
