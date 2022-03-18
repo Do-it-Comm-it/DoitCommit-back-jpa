@@ -5,6 +5,7 @@ import com.web.doitcommit.dto.CMRespDto;
 import com.web.doitcommit.dto.board.BoardRegDto;
 import com.web.doitcommit.dto.board.BoardListResDto;
 import com.web.doitcommit.dto.board.BoardResDto;
+import com.web.doitcommit.dto.board.TagCategoryResDto;
 import com.web.doitcommit.service.board.BoardService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -93,11 +94,7 @@ public class BoardController {
      */
     @Operation(summary = "태그 목록 조회 API", description = "태그 목록 조회을 조회한다.")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(example = "{\n" +
-                    "  \"message\": \"태그 목록 조회 성공\",\n" +
-                    "  \"data\": [],\n" +
-                    "  \"code\": 1\n" +
-                    "}"))),
+            @ApiResponse(responseCode = "200", content = @Content(array = @ArraySchema(schema = @Schema(implementation = TagCategoryResDto.class)))),
             @ApiResponse(responseCode = "400", content = @Content(schema = @Schema(example = "{\"error\": \"Bad Request\"}"))),
             @ApiResponse(responseCode = "401", content = @Content(schema = @Schema(example = "{\"error\": \"Unauthorized\"}"))),
             @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(example = "{\"error\": \"Not Found\"}"))),
@@ -105,8 +102,8 @@ public class BoardController {
     })
     @GetMapping("/tag")
     public ResponseEntity<?> getTagList() {
-        String[] TagList = boardService.getBoardTagList();
-        return new ResponseEntity<>(new CMRespDto<>(1, "태그 리스트 조회 성공", TagList),HttpStatus.OK);
+        List<TagCategoryResDto> tagCategoryResDto = boardService.getBoardTagList();
+        return new ResponseEntity<>(new CMRespDto<>(1, "태그 리스트 조회 성공", tagCategoryResDto),HttpStatus.OK);
     }
 
 

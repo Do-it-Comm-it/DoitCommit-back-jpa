@@ -2,10 +2,12 @@ package com.web.doitcommit.service.board;
 
 import com.web.doitcommit.domain.board.Board;
 import com.web.doitcommit.domain.board.BoardRepository;
-import com.web.doitcommit.dto.board.BoardRegDto;
-import com.web.doitcommit.dto.board.BoardListResDto;
-import com.web.doitcommit.dto.board.BoardResDto;
-import com.web.doitcommit.dto.board.ImageRegDto;
+import com.web.doitcommit.domain.hashtag.BoardHashtag;
+import com.web.doitcommit.domain.hashtag.BoardHashtagRepository;
+import com.web.doitcommit.domain.hashtag.TagCategory;
+import com.web.doitcommit.domain.hashtag.TagCategoryRepository;
+import com.web.doitcommit.dto.board.*;
+import com.web.doitcommit.handler.exception.CustomException;
 import com.web.doitcommit.service.image.ImageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,8 @@ import java.util.stream.Collectors;
 public class BoardService {
 
     private final BoardRepository boardRepository;
+    private final BoardHashtagRepository boardHashtagRepository;
+    private final TagCategoryRepository tagCategoryRepository;
     private final ImageService imageService;
 
 
@@ -37,7 +41,16 @@ public class BoardService {
     @Transactional
     public void createBoard(BoardRegDto boardRegDto, Long principalId) {
         Board boardEntity = boardRegDto.toEntity(principalId);
+
         Board board = boardRepository.save(boardEntity);
+
+        if(boardRegDto.getBoardHashtag() !=null){
+            for (int i = 0; i < boardRegDto.getBoardHashtag().size(); i++) {
+                TagCategory tagCategory = new TagCategory(boardRegDto.getBoardHashtag().get(i));
+                BoardHashtag boardHashtag = new BoardHashtag(board,tagCategory);
+                boardHashtagRepository.save(boardHashtag);
+            }
+        }
 
         ImageRegDto[] allImageArr = new ImageRegDto[0];
         if(boardRegDto.getAllImageArr() !=null){
@@ -97,25 +110,25 @@ public class BoardService {
     /**
      * 게시글 조회
      */
-    @Transactional
+    @Transactional(readOnly = true)
     public BoardResDto GetBoard(Long boardId) {
         Board boardEntity = boardRepository.findById(boardId).orElseThrow(() ->
-                new IllegalArgumentException("존재하지않는 게시글입니다."));
+                new CustomException("존재하지 않는 게시글입니다."));
         boardEntity.changeBoardCnt();
-        return new BoardResDto(boardEntity);
+        BoardResDto boardResDto = new BoardResDto(boardEntity);
+        //List<Object> boardHashtags = boardRepository.getPostTagList(boardId);
+//        if(boardHashtag != null){
+//            boardResDto.setBoardHashtag(boardHashtags);
+//        }
+        return boardResDto;
     }
 
     /**
      * 태그 목록 조회
      */
     @Transactional(readOnly = true)
-    public String[] getBoardTagList() {
-        List<String> result = boardRepository.getCustomTagList();
-        String[] tagArr = new String[result.size()];
-        int size = 0;
-        for (String temp : result) {
-            tagArr[size++] = temp;
-        }
-        return tagArr;
+    public List<TagCategoryResDto> getBoardTagList() {
+        List<TagCategory> result = tagCategoryRepository.findAll();
+        return result.stream().map(tag -> new TagCategoryResDto(tag)).collect(Collectors.toList());
     }
 }

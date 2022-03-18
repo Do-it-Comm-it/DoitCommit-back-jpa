@@ -65,6 +65,7 @@ public class ImageService {
     /**
      * 이미지 조회
      */
+    @Transactional(readOnly = true)
     public String getImage(String filePath, String fileNm) {
         return s3Uploader.getImageUrl(filePath, fileNm);
     }
