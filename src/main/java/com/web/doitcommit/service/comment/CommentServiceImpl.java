@@ -13,11 +13,13 @@ import com.web.doitcommit.dto.comment.CommentRegDto;
 import com.web.doitcommit.dto.comment.CommentResDto;
 import com.web.doitcommit.dto.comment.CommentUpdateDto;
 import com.web.doitcommit.dto.memberTag.MemberTagResDto;
+import com.web.doitcommit.dto.page.PageRequestDto;
 import com.web.doitcommit.dto.page.ScrollResultDto;
 import com.web.doitcommit.handler.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -142,9 +144,9 @@ public class CommentServiceImpl implements CommentService {
      */
     @Transactional(readOnly = true)
     @Override
-    public CommentListDto getCommentList(Long boardId, Pageable pageable) {
+    public CommentListDto getCommentList(Long boardId, PageRequestDto pageRequestDto) {
 
-        Page<Object[]> result = commentRepository.getCommentList(boardId, pageable);
+        Page<Object[]> result = commentRepository.getCommentList(boardId, pageRequestDto.getPageable());
 
         Function<Object[], CommentResDto> fn = (arr -> new CommentResDto((Comment) arr[0], (Image) arr[1]));
 

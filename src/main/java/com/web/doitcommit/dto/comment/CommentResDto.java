@@ -16,22 +16,29 @@ import java.util.stream.Collectors;
 @Data
 public class CommentResDto {
 
+    @Schema(description = "댓글 고유값")
     private Long commentId;
 
+    @Schema(description = "회원 고유값(작성자)")
     private String writerId;
 
+    @Schema(description = "작성자 닉네임")
     private String nickname;
 
+    @Schema(description = "이미지 데이터")
     private ImageResDto imageResDto;
 
+    @Schema(description = "본문")
     private String content;
 
+    @Schema(description = "댓글 존재 유무")
     private Boolean isExist;
 
-    @Schema(description = "투두 날짜('yyyy-MM-ddTHH:mm')")
+    @Schema(description = "댓글 등록 날짜('yyyy-MM-ddTHH:mm')")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm", timezone = "Asia/Seoul")
     private LocalDateTime regDateTime;
 
+    @Schema(description = "회원 태그의 회원 고유값 set")
     private Set<String> memberIdSet;
 
     public CommentResDto(Comment comment, Image image){

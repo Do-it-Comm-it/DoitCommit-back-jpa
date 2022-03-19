@@ -16,6 +16,7 @@ import com.web.doitcommit.domain.member.MemberRepository;
 import com.web.doitcommit.dto.comment.CommentListDto;
 import com.web.doitcommit.dto.comment.CommentResDto;
 import com.web.doitcommit.dto.memberTag.MemberTagResDto;
+import com.web.doitcommit.dto.page.PageRequestDto;
 import com.web.doitcommit.dto.page.ScrollResultDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -110,10 +111,11 @@ public class CommentServiceImplReadTest {
     @Test
     void 댓글리스트_조회() throws Exception{
         //given
-        Pageable pageable = PageRequest.of(0, 4, Sort.by("commentId").ascending());
+
+        PageRequestDto pageRequestDto = PageRequestDto.builder().page(1).size(4).build();
 
         //when
-        CommentListDto commentListDto = commentService.getCommentList(board.getBoardId(), pageable);
+        CommentListDto commentListDto = commentService.getCommentList(board.getBoardId(), pageRequestDto);
         //then
         //댓글 수 검증
         Assertions.assertThat(commentListDto.getCommentCount()).isEqualTo(5);
@@ -122,7 +124,7 @@ public class CommentServiceImplReadTest {
         Assertions.assertThat(commentListDto.getCommentResDtoList().getSize()).isEqualTo(4);
         Assertions.assertThat(commentListDto.getCommentResDtoList().getPage()).isEqualTo(1);
         Assertions.assertThat(commentListDto.getCommentResDtoList().getTotalPage()).isEqualTo(2);
-        Assertions.assertThat(commentListDto.getCommentResDtoList().isNext()).isEqualTo(true);
+        Assertions.assertThat(commentListDto.getCommentResDtoList().isLast()).isEqualTo(false);
 
         //회원 태그 리스트 검증
         Assertions.assertThat(commentListDto.getMemberTagResDtoList().size()).isEqualTo(3);
