@@ -41,11 +41,7 @@ public class ScrollResultDto<DTO, EN> {
 
         this.page = pageable.getPageNumber() + 1; // 0부터 시작하므로 1을 추가
         this.size = pageable.getPageSize();
-
-        //temp end page
-        int tempEnd = (int)(Math.ceil(page/10.0)) * 10;
-
-        next = totalPage > tempEnd;
+        this.next = totalPage > page;
     }
 
 

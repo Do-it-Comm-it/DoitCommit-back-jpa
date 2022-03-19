@@ -17,6 +17,7 @@ import com.web.doitcommit.dto.comment.CommentListDto;
 import com.web.doitcommit.dto.comment.CommentResDto;
 import com.web.doitcommit.dto.memberTag.MemberTagResDto;
 import com.web.doitcommit.dto.page.ScrollResultDto;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,12 +48,34 @@ public class CommentServiceImplReadTest {
     private Member member;
     private Board board;
 
+    /**
+     * 댓글 수 5
+     *
+     * -> 게시글 작성자
+     * -> 일반회원1(프로필 사진o)
+     * -> 게시글 작성자
+     * -> 일반회원2(게시글작성자, 일반회원1 태그)
+     * -> 게시글 작성자
+     */
     @BeforeEach
     void before(){
+
+        //게시글 작성자 생성
         Member member = createMember("boardWriter@naver.com", "boardWriterNickname",
                 "boardWriterUsername", "boardWriterOAuthId");
         this.member = member;
 
+        //일반 회원1 생성
+        Member createMember1 = createMember("testMember1@naver.com", "test1Nickname", "test1Username",
+                "adf111");
+        //일반 회원 프로필 사진 생성
+        MemberImage createMemberImage = createMemberImage(createMember1, "testFilePath", "testFileNm");
+
+        //일반회원 2 생성
+        Member createMember2 = createMember("testMember2@naver.com", "test2Nickname", "test2Username",
+                "adf123");
+
+        //게시글 카테고리 생성
         BoardCategory category = createBoardCategory("testName");
 
         //게시글 태그 set 생성
@@ -67,32 +90,43 @@ public class CommentServiceImplReadTest {
         //게시글 작성자 댓글1
         createComment(member,board, "게시글 작성자의 답변 1");
 
-        //일반 회원 생성
-        Member createMember = createMember("testMember@naver.com", "testNickname", "testUsername",
-                "adf111");
-        //일반 회원 프로필 사진 생성
-        MemberImage createMemberImage = createMemberImage(createMember, "testFilePath", "testFileNm");
-
-        //일반 회원 댓글 생성
-        HashSet<Long> memberIdSet = new HashSet<>();
-        memberIdSet.add(member.getMemberId());
-        createComment(createMember, board, "testContent", memberIdSet);
+        //일반 회원1 댓글 생성
+        createComment(createMember1, board, "testContent");
 
         //게시글 작성자 댓글2
-        createComment(member,board,"게시글 작성자 답젼 2");
+        createComment(member,board,"게시글 작성자 답변 2");
+
+        //일반 회원2 댓글 생성
+        HashSet<Long> memberIdSet = new HashSet<>();
+        memberIdSet.add(member.getMemberId()); //게시글 작성자 태그
+        memberIdSet.add(createMember1.getMemberId()); //일반회원1 태그
+
+        createComment(createMember2, board, "태그포함, testContent", memberIdSet);
+
+        //게시글 작성자 댓글3
+        createComment(member,board,"게시글 작성자 답변 3");
     }
 
     @Test
     void 댓글리스트_조회() throws Exception{
         //given
-        Pageable pageable = PageRequest.of(0, 5, Sort.by("commentId").ascending());
+        Pageable pageable = PageRequest.of(0, 4, Sort.by("commentId").ascending());
 
         //when
         CommentListDto commentListDto = commentService.getCommentList(board.getBoardId(), pageable);
-
         //then
-        System.out.println(commentListDto.getCommentCount());
-        System.out.println(commentListDto.getCommentResDtoList());
+        //댓글 수 검증
+        Assertions.assertThat(commentListDto.getCommentCount()).isEqualTo(5);
+
+        //댓글 리스트 검증
+        Assertions.assertThat(commentListDto.getCommentResDtoList().getSize()).isEqualTo(4);
+        Assertions.assertThat(commentListDto.getCommentResDtoList().getPage()).isEqualTo(1);
+        Assertions.assertThat(commentListDto.getCommentResDtoList().getTotalPage()).isEqualTo(2);
+        Assertions.assertThat(commentListDto.getCommentResDtoList().isNext()).isEqualTo(true);
+
+        //회원 태그 리스트 검증
+        Assertions.assertThat(commentListDto.getMemberTagResDtoList().size()).isEqualTo(3);
+
         ScrollResultDto<CommentResDto, Object[]> commentResDtoList = commentListDto.getCommentResDtoList();
         for (CommentResDto dto : commentResDtoList.getDtoList()){
             System.out.println(dto);
