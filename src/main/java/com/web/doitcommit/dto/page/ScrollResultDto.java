@@ -1,5 +1,6 @@
 package com.web.doitcommit.dto.page;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,18 +15,23 @@ import java.util.stream.IntStream;
 public class ScrollResultDto<DTO, EN> {
 
     //DTO리스트
+    @Schema(description = "dto 리스트")
     private List<DTO> dtoList;
 
     //총 페이지 번호
+    @Schema(description = "전체 페이지 수")
     private int totalPage;
 
     //현재 페이지 번호
+    @Schema(description = "현재 페이지")
     private int page;
 
     //목록 사이즈
+    @Schema(description = "페이지 크기")
     private int size;
 
-    //다음
+    //마지막
+    @Schema(description = "현재 페이지 마지막 여부")
     private boolean last;
 
 
