@@ -10,22 +10,21 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MemberTagResDto {
 
-    @Schema(description = "회원 고유값")
-    private Long memberId;
+    @Schema(description = "회원 고유값 - String 타입")
+    private String id;
 
     @Schema(description = "회원 닉네임")
-    private String nickname;
+    private String display;
 
     @Schema(description = "회원 프로필")
     private ImageResDto imageResDto;
 
     public MemberTagResDto(Long memberId, String nickname, Image image){
-        this.memberId = memberId;
-        this.nickname = nickname;
+        this.id = memberId.toString();
+        this.display = nickname;
 
         if (image != null){
-            ImageResDto imageResDto = new ImageResDto(image.getFilePath(), image.getFileNm());
-            this.imageResDto = imageResDto;
+            this.imageResDto = new ImageResDto(image.getFilePath(), image.getFileNm());
         }
     }
 }
