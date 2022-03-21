@@ -17,6 +17,7 @@ import com.web.doitcommit.domain.member.MemberRepository;
 import com.web.doitcommit.dto.comment.CommentRegDto;
 import com.web.doitcommit.dto.comment.CommentUpdateDto;
 import com.web.doitcommit.dto.memberTag.MemberTagResDto;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -44,7 +45,7 @@ class CommentServiceImplTest {
 
     private Member member;
     private Board board;
-    private Set<Long> memberTagIdSet;
+    private Set<Long> memberIdSet;
 
     @BeforeEach
     void before(){
@@ -63,16 +64,16 @@ class CommentServiceImplTest {
         this.board = board;
 
         //회원 태그 리스트
-        Set<Long> memberTagIdSet = new HashSet<>();
+        Set<Long> memberIdSet = new HashSet<>();
 
         IntStream.rangeClosed(1,3).forEach(i -> {
             Member newMember = createMember("before" + i + "@naver.com", "beforeNickname" + i,
                     "beforeUsername" + i, "beforeOAuthId" + i);
 
-            memberTagIdSet.add(memberRepository.save(newMember).getMemberId());
+            memberIdSet.add(memberRepository.save(newMember).getMemberId());
         });
 
-        this.memberTagIdSet = memberTagIdSet;
+        this.memberIdSet = memberIdSet;
     }
 
 
@@ -81,7 +82,7 @@ class CommentServiceImplTest {
         //given
 
         CommentRegDto commentRegDto =
-                createCommentRegDto(board.getBoardId(), "testContent", memberTagIdSet);
+                createCommentRegDto(board.getBoardId(), "testContent", memberIdSet);
 
         //when
         Comment comment = commentService.register(commentRegDto, member.getMemberId());
@@ -100,36 +101,33 @@ class CommentServiceImplTest {
     }
 
 
-    @Disabled
     @Test
     void 댓글수정() throws Exception{
         //given
-        Set<MemberTag> tagMemberSet = new HashSet<>();
-/*
-        tagMemberIdSet.forEach(id ->{
+        Set<MemberTag> memberTagSet = new HashSet<>();
+
+        memberIdSet.forEach(id ->{
             //tagMember 생성
-            TagMember tagMember = TagMember.builder()
+            MemberTag memberTag = MemberTag.builder()
                     .member(Member.builder().memberId(id).build())
                     .build();
 
             //tagMember 추가
-            tagMemberSet.add(tagMember);
+            memberTagSet.add(memberTag);
         });
 
 
-        Comment comment = createComment(member, board, "testContent", tagMemberSet);*/
+        Comment comment = createComment(member, board, "testContent", memberTagSet);
 
         CommentUpdateDto commentUpdateDto =
-                createUpdateDto(1L, "updateContent", null);
+                createUpdateDto(comment.getCommentId(), "updateContent", null);
         //when
         commentService.modify(commentUpdateDto);
 
         //then
-        Comment findComment = commentRepository.findById(1L).get();
-        Set<MemberTag> result = memberTagRepository.findByComment(findComment);
-        for (MemberTag tagMember : result){
-            System.out.println(tagMember);
-        }
+        Comment findComment = commentRepository.findById(comment.getCommentId()).get();
+        Assertions.assertThat(findComment.getContent()).isEqualTo(commentUpdateDto.getContent());
+        Assertions.assertThat(findComment.getMemberTagSet()).isEmpty();
 
         System.out.println(findComment);
     }
@@ -214,12 +212,12 @@ class CommentServiceImplTest {
             return commentRepository.save(comment);
         }
 
-        private CommentUpdateDto createUpdateDto (Long commentId, String content, Set <Long> tagMemberIdSet){
+        private CommentUpdateDto createUpdateDto (Long commentId, String content, Set<Long> updateMemberIdSet){
 
             return CommentUpdateDto.builder()
                     .commentId(commentId)
                     .content(content)
-                    .memberIdSet(tagMemberIdSet)
+                    .memberIdSet(updateMemberIdSet)
                     .build();
         }
 
