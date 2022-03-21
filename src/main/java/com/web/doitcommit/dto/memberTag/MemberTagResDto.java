@@ -17,14 +17,11 @@ public class MemberTagResDto {
     private String display;
 
     @Schema(description = "회원 프로필")
-    private ImageResDto imageResDto;
+    private String imageUrl;
 
-    public MemberTagResDto(Long memberId, String nickname, Image image){
+    public MemberTagResDto(Long memberId, String nickname, String imageUrl){
         this.id = memberId.toString();
         this.display = nickname;
-
-        if (image != null){
-            this.imageResDto = new ImageResDto(image.getFilePath(), image.getFileNm());
-        }
+        this.imageUrl = imageUrl;
     }
 }

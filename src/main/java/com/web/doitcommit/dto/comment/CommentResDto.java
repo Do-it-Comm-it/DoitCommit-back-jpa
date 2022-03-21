@@ -25,8 +25,8 @@ public class CommentResDto {
     @Schema(description = "작성자 닉네임")
     private String nickname;
 
-    @Schema(description = "이미지 데이터")
-    private ImageResDto imageResDto;
+    @Schema(description = "이미지 URL")
+    private String imageUrl;
 
     @Schema(description = "본문")
     private String content;
@@ -41,19 +41,17 @@ public class CommentResDto {
     @Schema(description = "회원 태그의 회원 고유값 set")
     private Set<String> memberIdSet;
 
-    public CommentResDto(Comment comment, Image image){
+    public CommentResDto(Comment comment, String imageUrl){
 
         commentId = comment.getCommentId();
         writerId = comment.getMember().getMemberId().toString();
         nickname = comment.getMember().getNickname();
         content = comment.getContent();
+        this.imageUrl = imageUrl;
         isExist = comment.getIsExist();
         regDateTime = comment.getModDate(); //수정 날짜
         memberIdSet = comment.getMemberTagSet().stream().map(memberTag ->
                 memberTag.getMember().getMemberId().toString()).collect(Collectors.toSet());
 
-        if (image != null){
-            this.imageResDto = new ImageResDto(image.getFilePath(), image.getFileNm());
-        }
     }
 }

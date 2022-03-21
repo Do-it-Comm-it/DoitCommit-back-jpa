@@ -16,6 +16,7 @@ import com.web.doitcommit.dto.memberTag.MemberTagResDto;
 import com.web.doitcommit.dto.page.PageRequestDto;
 import com.web.doitcommit.dto.page.ScrollResultDto;
 import com.web.doitcommit.handler.exception.CustomException;
+import com.web.doitcommit.service.image.ImageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -38,6 +39,7 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final BoardRepository boardRepository;
     private final MemberTagRepository memberTagRepository;
+    private final ImageService imageService;
 
     /**
      * 댓글 작성
@@ -148,7 +150,16 @@ public class CommentServiceImpl implements CommentService {
 
         Page<Object[]> result = commentRepository.getCommentList(boardId, pageRequestDto.getPageable());
 
-        Function<Object[], CommentResDto> fn = (arr -> new CommentResDto((Comment) arr[0], (Image) arr[1]));
+        Function<Object[], CommentResDto> fn = (arr -> {
+            Image image = (Image) arr[1];
+
+            String imageUrl = null;
+            if (image != null){
+                imageUrl = imageService.getImage(image.getFilePath(), image.getFileNm());
+            }
+
+            return new CommentResDto((Comment) arr[0], imageUrl);
+        });
 
         ScrollResultDto<CommentResDto, Object[]> commentResDtoList = new ScrollResultDto<>(result, fn);
 
@@ -163,8 +174,16 @@ public class CommentServiceImpl implements CommentService {
     public List<MemberTagResDto> getMemberTagList(Long boardId) {
         List<Object[]> result = commentRepository.getMemberTagList(boardId);
 
-        return  result.stream().map(arr ->
-                new MemberTagResDto((Long) arr[0], (String) arr[1], (Image) arr[2]))
-                .collect(Collectors.toList());
+        return result.stream().map(arr -> {
+            Image image = (Image) arr[2];
+
+            String imageUrl = null;
+
+            if(image != null){
+                imageUrl = imageService.getImage(image.getFilePath(), image.getFileNm());
+            }
+
+            return new MemberTagResDto((Long) arr[0], (String) arr[1], imageUrl);
+        }).collect(Collectors.toList());
     }
 }
