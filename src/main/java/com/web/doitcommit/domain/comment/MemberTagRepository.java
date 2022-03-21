@@ -12,7 +12,7 @@ public interface MemberTagRepository extends JpaRepository<MemberTag,Long> {
 
     Set<MemberTag> findByComment(Comment comment);
 
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Query("delete from MemberTag mt where mt.member.memberId in :memberIds")
     void deleteAllByMemberIdInQuery(@Param("memberIds") Set<Long> memberIdSet);
 

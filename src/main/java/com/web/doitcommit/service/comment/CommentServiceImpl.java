@@ -82,46 +82,54 @@ public class CommentServiceImpl implements CommentService {
 
         comment.changeContent(commentUpdateDto.getContent());
 
-        Set<MemberTag> findTagMember = comment.getMemberTagSet();
+        Set<MemberTag> findTagMemberSet = comment.getMemberTagSet();
 
-        Set<Long> findMemberIdSetOfTagMember = findTagMember.stream().map(tagMember -> {
-            return tagMember.getMember().getMemberId();
-        }).collect(Collectors.toSet());
+        updateMemberTag(comment, commentUpdateDto.getMemberIdSet(), findTagMemberSet);
 
-        Set<Long> memberIdSet = commentUpdateDto.getMemberIdSet();
+    }
 
-        Set<Long> memberIdSet2 = memberIdSet;
+    private void updateMemberTag(Comment comment, Set<Long> updateMemberIdSet, Set<MemberTag> findMemberSet) {
 
-        if(memberIdSet != null && !memberIdSet.isEmpty()){
-            memberIdSet.remove(findMemberIdSetOfTagMember);
+        Set<Long> findMemberIdSet = findMemberSet.stream().map(tagMember ->
+                tagMember.getMember().getMemberId()).collect(Collectors.toSet());
+
+
+        Set<Long> copyOfMemberIdSet = updateMemberIdSet;
+
+        //memberTag에 추가할 memberId 찾기
+        if(updateMemberIdSet != null && !updateMemberIdSet.isEmpty()){
+            updateMemberIdSet.remove(findMemberIdSet);
         }
 
-        if(memberIdSet2 != null && !memberIdSet2.isEmpty()){
-            findMemberIdSetOfTagMember.retainAll(memberIdSet2);
-        }
 
+        //memberTag 삭제할 memberId 찾기
+        if(!findMemberIdSet.isEmpty()){
+            findMemberIdSet.remove(copyOfMemberIdSet);
+        }
 
         //신규 태그 추가
-        if(memberIdSet != null && !memberIdSet.isEmpty()){
-            for (Long id : memberIdSet){
+        addMemberTag(comment, updateMemberIdSet);
+
+        //삭제된 tagMember 삭제
+        removeMemberTag(findMemberIdSet);
+    }
+
+    private void removeMemberTag(Set<Long> findMemberIdSet) {
+
+        if (!findMemberIdSet.isEmpty()) {
+            memberTagRepository.deleteAllByMemberIdInQuery(findMemberIdSet);
+        }
+    }
+
+    private void addMemberTag(Comment comment, Set<Long> updateMemberIdSet) {
+
+        if(updateMemberIdSet != null && !updateMemberIdSet.isEmpty()){
+            for (Long memberId : updateMemberIdSet){
                 MemberTag tagMember = MemberTag.builder()
-                        .member(Member.builder().memberId(id).build())
+                        .member(Member.builder().memberId(memberId ).build())
                         .build();
                 comment.addMemberTag(tagMember);
             }
-        }
-
-        //삭제된 태그 tagMember 삭제
-//        comment.getTagMemberSet().forEach(tagMember -> {
-//            for (Long id : findMemberIdSetOfTagMember){
-//                if (tagMember.getMember().getMemberId().equals(id)){
-//                    comment.getTagMemberSet().remove(tagMember);
-//                    break;
-//                }
-//            }
-//        });
-        if (!findMemberIdSetOfTagMember.isEmpty()) {
-            memberTagRepository.deleteAllByMemberIdInQuery(findMemberIdSetOfTagMember);
         }
     }
 
