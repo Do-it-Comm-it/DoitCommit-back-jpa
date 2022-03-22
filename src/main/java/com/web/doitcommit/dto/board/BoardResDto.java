@@ -30,7 +30,7 @@ public class BoardResDto {
     private int boardCnt;
 
     @Schema(description = "태그", nullable = true)
-    private List<Object> boardHashtag;
+    private List boardHashtag;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm", timezone = "Asia/Seoul")
     @Schema(description = "등록 날짜", nullable = true)
