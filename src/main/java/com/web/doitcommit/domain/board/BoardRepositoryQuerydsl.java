@@ -12,5 +12,5 @@ public interface BoardRepositoryQuerydsl {
     /**
      * 게시글의 태그 목록 조회
      */
-    /*List<Tuple> getCustomTagList();*/
+    List getCustomTagList(Long boardId);
 }
