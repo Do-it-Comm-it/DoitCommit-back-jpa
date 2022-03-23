@@ -24,13 +24,4 @@ public interface BoardRepository extends JpaRepository<Board,Long>, BoardReposit
             "group by bt.tag ", nativeQuery = true)
     List<Object[]> getAllPopularTag();
 
-    /**
-     * 게시글의 태그 목록 조회
-     */
-    @Query(value = "select tc.tag_id as tagId, tc.tag_name as tagName from tag_category tc join board_hashtag bh on tc.tag_id = bh.tag_id " +
-            "where bh.board_id = :boardId", nativeQuery = true)
-    List<Object> getPostTagList(Long boardId);
-
-
-
 }

@@ -116,10 +116,11 @@ public class BoardService {
                 new CustomException("존재하지 않는 게시글입니다."));
         boardEntity.changeBoardCnt();
         BoardResDto boardResDto = new BoardResDto(boardEntity);
-        //List<Object> boardHashtags = boardRepository.getPostTagList(boardId);
-//        if(boardHashtag != null){
-//            boardResDto.setBoardHashtag(boardHashtags);
-//        }
+        List boardHashtags = boardRepository.getCustomTagList(boardId);
+
+        if(boardHashtags.size() != 0){
+            boardResDto.setBoardHashtag(boardHashtags);
+        }
         return boardResDto;
     }
 
