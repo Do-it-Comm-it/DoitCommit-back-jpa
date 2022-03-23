@@ -160,9 +160,21 @@ public class CommentServiceImpl implements CommentService {
     @Transactional(readOnly = true)
     @Override
     public List<MemberTagResDto> getMemberTagList(Long boardId) {
-        List<Object[]> result = commentRepository.getMemberTagList(boardId);
 
-        return result.stream().map(arr -> {
+        List<Object[]> memberTagOfWriter = boardRepository.getMemberTagOfWriter(boardId);
+        List<Object[]> memberTagList = commentRepository.getMemberTagList(boardId);
+
+        //게시글 작성자의 회원 태그 추가
+        for (Object[] objects : memberTagList){
+
+            //게시글 작성자 회원태그가 이미 memberTagList에 있는 지 체크
+            if (memberTagOfWriter.get(0)[0].equals(objects[0])){
+                break;
+            }
+            memberTagList.addAll(0,memberTagOfWriter);
+        }
+
+        return memberTagList.stream().map(arr -> {
             Image image = (Image) arr[2];
 
             String imageUrl = null;
