@@ -24,7 +24,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import reactor.core.publisher.Flux;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.List;
@@ -82,43 +84,17 @@ public class CommentServiceImpl implements CommentService {
 
         comment.changeContent(commentUpdateDto.getContent());
 
-        Set<MemberTag> findTagMemberSet = comment.getMemberTagSet();
-
-        updateMemberTag(comment, commentUpdateDto.getMemberIdSet(), findTagMemberSet);
-
+        updateMemberTag(comment, commentUpdateDto.getMemberIdSet());
     }
 
-    private void updateMemberTag(Comment comment, Set<Long> updateMemberIdSet, Set<MemberTag> findMemberSet) {
+    private void updateMemberTag(Comment comment, Set<Long> updateMemberIdSet) {
 
-        Set<Long> findMemberIdSet = findMemberSet.stream().map(tagMember ->
-                tagMember.getMember().getMemberId()).collect(Collectors.toSet());
+        //현재 memberTag 모두삭제
+        memberTagRepository.deleteByComment(comment);
 
-
-        Set<Long> copyOfMemberIdSet = updateMemberIdSet;
-
-        //memberTag에 추가할 memberId 찾기
-        if(updateMemberIdSet != null && !updateMemberIdSet.isEmpty()){
-            updateMemberIdSet.remove(findMemberIdSet);
-        }
-
-
-        //memberTag 삭제할 memberId 찾기
-        if(!findMemberIdSet.isEmpty()){
-            findMemberIdSet.remove(copyOfMemberIdSet);
-        }
-
-        //신규 태그 추가
+        //갱신된 memberTag 추가
         addMemberTag(comment, updateMemberIdSet);
 
-        //삭제된 tagMember 삭제
-        removeMemberTag(findMemberIdSet);
-    }
-
-    private void removeMemberTag(Set<Long> findMemberIdSet) {
-
-        if (!findMemberIdSet.isEmpty()) {
-            memberTagRepository.deleteAllByMemberIdInQuery(findMemberIdSet);
-        }
     }
 
     private void addMemberTag(Comment comment, Set<Long> updateMemberIdSet) {
@@ -127,11 +103,15 @@ public class CommentServiceImpl implements CommentService {
             for (Long memberId : updateMemberIdSet){
                 MemberTag tagMember = MemberTag.builder()
                         .member(Member.builder().memberId(memberId ).build())
+                        .comment(comment)
                         .build();
-                comment.addMemberTag(tagMember);
+
+                memberTagRepository.save(tagMember);
             }
         }
+
     }
+
 
     /**
      * 댓글 삭제

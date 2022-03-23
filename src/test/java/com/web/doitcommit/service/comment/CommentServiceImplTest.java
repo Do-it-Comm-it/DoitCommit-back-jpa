@@ -116,18 +116,30 @@ class CommentServiceImplTest {
             memberTagSet.add(memberTag);
         });
 
-
+        //댓글 생성
         Comment comment = createComment(member, board, "testContent", memberTagSet);
 
+        //회원 태그할 회원 생성
+        Set<Long> updateMemberIdSet = new HashSet<>();
+
+        IntStream.rangeClosed(1,4).forEach(i -> {
+            Member newMember = createMember("updateTest" + i + "@naver.com", "updateTestNickname" + i,
+                    "updateTestUsername" + i, "updateTestOAuthId" + i);
+
+            updateMemberIdSet.add(memberRepository.save(newMember).getMemberId());
+        });
+
+
         CommentUpdateDto commentUpdateDto =
-                createUpdateDto(comment.getCommentId(), "updateContent", null);
+                createUpdateDto(comment.getCommentId(), "updateContent", updateMemberIdSet);
+
         //when
         commentService.modify(commentUpdateDto);
 
         //then
         Comment findComment = commentRepository.findById(comment.getCommentId()).get();
         Assertions.assertThat(findComment.getContent()).isEqualTo(commentUpdateDto.getContent());
-        Assertions.assertThat(findComment.getMemberTagSet()).isEmpty();
+        Assertions.assertThat(findComment.getMemberTagSet().size()).isEqualTo(4);
 
         System.out.println(findComment);
     }
@@ -200,67 +212,68 @@ class CommentServiceImplTest {
         return commentRepository.save(comment);
     }
 
-        private Comment createComment (Member member, Board board, String content, Set<MemberTag> memberTagSet){
 
-            Comment comment = Comment.builder()
-                    .member(member)
-                    .board(board)
-                    .content(content)
-                    .build();
-            memberTagSet.forEach(memberTag -> comment.addMemberTag(memberTag));
+    private Comment createComment (Member member, Board board, String content, Set<MemberTag> memberTagSet){
 
-            return commentRepository.save(comment);
-        }
+        Comment comment = Comment.builder()
+                .member(member)
+                .board(board)
+                .content(content)
+                .build();
+        memberTagSet.forEach(memberTag -> comment.addMemberTag(memberTag));
 
-        private CommentUpdateDto createUpdateDto (Long commentId, String content, Set<Long> updateMemberIdSet){
+        return commentRepository.save(comment);
+    }
 
-            return CommentUpdateDto.builder()
-                    .commentId(commentId)
-                    .content(content)
-                    .memberIdSet(updateMemberIdSet)
-                    .build();
-        }
+    private CommentUpdateDto createUpdateDto (Long commentId, String content, Set<Long> updateMemberIdSet){
+
+        return CommentUpdateDto.builder()
+                .commentId(commentId)
+                .content(content)
+                .memberIdSet(updateMemberIdSet)
+                .build();
+    }
 
 
-        private CommentRegDto createCommentRegDto (Long boardId, String content, Set < Long > memberTagIdSet){
+    private CommentRegDto createCommentRegDto (Long boardId, String content, Set < Long > memberTagIdSet){
 
-            return CommentRegDto.builder()
-                    .boardId(boardId)
-                    .content(content)
-                    .memberIdSet(memberTagIdSet)
-                    .build();
-        }
+        return CommentRegDto.builder()
+                .boardId(boardId)
+                .content(content)
+                .memberIdSet(memberTagIdSet)
+                .build();
+    }
 
-        private Board createBoard (Member member, BoardCategory boardCategory, String title, String
-        content, Set < String > tagSet){
-            Board board = Board.builder()
-                    .member(member)
-                    .boardCategory(boardCategory)
-                    .boardTitle(title)
-                    .boardContent(content)
-                    .tag(tagSet)
-                    .build();
+    private Board createBoard (Member member, BoardCategory boardCategory, String title, String
+            content, Set < String > tagSet){
+        Board board = Board.builder()
+                .member(member)
+                .boardCategory(boardCategory)
+                .boardTitle(title)
+                .boardContent(content)
+                .tag(tagSet)
+                .build();
 
-            return boardRepository.save(board);
-        }
+        return boardRepository.save(board);
+    }
 
-        private BoardCategory createBoardCategory (String categoryName){
-            BoardCategory category = BoardCategory.builder().categoryName(categoryName).build();
+    private BoardCategory createBoardCategory (String categoryName){
+        BoardCategory category = BoardCategory.builder().categoryName(categoryName).build();
 
-            return boardCategoryRepository.save(category);
-        }
+        return boardCategoryRepository.save(category);
+    }
 
-        private Member createMember (String email, String nickname, String username, String oAuthId){
-            Member member = Member.builder()
-                    .email(email)
-                    .nickname(nickname)
-                    .password("1111")
-                    .username(username)
-                    .provider(AuthProvider.GOOGLE)
-                    .interestTechSet(new HashSet<>(Arrays.asList("java")))
-                    .oauthId(oAuthId)
-                    .build();
+    private Member createMember (String email, String nickname, String username, String oAuthId){
+        Member member = Member.builder()
+                .email(email)
+                .nickname(nickname)
+                .password("1111")
+                .username(username)
+                .provider(AuthProvider.GOOGLE)
+                .interestTechSet(new HashSet<>(Arrays.asList("java")))
+                .oauthId(oAuthId)
+                .build();
 
-            return memberRepository.save(member);
-        }
+        return memberRepository.save(member);
+    }
 }
