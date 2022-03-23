@@ -10,7 +10,7 @@ import java.util.Set;
 
 public interface MemberTagRepository extends JpaRepository<MemberTag,Long> {
 
-    @Modifying(clearAutomatically = true)
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query("delete from MemberTag mt where mt.comment = :comment")
     void deleteByComment(@Param("comment") Comment comment);
 
