@@ -118,7 +118,7 @@ public class BoardService {
         BoardResDto boardResDto = new BoardResDto(boardEntity);
         List boardHashtags = boardRepository.getCustomTagList(boardId);
 
-        if(boardHashtags != null){
+        if(boardHashtags.size() != 0){
             boardResDto.setBoardHashtag(boardHashtags);
         }
         return boardResDto;
