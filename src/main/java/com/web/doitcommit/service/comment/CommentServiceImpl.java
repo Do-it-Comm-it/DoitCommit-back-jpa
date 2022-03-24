@@ -24,7 +24,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import reactor.core.publisher.Flux;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.List;
@@ -82,48 +84,34 @@ public class CommentServiceImpl implements CommentService {
 
         comment.changeContent(commentUpdateDto.getContent());
 
-        Set<MemberTag> findTagMember = comment.getMemberTagSet();
+        updateMemberTag(comment, commentUpdateDto.getMemberIdSet());
+    }
 
-        Set<Long> findMemberIdSetOfTagMember = findTagMember.stream().map(tagMember -> {
-            return tagMember.getMember().getMemberId();
-        }).collect(Collectors.toSet());
+    private void updateMemberTag(Comment comment, Set<Long> updateMemberIdSet) {
 
-        Set<Long> memberIdSet = commentUpdateDto.getMemberIdSet();
+        //현재 memberTag 모두삭제
+        memberTagRepository.deleteByComment(comment);
 
-        Set<Long> memberIdSet2 = memberIdSet;
+        //갱신된 memberTag 추가
+        addMemberTag(comment, updateMemberIdSet);
 
-        if(memberIdSet != null && !memberIdSet.isEmpty()){
-            memberIdSet.remove(findMemberIdSetOfTagMember);
-        }
+    }
 
-        if(memberIdSet2 != null && !memberIdSet2.isEmpty()){
-            findMemberIdSetOfTagMember.retainAll(memberIdSet2);
-        }
+    private void addMemberTag(Comment comment, Set<Long> updateMemberIdSet) {
 
-
-        //신규 태그 추가
-        if(memberIdSet != null && !memberIdSet.isEmpty()){
-            for (Long id : memberIdSet){
+        if(updateMemberIdSet != null && !updateMemberIdSet.isEmpty()){
+            for (Long memberId : updateMemberIdSet){
                 MemberTag tagMember = MemberTag.builder()
-                        .member(Member.builder().memberId(id).build())
+                        .member(Member.builder().memberId(memberId ).build())
+                        .comment(comment)
                         .build();
-                comment.addMemberTag(tagMember);
+
+                memberTagRepository.save(tagMember);
             }
         }
 
-        //삭제된 태그 tagMember 삭제
-//        comment.getTagMemberSet().forEach(tagMember -> {
-//            for (Long id : findMemberIdSetOfTagMember){
-//                if (tagMember.getMember().getMemberId().equals(id)){
-//                    comment.getTagMemberSet().remove(tagMember);
-//                    break;
-//                }
-//            }
-//        });
-        if (!findMemberIdSetOfTagMember.isEmpty()) {
-            memberTagRepository.deleteAllByMemberIdInQuery(findMemberIdSetOfTagMember);
-        }
     }
+
 
     /**
      * 댓글 삭제
@@ -172,9 +160,21 @@ public class CommentServiceImpl implements CommentService {
     @Transactional(readOnly = true)
     @Override
     public List<MemberTagResDto> getMemberTagList(Long boardId) {
-        List<Object[]> result = commentRepository.getMemberTagList(boardId);
 
-        return result.stream().map(arr -> {
+        List<Object[]> memberTagOfWriter = boardRepository.getMemberTagOfWriter(boardId);
+        List<Object[]> memberTagList = commentRepository.getMemberTagList(boardId);
+
+        //게시글 작성자의 회원 태그 추가
+        for (Object[] objects : memberTagList){
+
+            //게시글 작성자 회원태그가 이미 memberTagList에 있는 지 체크
+            if (memberTagOfWriter.get(0)[0].equals(objects[0])){
+                break;
+            }
+            memberTagList.addAll(0,memberTagOfWriter);
+        }
+
+        return memberTagList.stream().map(arr -> {
             Image image = (Image) arr[2];
 
             String imageUrl = null;

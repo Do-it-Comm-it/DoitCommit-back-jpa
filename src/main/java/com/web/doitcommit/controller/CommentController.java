@@ -4,6 +4,7 @@ import com.web.doitcommit.config.auth.PrincipalDetails;
 import com.web.doitcommit.dto.CMRespDto;
 import com.web.doitcommit.dto.comment.CommentListDto;
 import com.web.doitcommit.dto.comment.CommentRegDto;
+import com.web.doitcommit.dto.comment.CommentUpdateDto;
 import com.web.doitcommit.dto.page.PageRequestDto;
 import com.web.doitcommit.dto.todo.TodoResDto;
 import com.web.doitcommit.service.comment.CommentService;
@@ -22,6 +23,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RequiredArgsConstructor
 @RestController
@@ -65,12 +68,35 @@ public class CommentController {
             @ApiResponse(responseCode = "500",  content = @Content(schema = @Schema(example = "{\"error\": \"Internal Server Error\"}")))
     })
     @PostMapping("/comments")
-    public ResponseEntity<?> createComment(@RequestBody CommentRegDto commentRegDto, BindingResult bindingResult,
+    public ResponseEntity<?> createComment(@Valid @RequestBody CommentRegDto commentRegDto, BindingResult bindingResult,
                                            @Parameter(hidden = true)@AuthenticationPrincipal PrincipalDetails principalDetails){
 
         commentService.register(commentRegDto, principalDetails.getMember().getMemberId());
 
         return new ResponseEntity<>(new CMRespDto<>(1, "댓글등록 성공", null), HttpStatus.CREATED);
+    }
+
+    /**
+     * 댓글 수정
+     */
+    @Operation(summary = "댓글 수정 API", description = "댓글을 수정한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(example = "{\n" +
+                    "  \"message\": \"댓글수정 성공\",\n" +
+                    "  \"data\": null,\n" +
+                    "  \"code\": 1\n" +
+                    "}"))),
+            @ApiResponse(responseCode = "400", content = @Content(schema = @Schema(example = "{\"error\": \"Bad Request\"}"))),
+            @ApiResponse(responseCode = "401", content = @Content(schema = @Schema(example = "{\"error\": \"Unauthorized\"}"))),
+            @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(example = "{\"error\": \"Not Found\"}"))),
+            @ApiResponse(responseCode = "500",  content = @Content(schema = @Schema(example = "{\"error\": \"Internal Server Error\"}")))
+    })
+    @PutMapping("/comments/{commentId}")
+    public ResponseEntity<?> modify(@Valid @RequestBody CommentUpdateDto commentUpdateDto, BindingResult bindingResult){
+
+        commentService.modify(commentUpdateDto);
+
+        return new ResponseEntity<>(new CMRespDto<>(1, "댓글수정 성공",null), HttpStatus.OK);
     }
 
     /**

@@ -27,7 +27,7 @@ public class MemberTagController {
     /**
      * 회원 태그 리스트 조회
      */
-    @Operation(summary = "회원 태그 리스트 조회 api", description = "게시글에 댓글 작성한 회원들의 리스트를 조회한다.")
+    @Operation(summary = "회원 태그 리스트 조회 api", description = "게시글 작성자, 게시글에 댓글 작성한 회원들의 회원태그 리스트를 조회한다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = @Content(array = @ArraySchema(schema = @Schema(implementation = MemberTagResDto.class)))),
             @ApiResponse(responseCode = "400", content = @Content(schema = @Schema(example = "{\"error\": \"Bad Request\"}"))),
