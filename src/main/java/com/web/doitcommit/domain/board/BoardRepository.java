@@ -2,8 +2,6 @@ package com.web.doitcommit.domain.board;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-
 import java.util.List;
 
 public interface BoardRepository extends JpaRepository<Board,Long>, BoardRepositoryQuerydsl {
@@ -26,13 +24,4 @@ public interface BoardRepository extends JpaRepository<Board,Long>, BoardReposit
             "group by bt.tag ", nativeQuery = true)
     List<Object[]> getAllPopularTag();
 
-    /**
-     * 댓글 회원 태그 - 게시글 작성자 태그
-     */
-    @Query("select m.memberId, m.nickname,i from Board b " +
-            "left join Member m on m.memberId = b.member.memberId " +
-            "left join MemberImage mi on mi.member.memberId = m.memberId " +
-            "left join Image i on i.imageId = mi.imageId " +
-            "where b.boardId = :boardId")
-    List<Object[]> getMemberTagOfWriter(@Param("boardId") Long boardId);
 }

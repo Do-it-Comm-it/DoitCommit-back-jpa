@@ -10,7 +10,7 @@ public interface BoardRepositoryQuerydsl {
     List<Board> getCustomBoardList(int pageNo, int pageSize);
 
     /**
-     * 태그 목록 조회
+     * 게시글의 태그 목록 조회
      */
-    List<String> getCustomTagList();
+    List getCustomTagList(Long boardId);
 }

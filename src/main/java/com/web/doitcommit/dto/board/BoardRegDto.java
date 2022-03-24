@@ -2,12 +2,14 @@ package com.web.doitcommit.dto.board;
 
 import com.web.doitcommit.domain.board.Board;
 import com.web.doitcommit.domain.boardCategory.BoardCategory;
+import com.web.doitcommit.domain.hashtag.TagCategory;
 import com.web.doitcommit.domain.member.Member;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Schema(description = "게시글 등록 dto")
@@ -29,7 +31,7 @@ public class BoardRegDto {
     private String boardContent;
 
     @Schema(description = "태그", nullable = true)
-    private Set<String> tag = new HashSet<>();
+    private List<Long> boardHashtag;
 
     @Schema(description = "s3로 반환해준 전체 이미지 배열", nullable = true)
     private ImageRegDto[] allImageArr;
@@ -44,7 +46,7 @@ public class BoardRegDto {
                 .boardTitle(boardTitle)
                 .boardContent(boardContent)
                 .boardImage(new ArrayList<>())
-                .tag(tag)
+                .boardHashtag(new ArrayList<>())
                 .build();
         return board;
     }

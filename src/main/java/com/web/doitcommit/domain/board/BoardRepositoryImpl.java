@@ -1,11 +1,16 @@
 package com.web.doitcommit.domain.board;
 
+import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.web.doitcommit.domain.QTagCategory;
+import com.web.doitcommit.domain.hashtag.QBoardHashtag;
+import com.web.doitcommit.domain.hashtag.QTagCategory;
 import org.springframework.util.CollectionUtils;
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import static com.web.doitcommit.domain.board.QBoard.board;
 
 public class BoardRepositoryImpl implements BoardRepositoryQuerydsl {
@@ -42,16 +47,28 @@ public class BoardRepositoryImpl implements BoardRepositoryQuerydsl {
     }
 
     /**
-     * 태그 목록 조회
+     * 게시글의 태그 목록 조회
+     * @return
      */
     @Override
-    public List<String> getCustomTagList() {
+    public List getCustomTagList(Long boardId) {
         QTagCategory tagCategory = QTagCategory.tagCategory;
+        QBoardHashtag boardHashtag = QBoardHashtag.boardHashtag;
 
-        return queryFactory
-                .select(tagCategory.tagName)
+        List<Tuple> results = queryFactory
+                .select(tagCategory.tagId, tagCategory.tagName)
                 .from(tagCategory)
-                .orderBy(tagCategory.tagName.asc())
+                .leftJoin(boardHashtag).on(tagCategory.tagId.eq(boardHashtag.tagCategory.tagId))
+                .where(boardHashtag.board.boardId.eq(boardId))
                 .fetch();
+
+        List tagList = new ArrayList();
+        for (Tuple result : results) {
+            Map<Long,String> tagMap = new HashMap<>();
+            tagMap.put(result.get(tagCategory.tagId), result.get(tagCategory.tagName));
+            tagList.add(tagMap);
+        }
+
+        return tagList;
     }
 }

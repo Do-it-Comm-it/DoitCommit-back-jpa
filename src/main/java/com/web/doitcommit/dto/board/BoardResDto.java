@@ -5,7 +5,7 @@ import com.web.doitcommit.domain.board.Board;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.List;
 
 @Schema(description = "게시글 조회 dto")
 @Data
@@ -30,7 +30,7 @@ public class BoardResDto {
     private int boardCnt;
 
     @Schema(description = "태그", nullable = true)
-    private Set<String> tag;
+    private List boardHashtag;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm", timezone = "Asia/Seoul")
     @Schema(description = "등록 날짜", nullable = true)
@@ -43,7 +43,7 @@ public class BoardResDto {
     public BoardResDto(Board board){
         boardId = board.getBoardId();
         writer = board.getMember().getNickname();
-        tag = board.getTag();
+//        boardHashtag = board.getBoardHashtag();
         boardTitle = board.getBoardTitle();
         boardContent = board.getBoardContent();
         categoryId = board.getBoardCategory().getCategoryId();
