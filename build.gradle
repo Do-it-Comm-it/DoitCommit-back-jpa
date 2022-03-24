@@ -1,3 +1,4 @@
+
 plugins {
 	id 'org.springframework.boot' version '2.5.7'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
@@ -46,6 +47,9 @@ dependencies {
 	//secret manager
 	implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap:3.0.3'
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws-secrets-manager-config:2.2.6.RELEASE'
+
+	//s3
+	implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-aws', version: '2.2.6.RELEASE'
 
 	//querydsl 추가
 	implementation 'com.querydsl:querydsl-jpa'

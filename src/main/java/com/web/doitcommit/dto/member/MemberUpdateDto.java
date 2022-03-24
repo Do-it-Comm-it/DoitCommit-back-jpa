@@ -23,7 +23,7 @@ public class MemberUpdateDto {
     private Long memberId;
 
     @Schema(description = "파일정보", nullable = true)
-    private MultipartFile file;
+    private MultipartFile imageFile;
 
     @Schema(description = "닉네임", nullable = true)
     private String nickname;

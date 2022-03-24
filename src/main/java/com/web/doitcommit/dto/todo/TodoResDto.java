@@ -31,8 +31,8 @@ public class TodoResDto {
     @Schema(description = "완료상태")
     private Boolean isFinished;
 
-    @Schema(description = "투두 날짜('yyyy/MM/ddTHH:mm')")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd'T'HH:mm", timezone = "Asia/Seoul")
+    @Schema(description = "투두 날짜('yyyy-MM-ddTHH:mm')")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm", timezone = "Asia/Seoul")
     private LocalDateTime todoDateTime;
 
     public TodoResDto(Todo todo){

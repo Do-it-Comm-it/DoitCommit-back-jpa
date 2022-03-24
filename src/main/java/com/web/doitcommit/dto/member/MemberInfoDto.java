@@ -42,11 +42,11 @@ public class MemberInfoDto {
     @Schema(description = "프로필 사진 URL", nullable = true)
     private String pictureUrl;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd'T'HH:mm", timezone = "Asia/Seoul")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm", timezone = "Asia/Seoul")
     @Schema(description = "등록 날짜", nullable = true)
     private LocalDateTime regDate;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd'T'HH:mm", timezone = "Asia/Seoul")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm", timezone = "Asia/Seoul")
     @Schema(description = "수정 날짜", nullable = true)
     private LocalDateTime modDate;
 

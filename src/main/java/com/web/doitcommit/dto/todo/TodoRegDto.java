@@ -41,8 +41,8 @@ public class TodoRegDto {
     @NotNull
     private Boolean isFixed;
 
-    @Schema(description = "투두 날짜('yyyy/MM/ddTHH:mm') - default: 현재날짜 자동 입력", nullable = true)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd'T'HH:mm", timezone = "Asia/Seoul")
+    @Schema(description = "투두 날짜('yyyy-MM-ddTHH:mm') - default: 현재날짜 자동 입력", nullable = true)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm", timezone = "Asia/Seoul")
     @Builder.Default //테스트코드에 사용
     private LocalDateTime todoDateTime = LocalDateTime.now();
 

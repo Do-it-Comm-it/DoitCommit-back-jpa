@@ -1,6 +1,5 @@
 package com.web.doitcommit.controller;
 
-import com.web.doitcommit.config.auth.PrincipalDetails;
 import com.web.doitcommit.dto.CMRespDto;
 import com.web.doitcommit.jwt.CookieUtil;
 import com.web.doitcommit.jwt.JwtUtil;
@@ -14,11 +13,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -106,6 +102,4 @@ public class AuthController {
         }
         return new ResponseEntity<>(new CMRespDto<>(1,"로그아웃 성공", null),HttpStatus.OK);
     }
-
-
 }
