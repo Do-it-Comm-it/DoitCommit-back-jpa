@@ -1,6 +1,7 @@
 package com.web.doitcommit.service.popularTag;
 
 import com.web.doitcommit.domain.board.BoardRepository;
+import com.web.doitcommit.domain.hashtag.TagCategoryRepository;
 import com.web.doitcommit.dto.popularTag.PoplarTagResDto;
 import com.web.doitcommit.redis.RedisService;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,7 +23,7 @@ import java.util.stream.Collectors;
 @Service
 public class PopularTagService {
 
-    private final BoardRepository boardRepository;
+    private final TagCategoryRepository tagCategoryRepository;
     private final RedisService redisService;
 
     /**
@@ -31,13 +33,13 @@ public class PopularTagService {
     @Transactional
     public void UpdatePopularTag(){
         //금일 인기태그 리스트 추가
-        List<Object[]> popularTagList = boardRepository.getLimitPopularTag();
+        List<Object[]> popularTagList = tagCategoryRepository.getLimitPopularTag();
         redisService.setList(popularTagList);
 
         List<Object[]> result = redisService.getValues(LocalDate.now().toString());
 
         for (Object[] arr : result){
-            log.info("tag: {}, count: {}", arr[0], arr[1]);
+            log.info("tagId: {}, tagName: {}, count: {}", arr[0], arr[2], arr[1]);
         }
 
         //전날 인기태그 리스트 제거
@@ -53,18 +55,20 @@ public class PopularTagService {
         List<Object[]> result = redisService.getValues(LocalDate.now().toString());
 
         return result.stream().map(arr -> new PoplarTagResDto(
-                (String) arr[0], ((BigInteger)arr[1]).intValue())).collect(Collectors.toList());
+                (Long) arr[0], (String) arr[1], ((Long) arr[2]).intValue())).collect(Collectors.toList());
     }
 
     /**
-     * 7일간의 {tag, count} 모든 태그 리스트
+     * 7일간의 {tagId, tagName, count} 모든 태그 리스트
      */
     @Transactional(readOnly = true)
     public List<PoplarTagResDto> getAllPopularTagList(){
 
-        List<Object[]> result = boardRepository.getAllPopularTag();
+        List<Object[]> result = tagCategoryRepository.getAllPopularTag();
+
+        System.out.println(result.size());
 
         return result.stream().map(arr -> new PoplarTagResDto(
-                (String) arr[0], ((BigInteger)arr[1]).intValue())).collect(Collectors.toList());
+                (Long) arr[0], (String) arr[1], ((Long) arr[2]).intValue())).collect(Collectors.toList());
     }
 }
