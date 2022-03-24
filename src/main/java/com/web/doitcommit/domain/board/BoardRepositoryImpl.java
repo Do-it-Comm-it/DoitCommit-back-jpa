@@ -62,6 +62,7 @@ public class BoardRepositoryImpl implements BoardRepositoryQuerydsl {
                 .where(boardHashtag.board.boardId.eq(boardId))
                 .fetch();
 
+        
         List tagList = new ArrayList();
         for (Tuple result : results) {
             Map<Long,String> tagMap = new HashMap<>();
