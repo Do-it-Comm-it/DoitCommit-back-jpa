@@ -13,6 +13,12 @@ spring:
     username: sa
     driver-class-name: org.h2.Driver
 
+  sql:
+    init:
+      schema-locations: classpath:data.sql
+      #한번 실행하고 데이터 들어갔으면 never로 바꿔줘야 중복으로 안들어감 (없어져서 새로 넣고싶으면 always)
+      mode: never
+
   redis:
     host: ${REDIS_SERVER}
     port: 6379
