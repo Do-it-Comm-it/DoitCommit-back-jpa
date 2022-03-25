@@ -79,13 +79,8 @@ public class CommentServiceImplReadTest {
         //게시글 카테고리 생성
         BoardCategory category = createBoardCategory("testName");
 
-        //게시글 태그 set 생성
-        Set<String> tagSet = new HashSet<>();
-        tagSet.add("Spring");
-        tagSet.add("개발자");
-
         //게시글 생성
-        Board board = createBoard(member, category, "testTitle", "testContent", tagSet);
+        Board board = createBoard(member, category, "testTitle", "testContent");
         this.board = board;
 
         //게시글 작성자 댓글1
@@ -173,13 +168,12 @@ public class CommentServiceImplReadTest {
     }
 
     private Board createBoard (Member member, BoardCategory boardCategory, String title, String
-            content, Set< String > tagSet){
+            content){
         Board board = Board.builder()
                 .member(member)
                 .boardCategory(boardCategory)
                 .boardTitle(title)
                 .boardContent(content)
-                .tag(tagSet)
                 .build();
 
         return boardRepository.save(board);

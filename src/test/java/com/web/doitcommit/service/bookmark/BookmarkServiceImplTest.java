@@ -40,12 +40,8 @@ class BookmarkServiceImplTest {
         this.member = member;
         BoardCategory category = createBoardCategory("testName");
 
-        //게시글 태그 set 생성
-        Set<String> tagSet = new HashSet<>();
-        tagSet.add("Spring");
-        tagSet.add("개발자");
         //게시글 생성
-        Board board = createBoard(member, category, "testTitle", "testContent", tagSet);
+        Board board = createBoard(member, category, "testTitle", "testContent");
         this.board = board;
     }
 
@@ -91,13 +87,12 @@ class BookmarkServiceImplTest {
     }
 
     private Board createBoard(Member member, BoardCategory boardCategory, String title,
-                              String content, Set<String> tagSet) {
+                              String content) {
         Board board = Board.builder()
                 .member(member)
                 .boardCategory(boardCategory)
                 .boardTitle(title)
                 .boardContent(content)
-                .tag(tagSet)
                 .build();
 
         return boardRepository.save(board);

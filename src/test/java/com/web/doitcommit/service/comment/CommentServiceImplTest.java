@@ -11,6 +11,10 @@ import com.web.doitcommit.domain.comment.MemberTag;
 import com.web.doitcommit.domain.comment.MemberTagRepository;
 import com.web.doitcommit.domain.files.MemberImage;
 import com.web.doitcommit.domain.files.MemberImageRepository;
+import com.web.doitcommit.domain.hashtag.BoardHashtag;
+import com.web.doitcommit.domain.hashtag.BoardHashtagRepository;
+import com.web.doitcommit.domain.hashtag.TagCategory;
+import com.web.doitcommit.domain.hashtag.TagCategoryRepository;
 import com.web.doitcommit.domain.member.AuthProvider;
 import com.web.doitcommit.domain.member.Member;
 import com.web.doitcommit.domain.member.MemberRepository;
@@ -19,11 +23,9 @@ import com.web.doitcommit.dto.comment.CommentUpdateDto;
 import com.web.doitcommit.dto.memberTag.MemberTagResDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
@@ -42,6 +44,8 @@ class CommentServiceImplTest {
     @Autowired MemberTagRepository memberTagRepository;
     @Autowired CommentRepository commentRepository;
     @Autowired MemberImageRepository memberImageRepository;
+    @Autowired TagCategoryRepository tagCategoryRepository;
+    @Autowired BoardHashtagRepository boardHashtagRepository;
 
     private Member member;
     private Board board;
@@ -54,13 +58,8 @@ class CommentServiceImplTest {
 
         BoardCategory category = createBoardCategory("testName");
 
-        //게시글 태그 set 생성
-        Set<String> tagSet = new HashSet<>();
-        tagSet.add("Spring");
-        tagSet.add("개발자");
-
         //게시글 생성
-        Board board = createBoard(member, category, "testTitle", "testContent", tagSet);
+        Board board = createBoard(member, category, "testTitle", "testContent");
         this.board = board;
 
         //회원 태그 리스트
@@ -197,6 +196,13 @@ class CommentServiceImplTest {
         }
     }
 
+    private TagCategory createTagCategory(String tagName) {
+
+        TagCategory tagCategory = TagCategory.builder().tagName(tagName).build();
+
+        return tagCategoryRepository.save(tagCategory);
+    }
+
     private MemberImage createMemberImage (Member member, String filePath, String testFileNm){
         MemberImage memberImage = new MemberImage(member, filePath, testFileNm);
         return memberImageRepository.save(memberImage);
@@ -244,17 +250,18 @@ class CommentServiceImplTest {
                 .build();
     }
 
-    private Board createBoard (Member member, BoardCategory boardCategory, String title, String
-            content, Set < String > tagSet){
+    private Board createBoard (Member member, BoardCategory boardCategory, String title,
+                               String content){
         Board board = Board.builder()
                 .member(member)
                 .boardCategory(boardCategory)
                 .boardTitle(title)
                 .boardContent(content)
-                .tag(tagSet)
                 .build();
 
-        return boardRepository.save(board);
+        boardRepository.save(board);
+
+        return board;
     }
 
     private BoardCategory createBoardCategory (String categoryName){

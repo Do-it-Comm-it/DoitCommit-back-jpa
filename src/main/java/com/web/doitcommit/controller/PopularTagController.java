@@ -25,9 +25,9 @@ public class PopularTagController {
     private final PopularTagService popularTagService;
 
     /**
-     * 7일간의 인기태그 전체 리스트 조회
+     * 7일간의 {tagId, tagName, count} 인기 태그 리스트
      */
-    @Operation(summary = "인기태그 전체 리스트 조회 api", description = "7일간의 인기태그 전체 리스트를 조회한다.")
+    @Operation(summary = "인기태그 리스트 조회 api", description = "7일간의 인기태그 리스트를 조회한다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = @Content(array = @ArraySchema(schema = @Schema(implementation = PoplarTagResDto.class)))),
             @ApiResponse(responseCode = "400", content = @Content(schema = @Schema(example = "{\"error\": \"Bad Request\"}"))),

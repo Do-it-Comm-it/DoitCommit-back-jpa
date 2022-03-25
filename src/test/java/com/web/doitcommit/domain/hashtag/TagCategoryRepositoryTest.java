@@ -1,11 +1,10 @@
-package com.web.doitcommit.domain.board;
+package com.web.doitcommit.domain.hashtag;
 
 import com.web.doitcommit.domain.member.AuthProvider;
 import com.web.doitcommit.domain.member.Member;
 import com.web.doitcommit.domain.member.MemberRepository;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,9 +17,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @Transactional
 @SpringBootTest
-class BoardRepositoryTest {
+class TagCategoryRepositoryTest {
 
-    @Autowired BoardRepository boardRepository;
+    @Autowired TagCategoryRepository tagCategoryRepository;
     @Autowired MemberRepository memberRepository;
 
 
@@ -30,7 +29,7 @@ class BoardRepositoryTest {
         //given
 
         //when
-        List<Object[]> popularTagList = boardRepository.getLimitPopularTag();
+        List<Object[]> popularTagList = tagCategoryRepository.getLimitPopularTag();
 
         //then
         for (Object[] object : popularTagList){
