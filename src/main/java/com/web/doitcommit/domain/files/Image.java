@@ -22,4 +22,9 @@ public abstract class Image extends BaseEntity {
 
     @Column(nullable = false)
     private String fileNm;
+    
+    public Image(String filePath, String fileNm){
+        this.filePath = filePath;
+        this.fileNm = fileNm;
+    }
 }
