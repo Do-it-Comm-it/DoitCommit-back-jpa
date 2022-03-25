@@ -6,14 +6,18 @@ import lombok.Data;
 @Data
 public class PoplarTagResDto {
 
+    @Schema(description = "태그 고유값")
+    private Long tagId;
+
     @Schema(description = "태그이름")
-    private String tag;
+    private String tagName;
 
     @Schema(description = "태그 수")
     private int count;
 
-    public PoplarTagResDto(String tag, int count) {
-        this.tag = tag;
+    public PoplarTagResDto(Long tagId, String tagName, int count) {
+        this.tagId = tagId;
+        this.tagName = tagName;
         this.count = count;
     }
 }
