@@ -164,13 +164,20 @@ public class CommentServiceImpl implements CommentService {
         List<Object[]> memberTagOfWriter = boardRepository.getMemberTagOfWriter(boardId);
         List<Object[]> memberTagList = commentRepository.getMemberTagList(boardId);
 
+
         //게시글 작성자의 회원 태그 추가
+        boolean isExist = false;
         for (Object[] objects : memberTagList){
 
             //게시글 작성자 회원태그가 이미 memberTagList에 있는 지 체크
             if (memberTagOfWriter.get(0)[0].equals(objects[0])){
+                isExist = true;
                 break;
             }
+        }
+
+        //게시글 작성자가 리스테 존재하지 않으면 추가
+        if (!isExist){
             memberTagList.addAll(0,memberTagOfWriter);
         }
 
