@@ -18,7 +18,7 @@ public class MemberImage extends Image {
     protected MemberImage(){}
 
     public MemberImage(Member member, String filePath, String fileNm){
-        super(member.getMemberId(), filePath, fileNm);
+        super(filePath, fileNm);
         this.member = member;
         member.setMemberImage(this);
     }
