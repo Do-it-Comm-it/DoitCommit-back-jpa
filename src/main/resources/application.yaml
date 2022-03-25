@@ -62,10 +62,10 @@ logging:
 cloud:
   aws:
     credentials:
-      accessKey: ${cloud.aws.credentials.access-key}
-      secretKey: ${cloud.aws.credentials.secret-key}
+      accessKey: ${AWS_ACCESS_KEY_ID}
+      secretKey: ${AWS_SECRET_ACCESS_KEY}
     s3:
-      bucket: doitcommit
+      bucket: ${BUCKET_NAME}
     region:
       static: ap-northeast-2
     stack:
