@@ -52,6 +52,24 @@ app:
   oauth2:
     authorized-redirect-url: https://www.doit-commit.kro.kr
 
+logging:
+  level:
+    com:
+      amazonaws:
+        util:
+          EC2MetadataUtils: error
+
+cloud:
+  aws:
+    credentials:
+      accessKey: ${cloud.aws.credentials.access-key}
+      secretKey: ${cloud.aws.credentials.secret-key}
+    s3:
+      bucket: doitcommit
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
 
 file:
   path: D:\doitcommit\upload\

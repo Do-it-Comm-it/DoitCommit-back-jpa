@@ -28,7 +28,8 @@ spring:
       ddl-auto: create
     properties:
       hibernate:
-        show_sql: true
+        format_sql: true
+    open-in-view: false
     show-sql: true
 
   security:
@@ -55,6 +56,26 @@ app:
     secretKey: ${JWT_SECRET_KEY}
   oauth2:
     authorized-redirect-url: https://www.doit-commit.kro.kr
+
+logging:
+  level:
+    com:
+      amazonaws:
+        util:
+          EC2MetadataUtils: error
+
+cloud:
+  aws:
+    credentials:
+      accessKey: ${AWS_ACCESS_KEY_ID}
+      secretKey: ${AWS_SECRET_ACCESS_KEY}
+    s3:
+      bucket: ${BUCKET_NAME}
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+
 
 file:
   path: D:/doitcommit/upload/
