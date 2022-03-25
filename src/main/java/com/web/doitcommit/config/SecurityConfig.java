@@ -34,8 +34,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().mvcMatchers("/h2-console/**");
-        web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+        web
+                .ignoring()
+                .antMatchers(
+                        "/h2-console/**",
+                        "/favicon.ico",
+                        "/.env"
+                );
+
     }
 
     @Override
