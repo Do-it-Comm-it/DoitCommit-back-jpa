@@ -111,11 +111,32 @@ public class BoardService {
      * 게시글 조회
      */
     @Transactional(readOnly = true)
-    public BoardResDto GetBoard(Long boardId) {
+    public BoardResDto GetBoard(Long boardId, Long principalId) {
         Board boardEntity = boardRepository.findById(boardId).orElseThrow(() ->
                 new CustomException("존재하지 않는 게시글입니다."));
         boardEntity.changeBoardCnt();
+
         BoardResDto boardResDto = new BoardResDto(boardEntity);
+
+        //로그인한 사용자의 북마크 글인지 유무
+        for(int i = 0; i < boardEntity.getBookmarkList().size(); i++){
+            Long memberId = boardEntity.getBookmarkList().get(i).getMember().getMemberId();
+            if(memberId == principalId){
+                boardResDto.changeMyBookmark(true);
+                break;
+            }
+        }
+
+        //로그인한 사용자가 좋아요한 글인지 유무
+        for(int i = 0; i < boardEntity.getHeartList().size(); i++){
+            Long memberId = boardEntity.getHeartList().get(i).getMember().getMemberId();
+            if(memberId == principalId){
+                boardResDto.changeMyHeart(true);
+                break;
+            }
+        }
+
+        //해시태그 목록
         List boardHashtags = boardRepository.getCustomTagList(boardId);
 
         if(boardHashtags.size() != 0){
