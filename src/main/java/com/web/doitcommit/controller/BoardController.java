@@ -84,8 +84,8 @@ public class BoardController {
             @ApiResponse(responseCode = "500",  content = @Content(schema = @Schema(example = "{\"error\": \"Internal Server Error\"}")))
     })
     @GetMapping("")
-    public ResponseEntity<?> GetBoard(@Parameter(name = "boardId") Long boardId) {
-        BoardResDto boardResDto = boardService.GetBoard(boardId);
+    public ResponseEntity<?> GetBoard(@Parameter(name = "boardId") Long boardId, @Parameter(hidden = true) @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        BoardResDto boardResDto = boardService.GetBoard(boardId, principalDetails.getMember().getMemberId());
         return new ResponseEntity<>(new CMRespDto<>(1, "게시글 조회 성공", boardResDto), HttpStatus.OK);
     }
 
