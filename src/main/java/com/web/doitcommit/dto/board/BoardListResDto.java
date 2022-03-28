@@ -33,6 +33,15 @@ public class BoardListResDto {
     @Schema(description = "조회수")
     private int boardCnt;
 
+    @Schema(description = "좋아요 수")
+    private int heartCnt;
+
+    @Schema(description = "좋아요유무")
+    private boolean myHeart = false;
+
+    @Schema(description = "북마크유무")
+    private boolean myBookmark = false;
+
     @Schema(description = "태그", nullable = true)
     private List<BoardHashtag> boardHashtag;
 
@@ -44,7 +53,7 @@ public class BoardListResDto {
     @Schema(description = "수정 날짜", nullable = true)
     private LocalDateTime modDate;
 
-    public BoardListResDto(Board board){
+    public BoardListResDto(Board board, Long principalId){
         boardId = board.getBoardId();
         writer = board.getMember().getNickname();
 //        boardHashtag = board.getBoardHashtag();
@@ -55,6 +64,9 @@ public class BoardListResDto {
         boardCnt = board.getBoardCnt();
         regDate = board.getRegDate();
         modDate = board.getModDate();
+        heartCnt = board.getHeartList().size();
+        myHeart = board.getHeartList().stream().anyMatch(t->t.getMember().getMemberId().equals(principalId) ? true: false);
+        myBookmark = board.getBookmarkList().stream().anyMatch(t->t.getMember().getMemberId().equals(principalId) ? true: false);
     }
 
 }
