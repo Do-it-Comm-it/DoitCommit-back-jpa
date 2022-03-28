@@ -6,6 +6,7 @@ import com.web.doitcommit.domain.hashtag.BoardHashtag;
 import com.web.doitcommit.domain.hashtag.BoardHashtagRepository;
 import com.web.doitcommit.domain.hashtag.TagCategory;
 import com.web.doitcommit.domain.hashtag.TagCategoryRepository;
+import com.web.doitcommit.domain.member.MemberRepository;
 import com.web.doitcommit.dto.board.*;
 import com.web.doitcommit.handler.exception.CustomException;
 import com.web.doitcommit.service.image.ImageService;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 public class BoardService {
 
     private final BoardRepository boardRepository;
+    private final MemberRepository memberRepository;
     private final BoardHashtagRepository boardHashtagRepository;
     private final TagCategoryRepository tagCategoryRepository;
     private final ImageService imageService;
@@ -30,9 +32,9 @@ public class BoardService {
      * 게시판 목록 조회
      */
     @Transactional(readOnly = true)
-    public List<BoardListResDto> getBoardList(int pageNo, int pageSize) {
+    public List<BoardListResDto> getBoardList(int pageNo, int pageSize, Long principalId) {
         List<Board> result = boardRepository.getCustomBoardList(pageNo, pageSize);
-        return result.stream().map(board -> new BoardListResDto(board)).collect(Collectors.toList());
+        return result.stream().map(board -> new BoardListResDto(board, principalId)).collect(Collectors.toList());
     }
 
     /**
