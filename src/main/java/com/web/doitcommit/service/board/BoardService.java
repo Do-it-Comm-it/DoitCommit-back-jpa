@@ -121,7 +121,7 @@ public class BoardService {
         //로그인한 사용자의 북마크 글인지 유무
         for(int i = 0; i < boardEntity.getBookmarkList().size(); i++){
             Long memberId = boardEntity.getBookmarkList().get(i).getMember().getMemberId();
-            if(memberId == principalId){
+            if(memberId.equals(principalId)){
                 boardResDto.changeMyBookmark(true);
                 break;
             }
@@ -130,7 +130,7 @@ public class BoardService {
         //로그인한 사용자가 좋아요한 글인지 유무
         for(int i = 0; i < boardEntity.getHeartList().size(); i++){
             Long memberId = boardEntity.getHeartList().get(i).getMember().getMemberId();
-            if(memberId == principalId){
+            if(memberId.equals(principalId)){
                 boardResDto.changeMyHeart(true);
                 break;
             }
