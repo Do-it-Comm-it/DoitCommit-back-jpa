@@ -6,6 +6,7 @@ import com.web.doitcommit.domain.hashtag.BoardHashtag;
 import com.web.doitcommit.domain.hashtag.BoardHashtagRepository;
 import com.web.doitcommit.domain.hashtag.TagCategory;
 import com.web.doitcommit.domain.hashtag.TagCategoryRepository;
+import com.web.doitcommit.domain.member.MemberRepository;
 import com.web.doitcommit.dto.board.*;
 import com.web.doitcommit.handler.exception.CustomException;
 import com.web.doitcommit.service.image.ImageService;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 public class BoardService {
 
     private final BoardRepository boardRepository;
+    private final MemberRepository memberRepository;
     private final BoardHashtagRepository boardHashtagRepository;
     private final TagCategoryRepository tagCategoryRepository;
     private final ImageService imageService;
@@ -30,9 +32,9 @@ public class BoardService {
      * 게시판 목록 조회
      */
     @Transactional(readOnly = true)
-    public List<BoardListResDto> getBoardList(int pageNo, int pageSize) {
+    public List<BoardListResDto> getBoardList(int pageNo, int pageSize, Long principalId) {
         List<Board> result = boardRepository.getCustomBoardList(pageNo, pageSize);
-        return result.stream().map(board -> new BoardListResDto(board)).collect(Collectors.toList());
+        return result.stream().map(board -> new BoardListResDto(board, principalId)).collect(Collectors.toList());
     }
 
     /**
@@ -111,11 +113,32 @@ public class BoardService {
      * 게시글 조회
      */
     @Transactional(readOnly = true)
-    public BoardResDto GetBoard(Long boardId) {
+    public BoardResDto GetBoard(Long boardId, Long principalId) {
         Board boardEntity = boardRepository.findById(boardId).orElseThrow(() ->
                 new CustomException("존재하지 않는 게시글입니다."));
         boardEntity.changeBoardCnt();
+
         BoardResDto boardResDto = new BoardResDto(boardEntity);
+
+        //로그인한 사용자의 북마크 글인지 유무
+        for(int i = 0; i < boardEntity.getBookmarkList().size(); i++){
+            Long memberId = boardEntity.getBookmarkList().get(i).getMember().getMemberId();
+            if(memberId.equals(principalId)){
+                boardResDto.changeMyBookmark(true);
+                break;
+            }
+        }
+
+        //로그인한 사용자가 좋아요한 글인지 유무
+        for(int i = 0; i < boardEntity.getHeartList().size(); i++){
+            Long memberId = boardEntity.getHeartList().get(i).getMember().getMemberId();
+            if(memberId.equals(principalId)){
+                boardResDto.changeMyHeart(true);
+                break;
+            }
+        }
+
+        //해시태그 목록
         List boardHashtags = boardRepository.getCustomTagList(boardId);
 
         if(boardHashtags.size() != 0){

@@ -32,6 +32,12 @@ public class BoardResDto {
     @Schema(description = "태그", nullable = true)
     private List boardHashtag;
 
+    @Schema(description = "북마크유무")
+    private boolean myBookmark = false;
+
+    @Schema(description = "좋아요유무")
+    private boolean myHeart = false;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm", timezone = "Asia/Seoul")
     @Schema(description = "등록 날짜", nullable = true)
     private LocalDateTime regDate;
@@ -43,12 +49,19 @@ public class BoardResDto {
     public BoardResDto(Board board){
         boardId = board.getBoardId();
         writer = board.getMember().getNickname();
-//        boardHashtag = board.getBoardHashtag();
         boardTitle = board.getBoardTitle();
         boardContent = board.getBoardContent();
         categoryId = board.getBoardCategory().getCategoryId();
         boardCnt = board.getBoardCnt();
         regDate = board.getRegDate();
         modDate = board.getModDate();
+    }
+
+    public void changeMyBookmark(Boolean myBookmark){
+        this.myBookmark = myBookmark;
+    }
+
+    public void changeMyHeart(Boolean myHeart){
+        this.myHeart = myHeart;
     }
 }
