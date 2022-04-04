@@ -15,11 +15,14 @@ public class BoardListResDto {
     @Schema(description = "게시글 번호")
     private Long boardId;
 
-    @Schema(description = "글쓴이")
+    @Schema(description = "회원 고유값(작성자)")
+    private Long writerId;
+
+    @Schema(description = "작성자 닉네임")
     private String writer;
 
-    @Schema(description = "카테고리 아이디")
-    private Long categoryId;
+    @Schema(description = "작성자 프로필 이미지 URL")
+    private String writerImageUrl;
 
     @Schema(description = "글제목")
     private String boardTitle;
@@ -28,7 +31,10 @@ public class BoardListResDto {
     private String boardContent;
 
     @Schema(description = "썸네일")
-    private String thumbnail;
+    private String thumbnailUrl;
+
+    @Schema(description = "댓글수")
+    private int commentCnt;
 
     @Schema(description = "조회수")
     private int boardCnt;
@@ -43,7 +49,7 @@ public class BoardListResDto {
     private boolean myBookmark = false;
 
     @Schema(description = "태그", nullable = true)
-    private List<BoardHashtag> boardHashtag;
+    private List<BoardHashtag> boardHashtagList;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm", timezone = "Asia/Seoul")
     @Schema(description = "등록 날짜", nullable = true)
@@ -53,14 +59,16 @@ public class BoardListResDto {
     @Schema(description = "수정 날짜", nullable = true)
     private LocalDateTime modDate;
 
-    public BoardListResDto(Board board, Long principalId){
+    //TODO boardCategory 관련데이터 필요 여부
+
+   public BoardListResDto(Board board, Long principalId){
         boardId = board.getBoardId();
         writer = board.getMember().getNickname();
 //        boardHashtag = board.getBoardHashtag();
         boardTitle = board.getBoardTitle();
         boardContent = board.getBoardContent();
         categoryId = board.getBoardCategory().getCategoryId();
-        thumbnail = board.getThumbnail();
+        thumbnailUrl = board.getThumbnail();
         boardCnt = board.getBoardCnt();
         regDate = board.getRegDate();
         modDate = board.getModDate();
