@@ -2,6 +2,7 @@ package com.web.doitcommit.dto.board;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.web.doitcommit.domain.board.Board;
+import com.web.doitcommit.domain.files.Image;
 import com.web.doitcommit.domain.hashtag.BoardHashtag;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
@@ -43,11 +44,12 @@ public class BoardListResDto {
     private int heartCnt;
 
     @Schema(description = "좋아요유무")
-    private boolean myHeart = false;
+    private boolean myHeart;
 
     @Schema(description = "북마크유무")
-    private boolean myBookmark = false;
+    private boolean myBookmark;
 
+    //TODO BoardHashtagResDto 필요
     @Schema(description = "태그", nullable = true)
     private List<BoardHashtag> boardHashtagList;
 
@@ -61,20 +63,26 @@ public class BoardListResDto {
 
     //TODO boardCategory 관련데이터 필요 여부
 
-   public BoardListResDto(Board board, Long principalId){
-        boardId = board.getBoardId();
-        writer = board.getMember().getNickname();
-//        boardHashtag = board.getBoardHashtag();
-        boardTitle = board.getBoardTitle();
-        boardContent = board.getBoardContent();
-        categoryId = board.getBoardCategory().getCategoryId();
-        thumbnailUrl = board.getThumbnail();
-        boardCnt = board.getBoardCnt();
-        regDate = board.getRegDate();
-        modDate = board.getModDate();
-        heartCnt = board.getHeartList().size();
-        myHeart = board.getHeartList().stream().anyMatch(t->t.getMember().getMemberId().equals(principalId) ? true: false);
-        myBookmark = board.getBookmarkList().stream().anyMatch(t->t.getMember().getMemberId().equals(principalId) ? true: false);
+   public BoardListResDto(Board board, String writerImageUrl, String thumbnailUrl, int commentCnt, int heartCnt, Long principalId){
+       this.boardId = board.getBoardId();
+       this.writerId = board.getMember().getMemberId();
+       this.writer = board.getMember().getNickname();
+       this.writerImageUrl = writerImageUrl;
+       this.boardTitle = board.getBoardTitle();
+       this.boardContent = board.getBoardContent();
+       this.thumbnailUrl = thumbnailUrl;
+       this.commentCnt = commentCnt;
+       this.boardCnt = board.getBoardCnt();
+       this.heartCnt = heartCnt;
+       this.myHeart = board.getHeartList().stream().anyMatch(heart->heart.getMember().getMemberId().equals(principalId) ? true: false);
+       this.myBookmark = board.getBookmarkList().stream().anyMatch(bookmark->bookmark.getMember().getMemberId().equals(principalId) ? true: false);
+       this.regDate = board.getRegDate();
+       this.modDate = board.getModDate();
+
+       //게시글 해시태크 리스트
+       if (board.getBoardHashtag() != null && !board.getBoardHashtag().isEmpty()){
+           this.boardHashtagList = board.getBoardHashtag();
+       }
     }
 
 }
