@@ -19,7 +19,7 @@ public class BoardImage extends Image {
     protected BoardImage(){}
 
     public BoardImage(Board board, String filePath, String fileNm){
-        super(board.getBoardId(), filePath, fileNm);
+        super(filePath, fileNm);
         this.board = board;
         board.setBoardImage(this);
     }
