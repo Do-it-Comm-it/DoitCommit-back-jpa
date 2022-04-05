@@ -21,6 +21,10 @@ public class PageRequestDto {
     private int page;
     @Schema(description = "페이지 크기")
     private int size;
+    @Schema(description = "검색어")
+    private String keyword;
+    @Schema(description = "게시글 카테고리 고유값")
+    private Long boardCategoryId;
 
 
     public PageRequestDto(){
