@@ -46,6 +46,7 @@ public class Board extends BaseEntity {
     @Column(nullable = false)
     private int boardCnt = 0;
 
+    @BatchSize(size = 500)
     @OneToMany(mappedBy = "board",fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<BoardImage> boardImage = new ArrayList<>();
 

@@ -5,6 +5,7 @@ import com.web.doitcommit.domain.board.BoardRepository;
 import com.web.doitcommit.domain.comment.Comment;
 import com.web.doitcommit.domain.files.BoardImage;
 import com.web.doitcommit.domain.files.Image;
+import com.web.doitcommit.domain.files.MemberImage;
 import com.web.doitcommit.domain.hashtag.BoardHashtag;
 import com.web.doitcommit.domain.hashtag.BoardHashtagRepository;
 import com.web.doitcommit.domain.hashtag.TagCategory;
@@ -61,11 +62,11 @@ public class BoardService {
             }
 
             //작성자 프로필 이미지
-            Image image = (Image) arr[1];
+            MemberImage memberImage = (MemberImage) arr[1];
 
             String writerImageUrl = null;
-            if (image != null){
-                writerImageUrl = imageService.getImage(image.getFilePath(), image.getFileNm());
+            if (memberImage != null){
+                writerImageUrl = imageService.getImage(memberImage.getFilePath(), memberImage.getFileNm());
             }
 
             return new BoardListResDto((Board) arr[0], writerImageUrl, thumbnailUrl, (int) arr[2], (int) arr[3], principalId);

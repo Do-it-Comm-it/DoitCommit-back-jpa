@@ -4,10 +4,6 @@ import com.querydsl.core.Tuple;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.web.doitcommit.domain.files.BoardImage;
-import com.web.doitcommit.domain.files.QBoardImage;
-import com.web.doitcommit.domain.files.QImage;
-import com.web.doitcommit.domain.files.QMemberImage;
 import com.web.doitcommit.domain.hashtag.QBoardHashtag;
 import com.web.doitcommit.domain.hashtag.QTagCategory;
 import org.springframework.data.domain.Page;
@@ -15,16 +11,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.util.CollectionUtils;
 import javax.persistence.EntityManager;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.web.doitcommit.domain.board.QBoard.board;
 import static com.web.doitcommit.domain.files.QBoardImage.boardImage;
 import static com.web.doitcommit.domain.files.QImage.image;
 import static com.web.doitcommit.domain.files.QMemberImage.memberImage;
+import static org.apache.commons.lang3.ObjectUtils.min;
 import static org.aspectj.util.LangUtil.isEmpty;
 
 public class BoardRepositoryImpl implements BoardRepositoryQuerydsl {
@@ -46,29 +40,25 @@ public class BoardRepositoryImpl implements BoardRepositoryQuerydsl {
     @Override
     public Page<Object[]> getSearchByKeywordOfBoardList(String keyword, Long boardCategoryId, Pageable pageable) {
 
-        QImage imageOfBoard = new QImage("image2");
-
-        List<Tuple> results = queryFactory.select(board, image, board.commentList.size(), board.heartList.size())
+        List<Tuple> results = queryFactory
+                .select(board, memberImage, board.commentList.size(), board.heartList.size())
                 .from(board)
                 .join(board.member).fetchJoin()
-                .leftJoin(memberImage).on(memberImage.member.memberId.eq(board.member.memberId))
-                .leftJoin(image).on(image.imageId.eq(memberImage.imageId))
-                .leftJoin(memberImage).on(memberImage.member.memberId.eq(board.member.memberId))
-                .leftJoin(image).on(image.imageId.eq(memberImage.imageId))
+                .leftJoin(memberImage).on(memberImage.member.eq(board.member))
                 .where(board.boardCategory.categoryId.eq(boardCategoryId),
-                        titleContain(keyword), contentContain(keyword))
+                        keywordSearch(keyword))
+                .orderBy(board.boardId.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
 
         JPAQuery<Tuple> countQuery = queryFactory
-                .select(board, image, board.commentList.size(), board.heartList.size())
+                .select(board, memberImage, board.commentList.size(), board.heartList.size())
                 .from(board)
                 .join(board.member).fetchJoin()
-                .leftJoin(memberImage).on(memberImage.member.memberId.eq(board.member.memberId))
-                .leftJoin(image).on(image.imageId.eq(memberImage.imageId))
+                .leftJoin(memberImage).on(memberImage.member.eq(board.member))
                 .where(board.boardCategory.categoryId.eq(boardCategoryId),
-                        titleContain(keyword), contentContain(keyword));
+                        keywordSearch(keyword));
 
         List<Object[]> content = results.stream().map(t -> t.toArray()).collect(Collectors.toList());
 
@@ -79,6 +69,10 @@ public class BoardRepositoryImpl implements BoardRepositoryQuerydsl {
          * 날릴 필요가 없음.
          */
         return PageableExecutionUtils.getPage(content, pageable, () -> countQuery.fetchCount());
+    }
+
+    private BooleanExpression keywordSearch(String keyword){
+        return !isEmpty(keyword) ? titleContain(keyword).or(contentContain(keyword)) : null;
     }
 
     private BooleanExpression contentContain(String keyword) {

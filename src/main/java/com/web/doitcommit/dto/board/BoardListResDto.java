@@ -7,6 +7,7 @@ import com.web.doitcommit.domain.hashtag.BoardHashtag;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Schema(description = "게시글 목록 조회 dto")
@@ -50,8 +51,8 @@ public class BoardListResDto {
     private boolean myBookmark;
 
     //TODO BoardHashtagResDto 필요
-    @Schema(description = "태그", nullable = true)
-    private List<BoardHashtag> boardHashtagList;
+    @Schema(description = "게시글 해시태그", nullable = true)
+    private List<String> boardHashtagNameList;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm", timezone = "Asia/Seoul")
     @Schema(description = "등록 날짜", nullable = true)
@@ -61,7 +62,6 @@ public class BoardListResDto {
     @Schema(description = "수정 날짜", nullable = true)
     private LocalDateTime modDate;
 
-    //TODO boardCategory 관련데이터 필요 여부
 
    public BoardListResDto(Board board, String writerImageUrl, String thumbnailUrl, int commentCnt, int heartCnt, Long principalId){
        this.boardId = board.getBoardId();
@@ -76,12 +76,17 @@ public class BoardListResDto {
        this.heartCnt = heartCnt;
        this.myHeart = board.getHeartList().stream().anyMatch(heart->heart.getMember().getMemberId().equals(principalId) ? true: false);
        this.myBookmark = board.getBookmarkList().stream().anyMatch(bookmark->bookmark.getMember().getMemberId().equals(principalId) ? true: false);
+       this.boardHashtagNameList = new ArrayList<>();
        this.regDate = board.getRegDate();
        this.modDate = board.getModDate();
 
+
        //게시글 해시태크 리스트
        if (board.getBoardHashtag() != null && !board.getBoardHashtag().isEmpty()){
-           this.boardHashtagList = board.getBoardHashtag();
+           List<BoardHashtag> boardHashtagList = board.getBoardHashtag();
+           for (BoardHashtag boardHashtag : boardHashtagList){
+               this.boardHashtagNameList.add(boardHashtag.getTagCategory().getTagName());
+           }
        }
     }
 
