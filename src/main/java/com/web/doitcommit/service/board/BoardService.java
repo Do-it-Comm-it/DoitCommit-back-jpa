@@ -15,6 +15,7 @@ import com.web.doitcommit.dto.board.*;
 import com.web.doitcommit.dto.comment.CommentResDto;
 import com.web.doitcommit.dto.page.PageRequestDto;
 import com.web.doitcommit.dto.page.ScrollResultDto;
+import com.web.doitcommit.dto.todo.TodoResDto;
 import com.web.doitcommit.handler.exception.CustomException;
 import com.web.doitcommit.service.image.ImageService;
 import lombok.RequiredArgsConstructor;
@@ -40,15 +41,16 @@ public class BoardService {
 
 
     /**
-     * 게시판 목록 조회
+     * 게시글 목록 조회
      */
     @Transactional(readOnly = true)
     public ScrollResultDto<BoardListResDto, Object[]> getBoardList(PageRequestDto requestDto, Long principalId) {
 
         Pageable pageable = requestDto.getPageable(Sort.by("boardId").ascending());
 
-        Page<Object[]> results = boardRepository.getSearchByKeywordOfBoardList(
-                requestDto.getKeyword(), requestDto.getBoardCategoryId(), pageable);
+        Page<Object[]> results = boardRepository.getBoardListBySearch(
+                requestDto.getKeyword(), requestDto.getTagCategoryId(),
+                requestDto.getBoardCategoryId(), pageable);
 
         Function<Object[], BoardListResDto> fn = (arr -> {
 
@@ -74,6 +76,29 @@ public class BoardService {
 
         return new ScrollResultDto<>(results, fn);
     }
+
+    /**
+     * 게시글 사용자 개수 지정 조회
+     */
+    @Transactional(readOnly = true)
+    public List<MainViewBoardListResDto> getCustomLimitBoardList(int limit, Long boardCategoryId, Long principalId){
+
+        List<Object[]> results = boardRepository.getCustomLimitBoardList(limit, boardCategoryId);
+
+        return results.stream().map(arr -> {
+
+            //작성자 프로필 이미지
+            MemberImage memberImage = (MemberImage) arr[1];
+
+            String writerImageUrl = null;
+            if (memberImage != null){
+                writerImageUrl = imageService.getImage(memberImage.getFilePath(), memberImage.getFileNm());
+            }
+
+            return new MainViewBoardListResDto((Board)arr[0], writerImageUrl, (int)arr[2], principalId);
+        }).collect(Collectors.toList());
+    }
+
 
     /**
      * 게시글 등록

@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import java.util.List;
+import java.util.Set;
 
 @Builder
 @AllArgsConstructor
@@ -23,6 +24,8 @@ public class PageRequestDto {
     private int size;
     @Schema(description = "검색어")
     private String keyword;
+    @Schema(description = "해시태그 고유값")
+    private Long tagCategoryId;
     @Schema(description = "게시글 카테고리 고유값")
     private Long boardCategoryId;
 
