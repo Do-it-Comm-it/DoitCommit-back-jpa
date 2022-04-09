@@ -42,6 +42,25 @@ public class PopularTagController {
         return new ResponseEntity<>(new CMRespDto<>(
                 1, "인기태그 리스트 불러오기 성공", popularTagResDtoList), HttpStatus.OK);
     }
+
+    /**
+     * 7일간의 {tagId, tagName, count} 상위 8개 인기태그 리스트 조회 - redis 사용
+     */
+    @Operation(summary = "상위 8개의 인기태그 리스트 조회 api", description = "7일간의 상위 8개 인기태그를 조회한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = @Content(array = @ArraySchema(schema = @Schema(implementation = PoplarTagResDto.class)))),
+            @ApiResponse(responseCode = "400", content = @Content(schema = @Schema(example = "{\"error\": \"Bad Request\"}"))),
+            @ApiResponse(responseCode = "401", content = @Content(schema = @Schema(example = "{\"error\": \"Unauthorized\"}"))),
+            @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(example = "{\"error\": \"Not Found\"}"))),
+            @ApiResponse(responseCode = "500",  content = @Content(schema = @Schema(example = "{\"error\": \"Internal Server Error\"}")))
+    })
+    @GetMapping("/popularTags/limit")
+    public ResponseEntity<?> getLimitPopularTagList() {
+        List<PoplarTagResDto> popularTagResDtoList = popularTagService.getLimitPopularTagList();
+
+        return new ResponseEntity<>(new CMRespDto<>(
+                1, "상위 8개 인기태그 리스트 불러오기 성공", popularTagResDtoList), HttpStatus.OK);
+    }
 }
 
 
