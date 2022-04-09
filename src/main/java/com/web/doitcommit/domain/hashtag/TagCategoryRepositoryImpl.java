@@ -29,7 +29,7 @@ public class TagCategoryRepositoryImpl implements TagCategoryRepositoryQuerydsl 
     @Override
     public List<Object[]> getLimitPopularTag() {
 
-        List<Tuple> result = queryFactory.select(tagCategory.tagId, tagCategory.tagName, tagCategory.count())
+        List<Tuple> result = queryFactory.select(tagCategory.tagId, tagCategory.tagName, tagCategory.tagId.count())
                 .from(tagCategory)
                 .join(boardHashtag).on(boardHashtag.tagCategory.tagId.eq(tagCategory.tagId))
                 .join(board).on(board.boardId.eq(boardHashtag.board.boardId))
