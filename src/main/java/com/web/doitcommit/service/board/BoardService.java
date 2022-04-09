@@ -48,7 +48,8 @@ public class BoardService {
         Pageable pageable = requestDto.getPageable(Sort.by("boardId").ascending());
 
         Page<Object[]> results = boardRepository.getSearchByKeywordOfBoardList(
-                requestDto.getKeyword(), requestDto.getBoardCategoryId(), pageable);
+                requestDto.getKeyword(), requestDto.getTagCategoryId(),
+                requestDto.getBoardCategoryId(), pageable);
 
         Function<Object[], BoardListResDto> fn = (arr -> {
 

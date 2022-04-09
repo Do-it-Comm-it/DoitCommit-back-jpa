@@ -45,7 +45,7 @@ public class BoardController {
             @ApiResponse(responseCode = "500",  content = @Content(schema = @Schema(example = "{\"error\": \"Internal Server Error\"}")))
     })
     @GetMapping("/list")
-    public ResponseEntity<?> getBoardList(@Parameter(hidden = true) PageRequestDto pageRequestDto,
+    public ResponseEntity<?> getBoardList(PageRequestDto pageRequestDto,
                                           @Parameter(hidden = true) @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
         ScrollResultDto<BoardListResDto, Object[]> boardListResDtoList = boardService.getBoardList(pageRequestDto, principalDetails.getMember().getMemberId());
