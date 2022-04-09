@@ -6,6 +6,8 @@ import com.web.doitcommit.dto.board.BoardRegDto;
 import com.web.doitcommit.dto.board.BoardListResDto;
 import com.web.doitcommit.dto.board.BoardResDto;
 import com.web.doitcommit.dto.board.TagCategoryResDto;
+import com.web.doitcommit.dto.page.PageRequestDto;
+import com.web.doitcommit.dto.page.ScrollResultDto;
 import com.web.doitcommit.service.board.BoardService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -43,10 +45,11 @@ public class BoardController {
             @ApiResponse(responseCode = "500",  content = @Content(schema = @Schema(example = "{\"error\": \"Internal Server Error\"}")))
     })
     @GetMapping("/list")
-    public ResponseEntity<?> getBoardList(
-            @RequestParam(value = "pageNo") int pageNo,
-            @RequestParam(value = "pageSize") int pageSize) {
-        List<BoardListResDto> boardListResDtoList = boardService.getBoardList(pageNo, pageSize);
+    public ResponseEntity<?> getBoardList(@Parameter(hidden = true) PageRequestDto pageRequestDto,
+                                          @Parameter(hidden = true) @AuthenticationPrincipal PrincipalDetails principalDetails) {
+
+        ScrollResultDto<BoardListResDto, Object[]> boardListResDtoList = boardService.getBoardList(pageRequestDto, principalDetails.getMember().getMemberId());
+
         return new ResponseEntity<>(new CMRespDto<>(1, "게시판 리스트 조회 성공", boardListResDtoList),HttpStatus.OK);
     }
 
@@ -84,8 +87,8 @@ public class BoardController {
             @ApiResponse(responseCode = "500",  content = @Content(schema = @Schema(example = "{\"error\": \"Internal Server Error\"}")))
     })
     @GetMapping("")
-    public ResponseEntity<?> GetBoard(@Parameter(name = "boardId") Long boardId) {
-        BoardResDto boardResDto = boardService.GetBoard(boardId);
+    public ResponseEntity<?> GetBoard(@Parameter(name = "boardId") Long boardId, @Parameter(hidden = true) @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        BoardResDto boardResDto = boardService.GetBoard(boardId, principalDetails.getMember().getMemberId());
         return new ResponseEntity<>(new CMRespDto<>(1, "게시글 조회 성공", boardResDto), HttpStatus.OK);
     }
 

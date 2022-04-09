@@ -5,7 +5,6 @@ import com.web.doitcommit.config.oAuth.handler.OAuth2AuthenticationSuccessHandle
 import com.web.doitcommit.filter.JwtAuthenticationEntryPoint;
 import com.web.doitcommit.filter.JwtAuthorizationFilter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;

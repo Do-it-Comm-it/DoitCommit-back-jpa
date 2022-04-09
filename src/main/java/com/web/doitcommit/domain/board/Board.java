@@ -46,6 +46,7 @@ public class Board extends BaseEntity {
     @Column(nullable = false)
     private int boardCnt = 0;
 
+    @BatchSize(size = 500)
     @OneToMany(mappedBy = "board",fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<BoardImage> boardImage = new ArrayList<>();
 
@@ -54,10 +55,12 @@ public class Board extends BaseEntity {
     @OneToMany(mappedBy = "board",fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Heart> heartList = new ArrayList<>();
 
+    @BatchSize(size = 500)
     @Builder.Default
     @OneToMany(mappedBy = "board",fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Comment> commentList = new ArrayList<>();
 
+    @BatchSize(size = 500)
     @Builder.Default
     @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Bookmark> bookmarkList = new ArrayList<>();
