@@ -34,9 +34,8 @@ public class BoardRepositoryImpl implements BoardRepositoryQuerydsl {
     /**
      * 게시판 리스트 조회
      */
-
     @Override
-    public Page<Object[]> getSearchByKeywordOfBoardList(String keyword, Long tagCategoryId,
+    public Page<Object[]> getBoardListBySearch(String keyword, Long tagCategoryId,
                                                         Long boardCategoryId, Pageable pageable) {
 
         List<Tuple> results = queryFactory
@@ -68,6 +67,21 @@ public class BoardRepositoryImpl implements BoardRepositoryQuerydsl {
          * 날릴 필요가 없음.
          */
         return PageableExecutionUtils.getPage(content, pageable, () -> countQuery.fetchCount());
+    }
+
+    @Override
+    public List<Object[]> getCustomLimitBoardList(int limit, Long boardCategoryId) {
+        List<Tuple> results = queryFactory
+                .select(board, memberImage, board.commentList.size())
+                .from(board)
+                .join(board.member).fetchJoin()
+                .leftJoin(memberImage).on(memberImage.member.eq(board.member))
+                .where(board.boardCategory.categoryId.eq(boardCategoryId))
+                .orderBy(board.boardId.desc())
+                .limit(limit)
+                .fetch();
+
+        return results.stream().map(t -> t.toArray()).collect(Collectors.toList());
     }
 
     private BooleanExpression hashtagSearch(Long tagCategoryId) {
