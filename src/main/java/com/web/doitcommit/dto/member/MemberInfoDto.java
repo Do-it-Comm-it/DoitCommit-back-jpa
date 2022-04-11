@@ -58,7 +58,7 @@ public class MemberInfoDto {
         this.githubUrl = member.getGithubUrl();
         this.url1 = member.getUrl1();
         this.url2 = member.getUrl2();
-        this.pictureUrl = member.getPictureUrl();
+        //this.pictureUrl = member.getPictureUrl();
         this.regDate = member.getRegDate();
         this.modDate = member.getModDate();
     }
