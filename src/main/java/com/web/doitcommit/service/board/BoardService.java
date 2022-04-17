@@ -99,6 +99,43 @@ public class BoardService {
         }).collect(Collectors.toList());
     }
 
+    /**
+     * 북마크 게시글 리스트 조회
+     */
+    @Transactional(readOnly = true)
+    public ScrollResultDto<BoardListResDto, Object[]> getBookmarkList(PageRequestDto requestDto, Long principalId) {
+
+        Pageable pageable = requestDto.getPageable(Sort.by("boardId").ascending());
+
+        Page<Object[]> results = boardRepository.getBoardListByBookmark(
+                requestDto.getKeyword(), requestDto.getTagCategoryId(),
+                principalId, pageable);
+
+        Function<Object[], BoardListResDto> fn = (arr -> {
+
+            //게시글 첫번째 이미지
+            Board board = (Board) arr[0];
+
+            String thumbnailUrl = null;
+            if (board.getBoardImage() != null && !board.getBoardImage().isEmpty()) {
+                BoardImage boardImage = board.getBoardImage().get(0);
+                thumbnailUrl = imageService.getImage(boardImage.getFilePath(), boardImage.getFileNm());
+            }
+
+            //작성자 프로필 이미지
+            MemberImage memberImage = (MemberImage) arr[1];
+
+            String writerImageUrl = null;
+            if (memberImage != null) {
+                writerImageUrl = imageService.getImage(memberImage.getFilePath(), memberImage.getFileNm());
+            }
+
+            return new BoardListResDto((Board) arr[0], writerImageUrl, thumbnailUrl, (int) arr[2], (int) arr[3], principalId);
+        });
+
+        return new ScrollResultDto<>(results, fn);
+    }
+
 
     /**
      * 게시글 등록
