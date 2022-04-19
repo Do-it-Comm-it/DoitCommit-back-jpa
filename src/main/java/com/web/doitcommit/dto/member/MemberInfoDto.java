@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Schema(description = "멤버 정보 dto")
@@ -58,7 +59,6 @@ public class MemberInfoDto {
         this.githubUrl = member.getGithubUrl();
         this.url1 = member.getUrl1();
         this.url2 = member.getUrl2();
-        //this.pictureUrl = member.getPictureUrl();
         this.regDate = member.getRegDate();
         this.modDate = member.getModDate();
     }
