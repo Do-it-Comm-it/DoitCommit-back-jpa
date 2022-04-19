@@ -32,8 +32,9 @@ public class MemberService {
         try {
             Member memberEntity = memberRepository.findByMemberId(memberId);
             MemberInfoDto memberInfo = new MemberInfoDto(memberEntity);
-
-            memberInfo.setPictureUrl(memberRepository.getMemberImage(memberId));
+            if(memberRepository.getMemberImage(memberId) != null){
+                memberInfo.setPictureUrl(memberRepository.getMemberImage(memberId));
+            }
 
             return memberInfo;
         } catch (Exception e) {
