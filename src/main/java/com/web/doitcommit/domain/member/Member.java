@@ -40,9 +40,6 @@ public class Member extends BaseEntity {
 
     private String email;
 
-    @Builder.Default
-    private String pictureUrl = "";
-
     @OneToOne(mappedBy = "member",fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private MemberImage memberImage;
 
@@ -69,10 +66,6 @@ public class Member extends BaseEntity {
     @PrePersist
     public void defaultState() {
         this.state = this.state == null ? StateType.activate : this.state;
-    }
-
-    public void setPicture(String pictureUrl){
-        this.pictureUrl = pictureUrl;
     }
 
     public void setEmail(String email){
@@ -114,10 +107,4 @@ public class Member extends BaseEntity {
     public void changeLeaveDate(LocalDateTime leaveDate){
         this.leaveDate = leaveDate;
     }
-
-    //연관관계 메서드
-    public void setMemberImage(MemberImage memberImage){
-        this.memberImage = memberImage;
-    }
-
 }

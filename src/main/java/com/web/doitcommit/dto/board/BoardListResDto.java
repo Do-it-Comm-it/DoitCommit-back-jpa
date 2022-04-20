@@ -50,7 +50,6 @@ public class BoardListResDto {
     @Schema(description = "북마크유무")
     private boolean myBookmark;
 
-    //TODO BoardHashtagResDto 필요
     @Schema(description = "게시글 해시태그", nullable = true)
     private List<String> boardHashtagNameList;
 

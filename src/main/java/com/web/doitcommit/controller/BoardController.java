@@ -2,10 +2,7 @@ package com.web.doitcommit.controller;
 
 import com.web.doitcommit.config.auth.PrincipalDetails;
 import com.web.doitcommit.dto.CMRespDto;
-import com.web.doitcommit.dto.board.BoardRegDto;
-import com.web.doitcommit.dto.board.BoardListResDto;
-import com.web.doitcommit.dto.board.BoardResDto;
-import com.web.doitcommit.dto.board.TagCategoryResDto;
+import com.web.doitcommit.dto.board.*;
 import com.web.doitcommit.dto.page.PageRequestDto;
 import com.web.doitcommit.dto.page.ScrollResultDto;
 import com.web.doitcommit.service.board.BoardService;
@@ -33,6 +30,27 @@ public class BoardController {
 
     private final BoardService boardService;
 
+
+    /**
+     * 메인화면 게시글 리스트 조회
+     */
+    @Operation(summary = "메인화면 게시글 리스트 조회 API", description = "커뮤니티 최신글 2개를 조회한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = @Content(array = @ArraySchema(schema = @Schema(implementation = MainViewBoardListResDto.class)))),
+            @ApiResponse(responseCode = "400", content = @Content(schema = @Schema(example = "{\"error\": \"Bad Request\"}"))),
+            @ApiResponse(responseCode = "401", content = @Content(schema = @Schema(example = "{\"error\": \"Unauthorized\"}"))),
+            @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(example = "{\"error\": \"Not Found\"}"))),
+            @ApiResponse(responseCode = "500",  content = @Content(schema = @Schema(example = "{\"error\": \"Internal Server Error\"}")))
+    })
+    @GetMapping("/list/main")
+    public ResponseEntity<?> getCustomLimitBoardList(@Parameter(hidden = true) @AuthenticationPrincipal PrincipalDetails principalDetails) {
+
+        List<MainViewBoardListResDto> mainViewBoardListResDtoList = boardService.getCustomLimitBoardList(2, 1L, principalDetails.getMember().getMemberId());
+
+        return new ResponseEntity<>(new CMRespDto<>(1, "메인화면 게시글 리스트 조회 성공", mainViewBoardListResDtoList),HttpStatus.OK);
+    }
+
+
     /**
      * 게시판 목록 조회
      */
@@ -45,7 +63,7 @@ public class BoardController {
             @ApiResponse(responseCode = "500",  content = @Content(schema = @Schema(example = "{\"error\": \"Internal Server Error\"}")))
     })
     @GetMapping("/list")
-    public ResponseEntity<?> getBoardList(@Parameter(hidden = true) PageRequestDto pageRequestDto,
+    public ResponseEntity<?> getBoardList(PageRequestDto pageRequestDto,
                                           @Parameter(hidden = true) @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
         ScrollResultDto<BoardListResDto, Object[]> boardListResDtoList = boardService.getBoardList(pageRequestDto, principalDetails.getMember().getMemberId());

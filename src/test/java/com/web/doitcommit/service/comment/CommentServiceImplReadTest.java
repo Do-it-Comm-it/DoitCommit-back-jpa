@@ -18,6 +18,7 @@ import com.web.doitcommit.dto.comment.CommentResDto;
 import com.web.doitcommit.dto.memberTag.MemberTagResDto;
 import com.web.doitcommit.dto.page.PageRequestDto;
 import com.web.doitcommit.dto.page.ScrollResultDto;
+import com.web.doitcommit.service.image.ImageService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,6 +46,7 @@ public class CommentServiceImplReadTest {
     @Autowired MemberImageRepository memberImageRepository;
     @Autowired BoardCategoryRepository boardCategoryRepository;
     @Autowired MemberTagRepository memberTagRepository;
+    @Autowired ImageService imageService;
 
     private Member member;
     private Board board;
@@ -138,7 +140,8 @@ public class CommentServiceImplReadTest {
 
 
     private MemberImage createMemberImage (Member member, String filePath, String testFileNm){
-        MemberImage memberImage = new MemberImage(member, filePath, testFileNm);
+
+        MemberImage memberImage = new MemberImage(member, imageService.getImage(filePath, testFileNm), false, filePath, testFileNm);
         return memberImageRepository.save(memberImage);
     }
 

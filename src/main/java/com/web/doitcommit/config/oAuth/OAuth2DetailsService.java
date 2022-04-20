@@ -3,6 +3,8 @@ package com.web.doitcommit.config.oAuth;
 import com.web.doitcommit.config.auth.PrincipalDetails;
 import com.web.doitcommit.config.oAuth.userInfo.OAuth2UserInfo;
 import com.web.doitcommit.config.oAuth.userInfo.OAuth2UserInfoFactory;
+import com.web.doitcommit.domain.files.MemberImage;
+import com.web.doitcommit.domain.files.MemberImageRepository;
 import com.web.doitcommit.domain.member.AuthProvider;
 import com.web.doitcommit.domain.member.Member;
 import com.web.doitcommit.domain.member.MemberRepository;
@@ -27,6 +29,7 @@ import static com.web.doitcommit.domain.member.AuthProvider.GOOGLE;
 public class OAuth2DetailsService extends DefaultOAuth2UserService {
 
     private final MemberRepository memberRepository;
+    private final MemberImageRepository memberImageRepository;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -49,6 +52,7 @@ public class OAuth2DetailsService extends DefaultOAuth2UserService {
         //신규 회원
         if(result.isEmpty()){
             Member member;
+            MemberImage memberImage;
 
             //랜덤값 비밀번호 생성
             BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -64,9 +68,6 @@ public class OAuth2DetailsService extends DefaultOAuth2UserService {
                         .provider(GOOGLE)
                         .build();
 
-                    if (userInfo.getImageUrl() != null){
-                        member.setPicture(userInfo.getImageUrl());
-                    }
                     memberRepository.save(member);
                     break;
 
@@ -77,7 +78,6 @@ public class OAuth2DetailsService extends DefaultOAuth2UserService {
                         .nickname(null)
                         .provider(GITHUB)
                         .githubUrl((String)attributes.get("html_url"))
-                        .pictureUrl(userInfo.getImageUrl())
                         .build();
                 
                     if (userInfo.getEmail() != null){
@@ -88,6 +88,12 @@ public class OAuth2DetailsService extends DefaultOAuth2UserService {
 
                 default:
                     throw new IllegalStateException("Unexpected value: " + authProvider);
+            }
+
+            //프로필 사진 저장
+            if(userInfo.getImageUrl() != null){
+                memberImage = new MemberImage(member, userInfo.getImageUrl(),true, null, null);
+                memberImageRepository.save(memberImage);
             }
 
             return new PrincipalDetails(member, userInfo);

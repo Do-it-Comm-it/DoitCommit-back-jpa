@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Schema(description = "멤버 정보 dto")
@@ -42,6 +43,9 @@ public class MemberInfoDto {
     @Schema(description = "프로필 사진 URL", nullable = true)
     private String pictureUrl;
 
+    @Schema(description = "권한", nullable = true)
+    private String role;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm", timezone = "Asia/Seoul")
     @Schema(description = "등록 날짜", nullable = true)
     private LocalDateTime regDate;
@@ -58,7 +62,7 @@ public class MemberInfoDto {
         this.githubUrl = member.getGithubUrl();
         this.url1 = member.getUrl1();
         this.url2 = member.getUrl2();
-        this.pictureUrl = member.getPictureUrl();
+        this.role = member.getRole();
         this.regDate = member.getRegDate();
         this.modDate = member.getModDate();
     }

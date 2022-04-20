@@ -21,6 +21,7 @@ import com.web.doitcommit.domain.member.MemberRepository;
 import com.web.doitcommit.dto.comment.CommentRegDto;
 import com.web.doitcommit.dto.comment.CommentUpdateDto;
 import com.web.doitcommit.dto.memberTag.MemberTagResDto;
+import com.web.doitcommit.service.image.ImageService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,6 +47,7 @@ class CommentServiceImplTest {
     @Autowired MemberImageRepository memberImageRepository;
     @Autowired TagCategoryRepository tagCategoryRepository;
     @Autowired BoardHashtagRepository boardHashtagRepository;
+    @Autowired ImageService imageService;
 
     private Member member;
     private Board board;
@@ -204,7 +206,7 @@ class CommentServiceImplTest {
     }
 
     private MemberImage createMemberImage (Member member, String filePath, String testFileNm){
-        MemberImage memberImage = new MemberImage(member, filePath, testFileNm);
+        MemberImage memberImage = new MemberImage(member, imageService.getImage(filePath, testFileNm), false, filePath, testFileNm);
         return memberImageRepository.save(memberImage);
     }
 

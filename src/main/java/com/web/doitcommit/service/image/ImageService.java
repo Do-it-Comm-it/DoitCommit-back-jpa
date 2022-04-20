@@ -29,7 +29,7 @@ public class ImageService {
     @Transactional
     public Long imageMemberRegister(Member member, MultipartFile imageFile) throws IOException {
         Map<String, String> fileMap = s3Uploader.S3Upload(imageFile);
-        MemberImage memberImage = new MemberImage(member, fileMap.get("filePath"), fileMap.get("fileNm"));
+        MemberImage memberImage = new MemberImage(member, getImage(fileMap.get("filePath"),fileMap.get("fileNm")),false, fileMap.get("filePath"), fileMap.get("fileNm"));
         memberImageRepository.save(memberImage);
         return memberImage.getImageId();
     }

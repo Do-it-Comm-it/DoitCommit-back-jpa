@@ -20,7 +20,7 @@ public abstract class Image extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String filePath;
 
-    @Column(nullable = false)
+    @Column
     private String fileNm;
 
     public Image(String filePath, String fileNm){
