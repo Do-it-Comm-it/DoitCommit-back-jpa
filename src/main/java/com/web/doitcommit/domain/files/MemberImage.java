@@ -15,11 +15,18 @@ public class MemberImage extends Image {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
+    @Column
+    private String imageUrl;
+
+    @Column(nullable = false)
+    private boolean socialImg;
+
     protected MemberImage(){}
 
-    public MemberImage(Member member, String filePath, String fileNm){
+    public MemberImage(Member member ,String imageUrl, boolean socialImg, String filePath, String fileNm){
         super(filePath, fileNm);
         this.member = member;
-        member.setMemberImage(this);
+        this.imageUrl = imageUrl;
+        this.socialImg = socialImg;
     }
 }

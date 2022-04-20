@@ -32,8 +32,8 @@ public class MemberService {
         try {
             Member memberEntity = memberRepository.findByMemberId(memberId);
             MemberInfoDto memberInfo = new MemberInfoDto(memberEntity);
-            if(memberEntity.getMemberImage() != null){ //이미지파일이 있으면
-                memberInfo.setPictureUrl(imageService.getImage(memberEntity.getMemberImage().getFilePath(), memberEntity.getMemberImage().getFileNm()));
+            if(memberRepository.getMemberImage(memberId) != null){
+                memberInfo.setPictureUrl(memberRepository.getMemberImage(memberId));
             }
 
             return memberInfo;

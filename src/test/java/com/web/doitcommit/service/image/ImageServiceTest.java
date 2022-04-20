@@ -82,7 +82,7 @@ class ImageServiceTest {
     }
 
     private MemberImage createMemberImage(Member member, String filePath, String fileNm) {
-        MemberImage memberImage = new MemberImage(member, filePath, fileNm);
+        MemberImage memberImage = new MemberImage(member, imageService.getImage(filePath, fileNm), false, filePath, fileNm);
         return memberImageRepository.save(memberImage);
     }
 
