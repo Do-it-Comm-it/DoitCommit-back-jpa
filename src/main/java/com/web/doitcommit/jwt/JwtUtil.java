@@ -18,7 +18,7 @@ public class JwtUtil implements InitializingBean {
     @Value("${app.token.secretKey}")
     private String secretKey;
 
-    public final static int accessTokenExpire = 30;
+    public final static int accessTokenExpire = 60*30;
     //테스트용
     //public final static int accessTokenExpire = 10*600;
 
