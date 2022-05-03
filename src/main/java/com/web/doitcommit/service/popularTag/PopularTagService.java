@@ -46,7 +46,7 @@ public class PopularTagService {
         log.info(LocalDate.now().minusDays(2L).toString());
 
         //전날 인기태그 리스트 제거
-        redisService.delPopularTag(LocalDate.now().minusDays(2L).toString());
+       // redisService.delPopularTag(LocalDate.now().minusDays(2L).toString());
     }
 
     /**
