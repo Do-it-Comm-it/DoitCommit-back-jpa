@@ -57,6 +57,10 @@ public class PopularTagService {
 
         List<Object[]> result = redisService.getValues(LocalDate.now().toString());
 
+        for(Object[] arr : result){
+            System.out.println(Arrays.toString(arr));
+        }
+
         return result.stream().map(arr -> new PoplarTagResDto(
                 (Long) arr[0], (String) arr[1], ((Long) arr[2]).intValue())).collect(Collectors.toList());
     }
