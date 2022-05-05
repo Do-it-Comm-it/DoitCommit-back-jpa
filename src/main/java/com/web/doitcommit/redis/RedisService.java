@@ -3,6 +3,7 @@ package com.web.doitcommit.redis;
 import com.web.doitcommit.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.ListOperations;
+import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
@@ -54,8 +55,9 @@ public class RedisService {
      * redis 날짜별 인기태그 조회
      */
     public List<Object[]> getValues(String date){
+
         ListOperations<String, List<Object[]>> listOperations = redisTemplate.opsForList();
-        return listOperations.leftPop(date);
+        return listOperations.range(date,0,1).get(0);
     }
 
     /**

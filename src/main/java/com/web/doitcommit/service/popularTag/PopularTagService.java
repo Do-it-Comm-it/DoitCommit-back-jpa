@@ -42,11 +42,8 @@ public class PopularTagService {
             log.info("tagId: {}, tagName: {}, count: {}", arr[0], arr[1], arr[2]);
         }
 
-        log.info(LocalDate.now().toString());
-        log.info(LocalDate.now().minusDays(2L).toString());
-
         //전날 인기태그 리스트 제거
-       // redisService.delPopularTag(LocalDate.now().minusDays(2L).toString());
+        redisService.delPopularTag(LocalDate.now().minusDays(1L).toString());
     }
 
     /**
@@ -56,10 +53,6 @@ public class PopularTagService {
     public List<PoplarTagResDto> getLimitPopularTagList(){
 
         List<Object[]> result = redisService.getValues(LocalDate.now().toString());
-
-        for(Object[] arr : result){
-            System.out.println(Arrays.toString(arr));
-        }
 
         return result.stream().map(arr -> new PoplarTagResDto(
                 (Long) arr[0], (String) arr[1], ((Long) arr[2]).intValue())).collect(Collectors.toList());
