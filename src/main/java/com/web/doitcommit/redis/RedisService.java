@@ -55,7 +55,7 @@ public class RedisService {
      */
     public List<Object[]> getValues(String date){
         ListOperations<String, List<Object[]>> listOperations = redisTemplate.opsForList();
-        return listOperations.leftPop(date);
+        return listOperations.range(date,0,1).get(0);
     }
 
     /**

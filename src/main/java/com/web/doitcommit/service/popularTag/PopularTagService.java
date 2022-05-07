@@ -39,7 +39,7 @@ public class PopularTagService {
         List<Object[]> result = redisService.getValues(LocalDate.now().toString());
 
         for (Object[] arr : result){
-            log.info("tagId: {}, tagName: {}, count: {}", arr[0], arr[2], arr[1]);
+            log.info("tagId: {}, tagName: {}, count: {}", arr[0], arr[1], arr[2]);
         }
 
         //전날 인기태그 리스트 제거
