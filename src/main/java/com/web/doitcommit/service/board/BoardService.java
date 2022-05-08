@@ -211,7 +211,7 @@ public class BoardService {
     /**
      * 게시글 조회
      */
-    @Transactional(readOnly = true)
+    @Transactional
     public BoardResDto GetBoard(Long boardId, Long principalId) {
         Board boardEntity = boardRepository.findById(boardId).orElseThrow(() ->
                 new CustomException("존재하지 않는 게시글입니다."));
