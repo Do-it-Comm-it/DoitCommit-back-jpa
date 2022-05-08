@@ -218,6 +218,16 @@ public class BoardService {
         boardEntity.changeBoardCnt();
 
         BoardResDto boardResDto = new BoardResDto(boardEntity);
+        Map<Long, String> savedImageIdsAndUrl = new HashMap<>();
+
+        //이미지id와 이미지url map
+        if (boardEntity.getBoardImage().size() != 0) {
+            for (int i = 0; i < boardEntity.getBoardImage().size(); i++) {
+                savedImageIdsAndUrl.put(boardEntity.getBoardImage().get(i).getImageId(),
+                        imageService.getImage(boardEntity.getBoardImage().get(i).getFilePath(), boardEntity.getBoardImage().get(i).getFileNm()));
+            }
+            boardResDto.changeSavedImageIdsAndUrl(savedImageIdsAndUrl);
+        }
 
         //로그인한 사용자의 북마크 글인지 유무
         for (int i = 0; i < boardEntity.getBookmarkList().size(); i++) {
