@@ -24,6 +24,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -58,17 +59,15 @@ public class BoardService {
             Board board = (Board) arr[0];
 
             String thumbnailUrl = null;
-            if(board.getBoardImage() != null && !board.getBoardImage().isEmpty()){
+            if (board.getBoardImage() != null && !board.getBoardImage().isEmpty()) {
                 BoardImage boardImage = board.getBoardImage().get(0);
                 thumbnailUrl = imageService.getImage(boardImage.getFilePath(), boardImage.getFileNm());
             }
 
             //작성자 프로필 이미지
-            MemberImage memberImage = (MemberImage) arr[1];
-
             String writerImageUrl = null;
-            if (memberImage != null){
-                writerImageUrl = imageService.getImage(memberImage.getFilePath(), memberImage.getFileNm());
+            if (board.getBoardImage().size() == 0 && board.getMember().getMemberImage() != null) {
+                writerImageUrl = board.getMember().getMemberImage().getImageUrl();
             }
 
             return new BoardListResDto((Board) arr[0], writerImageUrl, thumbnailUrl, (int) arr[2], (int) arr[3], principalId);
@@ -81,7 +80,7 @@ public class BoardService {
      * 게시글 사용자 개수 지정 조회
      */
     @Transactional(readOnly = true)
-    public List<MainViewBoardListResDto> getCustomLimitBoardList(int limit, Long boardCategoryId, Long principalId){
+    public List<MainViewBoardListResDto> getCustomLimitBoardList(int limit, Long boardCategoryId, Long principalId) {
 
         List<Object[]> results = boardRepository.getCustomLimitBoardList(limit, boardCategoryId);
 
@@ -91,11 +90,11 @@ public class BoardService {
             MemberImage memberImage = (MemberImage) arr[1];
 
             String writerImageUrl = null;
-            if (memberImage != null){
+            if (memberImage != null) {
                 writerImageUrl = imageService.getImage(memberImage.getFilePath(), memberImage.getFileNm());
             }
 
-            return new MainViewBoardListResDto((Board)arr[0], writerImageUrl, (int)arr[2], principalId);
+            return new MainViewBoardListResDto((Board) arr[0], writerImageUrl, (int) arr[2], principalId);
         }).collect(Collectors.toList());
     }
 
@@ -221,18 +220,18 @@ public class BoardService {
         BoardResDto boardResDto = new BoardResDto(boardEntity);
 
         //로그인한 사용자의 북마크 글인지 유무
-        for(int i = 0; i < boardEntity.getBookmarkList().size(); i++){
+        for (int i = 0; i < boardEntity.getBookmarkList().size(); i++) {
             Long memberId = boardEntity.getBookmarkList().get(i).getMember().getMemberId();
-            if(memberId.equals(principalId)){
+            if (memberId.equals(principalId)) {
                 boardResDto.changeMyBookmark(true);
                 break;
             }
         }
 
         //로그인한 사용자가 좋아요한 글인지 유무
-        for(int i = 0; i < boardEntity.getHeartList().size(); i++){
+        for (int i = 0; i < boardEntity.getHeartList().size(); i++) {
             Long memberId = boardEntity.getHeartList().get(i).getMember().getMemberId();
-            if(memberId.equals(principalId)){
+            if (memberId.equals(principalId)) {
                 boardResDto.changeMyHeart(true);
                 break;
             }
@@ -241,7 +240,7 @@ public class BoardService {
         //해시태그 목록
         List boardHashtags = boardRepository.getCustomTagList(boardId);
 
-        if(boardHashtags.size() != 0){
+        if (boardHashtags.size() != 0) {
             boardResDto.setBoardHashtag(boardHashtags);
         }
         return boardResDto;
