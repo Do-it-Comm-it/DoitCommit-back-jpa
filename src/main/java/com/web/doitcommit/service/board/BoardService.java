@@ -264,4 +264,22 @@ public class BoardService {
         List<TagCategory> result = tagCategoryRepository.findAll();
         return result.stream().map(tag -> new TagCategoryResDto(tag)).collect(Collectors.toList());
     }
+
+    /**
+     * 게시글 삭제
+     */
+    @Transactional
+    public void remove(Long boardId) {
+        Board board = boardRepository.findById(boardId).orElseThrow(() ->
+                new CustomException("존재하지 않는 게시글입니다."));
+        boardRepository.deleteById(boardId);
+        List<BoardImage> imageInfoArr = board.getBoardImage();
+
+        //s3에서 삭제된 게시글 이미지 삭제
+        if (imageInfoArr.size() != 0) {
+            for (BoardImage imageInfo : imageInfoArr) {
+                imageService.imageRemove(imageInfo.getFilePath() + "/" + imageInfo.getFileNm());
+            }
+        }
+    }
 }
