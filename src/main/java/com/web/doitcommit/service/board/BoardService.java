@@ -2,9 +2,7 @@ package com.web.doitcommit.service.board;
 
 import com.web.doitcommit.domain.board.Board;
 import com.web.doitcommit.domain.board.BoardRepository;
-import com.web.doitcommit.domain.comment.Comment;
 import com.web.doitcommit.domain.files.BoardImage;
-import com.web.doitcommit.domain.files.Image;
 import com.web.doitcommit.domain.files.MemberImage;
 import com.web.doitcommit.domain.hashtag.BoardHashtag;
 import com.web.doitcommit.domain.hashtag.BoardHashtagRepository;
@@ -12,10 +10,8 @@ import com.web.doitcommit.domain.hashtag.TagCategory;
 import com.web.doitcommit.domain.hashtag.TagCategoryRepository;
 import com.web.doitcommit.domain.member.MemberRepository;
 import com.web.doitcommit.dto.board.*;
-import com.web.doitcommit.dto.comment.CommentResDto;
 import com.web.doitcommit.dto.page.PageRequestDto;
 import com.web.doitcommit.dto.page.ScrollResultDto;
-import com.web.doitcommit.dto.todo.TodoResDto;
 import com.web.doitcommit.handler.exception.CustomException;
 import com.web.doitcommit.service.image.ImageService;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +20,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -35,7 +30,6 @@ import java.util.stream.Collectors;
 public class BoardService {
 
     private final BoardRepository boardRepository;
-    private final MemberRepository memberRepository;
     private final BoardHashtagRepository boardHashtagRepository;
     private final TagCategoryRepository tagCategoryRepository;
     private final ImageService imageService;
