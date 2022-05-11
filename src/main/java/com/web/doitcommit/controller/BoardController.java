@@ -142,8 +142,8 @@ public class BoardController {
             @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(example = "{\"error\": \"Not Found\"}"))),
             @ApiResponse(responseCode = "500",  content = @Content(schema = @Schema(example = "{\"error\": \"Internal Server Error\"}")))
     })
-    @DeleteMapping("")
-    public ResponseEntity<?> removeBoard(@Parameter(name = "boardId") Long boardId) {
+    @DeleteMapping("/{boardId}")
+    public ResponseEntity<?> removeBoard(@Parameter(name = "boardId") @PathVariable("boardId") Long boardId) {
         boardService.remove(boardId);
         return new ResponseEntity<>(new CMRespDto<>(1, "게시글 삭제 성공", null), HttpStatus.OK);
     }
