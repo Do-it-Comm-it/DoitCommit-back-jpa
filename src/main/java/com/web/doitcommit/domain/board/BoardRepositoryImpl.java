@@ -103,7 +103,7 @@ public class BoardRepositoryImpl implements BoardRepositoryQuerydsl {
                 .join(board.member).fetchJoin()
                 .leftJoin(memberImage).on(memberImage.member.eq(board.member))
                 .leftJoin(bookmark).on(bookmark.board.boardId.eq(board.boardId))
-                .where(board.boardCategory.categoryId.eq(1L),
+                .where(board.boardCategory.categoryId.eq(2L),
                         keywordSearch(keyword), hashtagSearch(tagCategoryId),
                         bookmark.member.memberId.eq(principalId))
                 .orderBy(board.boardId.desc())
