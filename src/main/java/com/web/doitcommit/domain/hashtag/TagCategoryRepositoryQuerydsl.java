@@ -7,13 +7,18 @@ import java.util.List;
 public interface TagCategoryRepositoryQuerydsl {
 
     /**
-     * 7일간의 인기태그 상위 8개 리스트
+     * 지정된 기간동안 인기태그 상위 8개 리스트
      */
-    List<Object[]> getLimitPopularTag();
+    List<Object[]> getLimitPopularTagListForPeriod(int period);
 
     /**
-     * 7일간의 인기태그 리스트
+     * 전체 태그 상위 8개 리스트
      */
-    List<Object[]> getAllPopularTag();
+    List<Object[]> getLimitPopularTagList();
+
+    /**
+     * 지정된 기간동안 인기태그 리스트
+     */
+    List<Object[]> getAllPopularTagListForPeriod(int period);
 
 }
