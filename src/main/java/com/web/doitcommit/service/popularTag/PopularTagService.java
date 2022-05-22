@@ -3,6 +3,7 @@ package com.web.doitcommit.service.popularTag;
 import com.web.doitcommit.domain.board.BoardRepository;
 import com.web.doitcommit.domain.hashtag.TagCategoryRepository;
 import com.web.doitcommit.dto.popularTag.PoplarTagResDto;
+import com.web.doitcommit.handler.exception.CustomException;
 import com.web.doitcommit.redis.RedisService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +34,7 @@ public class PopularTagService {
     @Transactional
     public void UpdatePopularTag(){
         //금일 인기태그 리스트 추가
-        List<Object[]> popularTagList = tagCategoryRepository.getLimitPopularTag();
+        List<Object[]> popularTagList = tagCategoryRepository.getLimitPopularTagListForPeriod(7);
         redisService.setList(popularTagList);
 
         List<Object[]> result = redisService.getValues(LocalDate.now().toString());
@@ -47,10 +48,10 @@ public class PopularTagService {
     }
 
     /**
-     * 상단 8개 인기태그 리스트
+     * 상단 8개 인기태그 리스트 - redis 조회
      */
     @Transactional(readOnly = true)
-    public List<PoplarTagResDto> getLimitPopularTagList(){
+    public List<PoplarTagResDto> getLimitPopularTagListFor7Days(){
 
         List<Object[]> result = redisService.getValues(LocalDate.now().toString());
 
@@ -59,12 +60,24 @@ public class PopularTagService {
     }
 
     /**
-     * 7일간의 {tagId, tagName, count} 모든 태그 리스트
+     * 상단 8개 인기태그 리스트 조회 - db 조회
      */
     @Transactional(readOnly = true)
-    public List<PoplarTagResDto> getAllPopularTagList(){
+    public List<PoplarTagResDto> getLimitPopularTagList(){
 
-        List<Object[]> result = tagCategoryRepository.getAllPopularTag();
+        List<Object[]> result = tagCategoryRepository.getLimitPopularTagList();
+
+        return result.stream().map(arr -> new PoplarTagResDto(
+                (Long) arr[0], (String) arr[1], ((Long) arr[2]).intValue())).collect(Collectors.toList());
+    }
+
+    /**
+     * 지정된 기간동안 {tagId, tagName, count} 모든 태그 리스트
+     */
+    @Transactional(readOnly = true)
+    public List<PoplarTagResDto> getAllPopularTagListForPeriod(int period){
+
+        List<Object[]> result = tagCategoryRepository.getAllPopularTagListForPeriod(period);
 
         System.out.println(result.size());
 

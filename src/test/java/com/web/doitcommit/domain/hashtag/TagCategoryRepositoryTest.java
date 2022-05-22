@@ -29,7 +29,7 @@ class TagCategoryRepositoryTest {
         //given
 
         //when
-        List<Object[]> popularTagList = tagCategoryRepository.getLimitPopularTag();
+        List<Object[]> popularTagList = tagCategoryRepository.getLimitPopularTagListForPeriod(7);
 
         //then
         for (Object[] object : popularTagList){
