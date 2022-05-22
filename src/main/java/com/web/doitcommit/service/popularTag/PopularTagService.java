@@ -3,6 +3,7 @@ package com.web.doitcommit.service.popularTag;
 import com.web.doitcommit.domain.board.BoardRepository;
 import com.web.doitcommit.domain.hashtag.TagCategoryRepository;
 import com.web.doitcommit.dto.popularTag.PoplarTagResDto;
+import com.web.doitcommit.handler.exception.CustomException;
 import com.web.doitcommit.redis.RedisService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

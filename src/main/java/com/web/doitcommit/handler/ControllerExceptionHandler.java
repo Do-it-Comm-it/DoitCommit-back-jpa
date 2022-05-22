@@ -3,6 +3,7 @@ package com.web.doitcommit.handler;
 import com.web.doitcommit.dto.CMRespDto;
 import com.web.doitcommit.handler.exception.CustomException;
 import com.web.doitcommit.handler.exception.CustomValidationException;
+import com.web.doitcommit.handler.exception.NoSavedDataException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -32,6 +33,11 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
     public ResponseEntity<CMRespDto<?>> apiSQLIntegrityConstraintViolationException(SQLIntegrityConstraintViolationException e){
         return new ResponseEntity<>(new CMRespDto<>(-1,e.getMessage(),null), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NoSavedDataException.class)
+    public ResponseEntity<CMRespDto<?>> apiNoSavedDataException(NoSavedDataException e){
+        return new ResponseEntity<>(new CMRespDto<>(-1,e.getMessage(),null), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }
