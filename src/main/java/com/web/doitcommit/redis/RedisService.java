@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -61,7 +62,7 @@ public class RedisService {
         try{
            return listOperations.range(date, 0, 1).get(0);
         }catch (IndexOutOfBoundsException e){
-            throw new NoSavedDataException("저장된 인기태그가 없습니다.");
+            return new ArrayList<>();
         }
     }
 
