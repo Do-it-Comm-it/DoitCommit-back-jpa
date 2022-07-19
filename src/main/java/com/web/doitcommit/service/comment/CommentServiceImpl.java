@@ -26,10 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.List;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -53,7 +50,20 @@ public class CommentServiceImpl implements CommentService {
         Board board = boardRepository.findById(commentRegDto.getBoardId()).orElseThrow(() ->
                 new CustomException("존재하지 않는 게시글입니다."));
 
-        Comment comment = commentRegDto.toEntity(board,principalId);
+        Comment comment;
+
+        //대댓글인 경우
+        if(commentRegDto.getParentId() != null){
+
+            Comment parent = commentRepository.findById(commentRegDto.getParentId()).orElseThrow(() ->
+                    new CustomException("존재하는 부모댓글이 없습니다."));
+
+            comment = commentRegDto.toEntity(board, principalId, parent);
+        }
+        //댓글인 경우
+        else{
+            comment = commentRegDto.toEntity(board, principalId);
+        }
 
         //회원 태그가 있는 경우
         if (commentRegDto.getMemberIdSet() != null && !commentRegDto.getMemberIdSet().isEmpty()){
@@ -139,6 +149,8 @@ public class CommentServiceImpl implements CommentService {
         Page<Object[]> result = commentRepository.getCommentList(boardId, pageRequestDto.getPageable());
 
         Function<Object[], CommentResDto> fn = (arr -> {
+
+            //회원 프로필 이미지
             Image image = (Image) arr[1];
 
             String imageUrl = null;
@@ -146,7 +158,26 @@ public class CommentServiceImpl implements CommentService {
                 imageUrl = imageService.getImage(image.getFilePath(), image.getFileNm());
             }
 
-            return new CommentResDto((Comment) arr[0], imageUrl);
+            //대댓글 리스트
+            Comment comment = (Comment) arr[0];
+            List<CommentResDto> childResDtoList = new ArrayList<>();
+
+            List<Comment> childList = comment.getChildList();
+
+            if(!childList.isEmpty()){
+                for(Comment child : childList){
+
+                    String imageUrlOfChild = null;
+
+                    if(child.getMember().getMemberImage() != null){
+                        imageUrlOfChild = child.getMember().getMemberImage().getImageUrl();
+                    }
+
+                    childResDtoList.add(new CommentResDto(child, imageUrlOfChild, null));
+                }
+            }
+
+            return new CommentResDto(comment, imageUrl, childResDtoList);
         });
 
         ScrollResultDto<CommentResDto, Object[]> commentResDtoList = new ScrollResultDto<>(result, fn);
@@ -176,7 +207,7 @@ public class CommentServiceImpl implements CommentService {
             }
         }
 
-        //게시글 작성자가 리스테 존재하지 않으면 추가
+        //게시글 작성자가 리스에 존재하지 않으면 추가
         if (!isExist){
             memberTagList.addAll(0,memberTagOfWriter);
         }
