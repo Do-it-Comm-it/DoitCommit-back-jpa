@@ -10,6 +10,8 @@ import lombok.Data;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -34,6 +36,9 @@ public class CommentResDto {
     @Schema(description = "댓글 존재 유무")
     private Boolean isExist;
 
+    @Schema(description = "대댓글 리스트")
+    private List<CommentResDto> childList;
+
     @Schema(description = "댓글 등록 날짜('yyyy-MM-ddTHH:mm')")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm", timezone = "Asia/Seoul")
     private LocalDateTime regDateTime;
@@ -41,7 +46,7 @@ public class CommentResDto {
     @Schema(description = "회원 태그의 회원 고유값 set")
     private Set<String> memberIdSet;
 
-    public CommentResDto(Comment comment, String imageUrl){
+    public CommentResDto(Comment comment, String imageUrl, List<CommentResDto> childResDtoList){
 
         commentId = comment.getCommentId();
         writerId = comment.getMember().getMemberId().toString();
@@ -49,6 +54,7 @@ public class CommentResDto {
         content = comment.getContent();
         this.imageUrl = imageUrl;
         isExist = comment.getIsExist();
+        this.childList = childResDtoList;
         regDateTime = comment.getModDate(); //수정 날짜
         memberIdSet = comment.getMemberTagSet().stream().map(memberTag ->
                 memberTag.getMember().getMemberId().toString()).collect(Collectors.toSet());
