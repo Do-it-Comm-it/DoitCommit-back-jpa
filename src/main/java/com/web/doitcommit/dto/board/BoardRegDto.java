@@ -45,7 +45,7 @@ public class BoardRegDto {
                 .member(Member.builder().memberId(principalId).build())
                 .boardTitle(boardTitle)
                 .boardContent(boardContent)
-                .boardImage(new ArrayList<>())
+                .boardImageList(new ArrayList<>())
                 .boardHashtag(new ArrayList<>())
                 .build();
         return board;

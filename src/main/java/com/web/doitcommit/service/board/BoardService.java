@@ -53,15 +53,24 @@ public class BoardService {
             Board board = (Board) arr[0];
 
             String thumbnailUrl = null;
-            if (board.getBoardImage() != null && !board.getBoardImage().isEmpty()) {
-                BoardImage boardImage = board.getBoardImage().get(0);
+            if (board.getBoardImageList() != null && !board.getBoardImageList().isEmpty()) {
+                BoardImage boardImage = board.getBoardImageList().get(0);
                 thumbnailUrl = imageService.getImage(boardImage.getFilePath(), boardImage.getFileNm());
             }
 
             //작성자 프로필 이미지
+            MemberImage memberImage = (MemberImage) arr[1];
+
             String writerImageUrl = null;
-            if (board.getBoardImage().size() == 0 && board.getMember().getMemberImage() != null) {
-                writerImageUrl = board.getMember().getMemberImage().getImageUrl();
+            if (memberImage != null) {
+                //소셜 이미지일 경우
+                if(memberImage.isSocialImg()){
+                    writerImageUrl = memberImage.getImageUrl();
+                }
+                //s3 이미지일 경우
+                else{
+                    writerImageUrl = imageService.getImage(memberImage.getFilePath(), memberImage.getFileNm());
+                }
             }
 
             return new BoardListResDto((Board) arr[0], writerImageUrl, thumbnailUrl, (int) arr[2], (int) arr[3], principalId);
@@ -85,7 +94,14 @@ public class BoardService {
 
             String writerImageUrl = null;
             if (memberImage != null) {
-                writerImageUrl = imageService.getImage(memberImage.getFilePath(), memberImage.getFileNm());
+                //소셜 이미지일 경우
+                if(memberImage.isSocialImg()){
+                    writerImageUrl = memberImage.getImageUrl();
+                }
+                //s3 이미지일 경우
+                else{
+                    writerImageUrl = imageService.getImage(memberImage.getFilePath(), memberImage.getFileNm());
+                }
             }
 
             return new MainViewBoardListResDto((Board) arr[0], writerImageUrl, (int) arr[2], principalId);
@@ -110,8 +126,8 @@ public class BoardService {
             Board board = (Board) arr[0];
 
             String thumbnailUrl = null;
-            if (board.getBoardImage() != null && !board.getBoardImage().isEmpty()) {
-                BoardImage boardImage = board.getBoardImage().get(0);
+            if (board.getBoardImageList() != null && !board.getBoardImageList().isEmpty()) {
+                BoardImage boardImage = board.getBoardImageList().get(0);
                 thumbnailUrl = imageService.getImage(boardImage.getFilePath(), boardImage.getFileNm());
             }
 
@@ -120,7 +136,14 @@ public class BoardService {
 
             String writerImageUrl = null;
             if (memberImage != null) {
-                writerImageUrl = imageService.getImage(memberImage.getFilePath(), memberImage.getFileNm());
+                //소셜 이미지일 경우
+                if(memberImage.isSocialImg()){
+                    writerImageUrl = memberImage.getImageUrl();
+                }
+                //s3 이미지일 경우
+                else{
+                    writerImageUrl = imageService.getImage(memberImage.getFilePath(), memberImage.getFileNm());
+                }
             }
 
             return new BoardListResDto((Board) arr[0], writerImageUrl, thumbnailUrl, (int) arr[2], (int) arr[3], principalId);
@@ -215,10 +238,10 @@ public class BoardService {
         Map<Long, String> savedImageIdsAndUrl = new HashMap<>();
 
         //이미지id와 이미지url map
-        if (boardEntity.getBoardImage().size() != 0) {
-            for (int i = 0; i < boardEntity.getBoardImage().size(); i++) {
-                savedImageIdsAndUrl.put(boardEntity.getBoardImage().get(i).getImageId(),
-                        imageService.getImage(boardEntity.getBoardImage().get(i).getFilePath(), boardEntity.getBoardImage().get(i).getFileNm()));
+        if (boardEntity.getBoardImageList().size() != 0) {
+            for (int i = 0; i < boardEntity.getBoardImageList().size(); i++) {
+                savedImageIdsAndUrl.put(boardEntity.getBoardImageList().get(i).getImageId(),
+                        imageService.getImage(boardEntity.getBoardImageList().get(i).getFilePath(), boardEntity.getBoardImageList().get(i).getFileNm()));
             }
             boardResDto.changeSavedImageIdsAndUrl(savedImageIdsAndUrl);
         }
@@ -267,7 +290,7 @@ public class BoardService {
         Board board = boardRepository.findById(boardId).orElseThrow(() ->
                 new CustomException("존재하지 않는 게시글입니다."));
         boardRepository.deleteById(boardId);
-        List<BoardImage> imageInfoArr = board.getBoardImage();
+        List<BoardImage> imageInfoArr = board.getBoardImageList();
 
         //s3에서 삭제된 게시글 이미지 삭제
         if (imageInfoArr.size() != 0) {

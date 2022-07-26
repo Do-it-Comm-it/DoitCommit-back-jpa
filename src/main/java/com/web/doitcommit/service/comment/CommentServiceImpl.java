@@ -7,6 +7,7 @@ import com.web.doitcommit.domain.comment.CommentRepository;
 import com.web.doitcommit.domain.comment.MemberTag;
 import com.web.doitcommit.domain.comment.MemberTagRepository;
 import com.web.doitcommit.domain.files.Image;
+import com.web.doitcommit.domain.files.MemberImage;
 import com.web.doitcommit.domain.member.Member;
 import com.web.doitcommit.dto.comment.CommentListDto;
 import com.web.doitcommit.dto.comment.CommentRegDto;
@@ -151,11 +152,19 @@ public class CommentServiceImpl implements CommentService {
         Function<Object[], CommentResDto> fn = (arr -> {
 
             //회원 프로필 이미지
-            Image image = (Image) arr[1];
+            MemberImage memberImage = (MemberImage) arr[1];
 
             String imageUrl = null;
-            if (image != null){
-                imageUrl = imageService.getImage(image.getFilePath(), image.getFileNm());
+
+            if (memberImage != null){
+                //소셜 이미지일 경우
+                if(memberImage.isSocialImg()){
+                    imageUrl = memberImage.getImageUrl();
+                }
+                //s3 이미지일 경우
+                else{
+                    imageUrl = imageService.getImage(memberImage.getFilePath(), memberImage.getFileNm());
+                }
             }
 
             //대댓글 리스트
