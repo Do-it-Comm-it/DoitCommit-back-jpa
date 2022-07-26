@@ -5,7 +5,9 @@ import com.web.doitcommit.domain.board.Board;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Schema(description = "게시글 조회 dto")
 @Data
@@ -38,6 +40,9 @@ public class BoardResDto {
     @Schema(description = "좋아요유무")
     private boolean myHeart = false;
 
+    @Schema(description = "이미지 배열")
+    private Map<Long, String> savedImageIdsAndUrl = new HashMap<>();
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm", timezone = "Asia/Seoul")
     @Schema(description = "등록 날짜", nullable = true)
     private LocalDateTime regDate;
@@ -63,5 +68,9 @@ public class BoardResDto {
 
     public void changeMyHeart(Boolean myHeart){
         this.myHeart = myHeart;
+    }
+
+    public void changeSavedImageIdsAndUrl(Map<Long, String> savedImageIdsAndUrl){
+        this.savedImageIdsAndUrl = savedImageIdsAndUrl;
     }
 }

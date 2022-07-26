@@ -13,16 +13,14 @@ public interface CommentRepository extends JpaRepository<Comment,Long> {
 
 
     @EntityGraph(attributePaths = {"member"}, type = EntityGraph.EntityGraphType.LOAD)
-    @Query("select c, i from Comment c " +
+    @Query("select c, mi from Comment c " +
             "left join MemberImage mi on mi.member.memberId = c.member.memberId " +
-            "left join Image i on i.imageId = mi.imageId " +
-            "where c.board.boardId = :boardId")
+            "where c.board.boardId = :boardId and c.parent is null")
     Page<Object[]> getCommentList(@Param("boardId") Long boardId, Pageable pageable);
 
-    @Query("select m.memberId, m.nickname, i from Comment c " +
+    @Query("select m.memberId, m.nickname, mi from Comment c " +
             "join Member m on m.memberId = c.member.memberId " +
             "left join MemberImage mi on mi.member.memberId = m.memberId " +
-            "left join Image i on i.imageId = mi.imageId " +
             "where c.board.boardId = :boardId " +
             "group by m.memberId")
     List<Object[]> getMemberTagList(@Param("boardId") Long boardId);

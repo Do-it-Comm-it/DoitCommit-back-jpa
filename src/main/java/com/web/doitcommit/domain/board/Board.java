@@ -48,7 +48,7 @@ public class Board extends BaseEntity {
 
     @BatchSize(size = 500)
     @OneToMany(mappedBy = "board",fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    private List<BoardImage> boardImage = new ArrayList<>();
+    private List<BoardImage> boardImageList = new ArrayList<>();
 
     @BatchSize(size = 500)
     @Builder.Default
@@ -71,7 +71,7 @@ public class Board extends BaseEntity {
 
     //연관관계 메서드
     public void setBoardImage(BoardImage boardImage){
-        this.boardImage.add(boardImage);
+        this.getBoardImageList().add(boardImage);
     }
 
     //연관관계 메서드

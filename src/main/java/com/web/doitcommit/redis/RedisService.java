@@ -1,5 +1,7 @@
 package com.web.doitcommit.redis;
 
+import com.web.doitcommit.handler.exception.CustomException;
+import com.web.doitcommit.handler.exception.NoSavedDataException;
 import com.web.doitcommit.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.ListOperations;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -57,7 +60,12 @@ public class RedisService {
     public List<Object[]> getValues(String date){
 
         ListOperations<String, List<Object[]>> listOperations = redisTemplate.opsForList();
-        return listOperations.range(date,0,1).get(0);
+
+        try{
+           return listOperations.range(date, 0, 1).get(0);
+        }catch (IndexOutOfBoundsException e){
+            return new ArrayList<>();
+        }
     }
 
     /**

@@ -24,16 +24,16 @@ public class TagCategoryRepositoryImpl implements TagCategoryRepositoryQuerydsl 
     }
 
     /**
-     * 7일간의 인기태그 상위 8개 리스트
+     * 지정된 기간동안 인기태그 상위 8개 리스트
      */
     @Override
-    public List<Object[]> getLimitPopularTag() {
+    public List<Object[]> getLimitPopularTagListForPeriod(int period) {
 
         List<Tuple> result = queryFactory.select(tagCategory.tagId, tagCategory.tagName, tagCategory.tagId.count())
                 .from(tagCategory)
                 .join(boardHashtag).on(boardHashtag.tagCategory.tagId.eq(tagCategory.tagId))
                 .join(board).on(board.boardId.eq(boardHashtag.board.boardId))
-                .where(board.modDate.between(LocalDateTime.now().minusDays(7), LocalDateTime.now()))
+                .where(board.modDate.between(LocalDateTime.now().minusDays(period), LocalDateTime.now()))
                 .groupBy(tagCategory.tagId)
                 .orderBy(tagCategory.count().desc())
                 .limit(8)
@@ -43,16 +43,34 @@ public class TagCategoryRepositoryImpl implements TagCategoryRepositoryQuerydsl 
     }
 
     /**
-     * 7일간의 인기태그 리스트
+     * 전체 태그 상위 8개 리스트
      */
     @Override
-    public List<Object[]> getAllPopularTag() {
+    public List<Object[]> getLimitPopularTagList() {
 
         List<Tuple> result = queryFactory.select(tagCategory.tagId, tagCategory.tagName, tagCategory.tagId.count())
                 .from(tagCategory)
                 .join(boardHashtag).on(boardHashtag.tagCategory.tagId.eq(tagCategory.tagId))
                 .join(board).on(board.boardId.eq(boardHashtag.board.boardId))
-                .where(board.modDate.between(LocalDateTime.now().minusDays(7), LocalDateTime.now()))
+                .groupBy(tagCategory.tagId)
+                .orderBy(tagCategory.count().desc())
+                .limit(8)
+                .fetch();
+
+        return result.stream().map(t -> t.toArray()).collect(Collectors.toList());
+    }
+
+    /**
+     * 지정된 기간동안 인기태그 리스트
+     */
+    @Override
+    public List<Object[]> getAllPopularTagListForPeriod(int period) {
+
+        List<Tuple> result = queryFactory.select(tagCategory.tagId, tagCategory.tagName, tagCategory.tagId.count())
+                .from(tagCategory)
+                .join(boardHashtag).on(boardHashtag.tagCategory.tagId.eq(tagCategory.tagId))
+                .join(board).on(board.boardId.eq(boardHashtag.board.boardId))
+                .where(board.modDate.between(LocalDateTime.now().minusDays(period), LocalDateTime.now()))
                 .groupBy(tagCategory.tagId)
                 .orderBy(tagCategory.count().desc())
                 .fetch();

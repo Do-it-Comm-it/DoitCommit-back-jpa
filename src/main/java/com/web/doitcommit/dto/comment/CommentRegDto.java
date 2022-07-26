@@ -34,6 +34,21 @@ public class CommentRegDto {
     @Builder.Default
     private Set<Long> memberIdSet = new HashSet<>();
 
+    @Schema(description = "부모 댓글 고유값")
+    private Long parentId;
+
+    public Comment toEntity(Board board, Long principalId, Comment parent){
+        Comment comment = Comment.builder()
+                .member(Member.builder().memberId(principalId).build())
+                .content(content)
+                .isExist(true)
+                .build();
+        comment.setBoard(board);
+        comment.setParent(parent);
+
+        return comment;
+    }
+
     public Comment toEntity(Board board, Long principalId){
         Comment comment = Comment.builder()
                 .member(Member.builder().memberId(principalId).build())
