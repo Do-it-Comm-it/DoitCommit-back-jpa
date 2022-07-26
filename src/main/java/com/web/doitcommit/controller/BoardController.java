@@ -45,7 +45,7 @@ public class BoardController {
     @GetMapping("/list/main")
     public ResponseEntity<?> getCustomLimitBoardList(@Parameter(hidden = true) @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
-        List<MainViewBoardListResDto> mainViewBoardListResDtoList = boardService.getCustomLimitBoardList(2, 1L, principalDetails.getMember().getMemberId());
+        List<MainViewBoardListResDto> mainViewBoardListResDtoList = boardService.getCustomLimitBoardList(4, 2L, principalDetails.getMember().getMemberId());
 
         return new ResponseEntity<>(new CMRespDto<>(1, "메인화면 게시글 리스트 조회 성공", mainViewBoardListResDtoList),HttpStatus.OK);
     }
