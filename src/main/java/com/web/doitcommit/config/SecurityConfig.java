@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.reactive.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -62,6 +63,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/members/*","/todos/**").authenticated()
+                .antMatchers(HttpMethod.POST, "/board", "/comments").authenticated()
+                .antMatchers(HttpMethod.PUT, "/comments/{commentId}").authenticated()
+                .antMatchers(HttpMethod.DELETE, "/board/{boardId}").authenticated()
+                .antMatchers(HttpMethod.PATCH, "/comments/{commentId}/isExist").authenticated()
                 .anyRequest().permitAll()
 
                 .and()
