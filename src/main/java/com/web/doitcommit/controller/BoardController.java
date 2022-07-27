@@ -45,7 +45,16 @@ public class BoardController {
     @GetMapping("/list/main")
     public ResponseEntity<?> getCustomLimitBoardList(@Parameter(hidden = true) @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
-        List<MainViewBoardListResDto> mainViewBoardListResDtoList = boardService.getCustomLimitBoardList(4, 2L, principalDetails.getMember().getMemberId());
+        List<MainViewBoardListResDto> mainViewBoardListResDtoList;
+
+        //비로그인 상태
+        if(principalDetails == null){
+            mainViewBoardListResDtoList = boardService.getCustomLimitBoardList(4, 2L, null);
+        }
+        //로그인 상태
+        else{
+            mainViewBoardListResDtoList = boardService.getCustomLimitBoardList(4, 2L, principalDetails.getMember().getMemberId());
+        }
 
         return new ResponseEntity<>(new CMRespDto<>(1, "메인화면 게시글 리스트 조회 성공", mainViewBoardListResDtoList),HttpStatus.OK);
     }
@@ -66,7 +75,16 @@ public class BoardController {
     public ResponseEntity<?> getBoardList(PageRequestDto pageRequestDto,
                                           @Parameter(hidden = true) @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
-        ScrollResultDto<BoardListResDto, Object[]> boardListResDtoList = boardService.getBoardList(pageRequestDto, principalDetails.getMember().getMemberId());
+        ScrollResultDto<BoardListResDto, Object[]> boardListResDtoList;
+
+        //비로그인 상태
+        if(principalDetails == null){
+            boardListResDtoList = boardService.getBoardList(pageRequestDto, null);
+        }
+        //로그인 상태
+        else{
+            boardListResDtoList = boardService.getBoardList(pageRequestDto, principalDetails.getMember().getMemberId());
+        }
 
         return new ResponseEntity<>(new CMRespDto<>(1, "게시판 리스트 조회 성공", boardListResDtoList),HttpStatus.OK);
     }
@@ -106,7 +124,17 @@ public class BoardController {
     })
     @GetMapping("")
     public ResponseEntity<?> GetBoard(@Parameter(name = "boardId") Long boardId, @Parameter(hidden = true) @AuthenticationPrincipal PrincipalDetails principalDetails) {
-        BoardResDto boardResDto = boardService.GetBoard(boardId, principalDetails.getMember().getMemberId());
+
+        BoardResDto boardResDto;
+
+        //비로그인 상태
+        if(principalDetails == null){
+            boardResDto = boardService.GetBoard(boardId, null);
+        }
+        else{
+            boardResDto = boardService.GetBoard(boardId, principalDetails.getMember().getMemberId());
+        }
+
         return new ResponseEntity<>(new CMRespDto<>(1, "게시글 조회 성공", boardResDto), HttpStatus.OK);
     }
 
