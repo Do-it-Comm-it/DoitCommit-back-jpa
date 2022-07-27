@@ -179,7 +179,16 @@ public class CommentServiceImpl implements CommentService {
                     String imageUrlOfChild = null;
 
                     if(child.getMember().getMemberImage() != null){
-                        imageUrlOfChild = child.getMember().getMemberImage().getImageUrl();
+                        MemberImage memberImageOfChild = child.getMember().getMemberImage();
+
+                        //소셜 이미지일 경우
+                        if(memberImageOfChild.isSocialImg()){
+                            imageUrlOfChild = memberImageOfChild.getImageUrl();
+                        }
+                        //s3 이미지일 경우
+                        else{
+                            imageUrlOfChild = imageService.getImage(memberImageOfChild.getFilePath(), memberImageOfChild.getFileNm());
+                        }
                     }
 
                     childResDtoList.add(new CommentResDto(child, imageUrlOfChild, null));
