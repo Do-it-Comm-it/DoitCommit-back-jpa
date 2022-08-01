@@ -34,7 +34,7 @@ public class BoardController {
     /**
      * 메인화면 게시글 리스트 조회
      */
-    @Operation(summary = "메인화면 게시글 리스트 조회 API", description = "커뮤니티 최신글 2개를 조회한다.")
+    @Operation(summary = "메인화면 게시글 리스트 조회 API", description = "커뮤니티 최신글 4개를 조회한다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = @Content(array = @ArraySchema(schema = @Schema(implementation = MainViewBoardListResDto.class)))),
             @ApiResponse(responseCode = "400", content = @Content(schema = @Schema(example = "{\"error\": \"Bad Request\"}"))),
@@ -49,11 +49,11 @@ public class BoardController {
 
         //비로그인 상태
         if(principalDetails == null){
-            mainViewBoardListResDtoList = boardService.getCustomLimitBoardList(4, 2L, null);
+            mainViewBoardListResDtoList = boardService.getCustomLimitBoardList(4, null);
         }
         //로그인 상태
         else{
-            mainViewBoardListResDtoList = boardService.getCustomLimitBoardList(4, 2L, principalDetails.getMember().getMemberId());
+            mainViewBoardListResDtoList = boardService.getCustomLimitBoardList(4, principalDetails.getMember().getMemberId());
         }
 
         return new ResponseEntity<>(new CMRespDto<>(1, "메인화면 게시글 리스트 조회 성공", mainViewBoardListResDtoList),HttpStatus.OK);
