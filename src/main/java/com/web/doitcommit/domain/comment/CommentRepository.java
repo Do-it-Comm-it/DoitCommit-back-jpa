@@ -18,6 +18,11 @@ public interface CommentRepository extends JpaRepository<Comment,Long> {
             "where c.board.boardId = :boardId and c.parent is null")
     Page<Object[]> getCommentList(@Param("boardId") Long boardId, Pageable pageable);
 
+
+    @Query("select count(c.commentId) from Comment c where c.board.boardId =:boardId")
+    long countByBoardId(@Param("boardId") Long boardId);
+
+
     @Query("select m.memberId, m.nickname, mi from Comment c " +
             "join Member m on m.memberId = c.member.memberId " +
             "left join MemberImage mi on mi.member.memberId = m.memberId " +

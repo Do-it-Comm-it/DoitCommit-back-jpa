@@ -200,7 +200,10 @@ public class CommentServiceImpl implements CommentService {
 
         ScrollResultDto<CommentResDto, Object[]> commentResDtoList = new ScrollResultDto<>(result, fn);
 
-        return new CommentListDto(result.getTotalElements(), commentResDtoList, getMemberTagList(boardId));
+        //전체 댓글 수
+        long totalCommentCnt = commentRepository.countByBoardId(boardId);
+
+        return new CommentListDto(totalCommentCnt, commentResDtoList, getMemberTagList(boardId));
     }
 
     /**
