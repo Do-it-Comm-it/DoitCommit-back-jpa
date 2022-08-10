@@ -72,5 +72,9 @@ insert into board_tag (board_id, tag) values (3, '직장인');
 insert into board_tag (board_id, tag) values (3, '공대생');
 insert into board_tag (board_id, tag) values (4, '취준생');
 
+-- 관심분야
+insert into interest_tech (interest_tech_nm) values ('기획');
+insert into interest_tech (interest_tech_nm) values ('개발');
+insert into interest_tech (interest_tech_nm) values ('디자인');
 
 

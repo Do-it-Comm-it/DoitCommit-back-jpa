@@ -45,7 +45,7 @@ public class BoardRepositoryImpl implements BoardRepositoryQuerydsl {
                 .from(board)
                 .join(board.member).fetchJoin()
                 .leftJoin(memberImage).on(memberImage.member.eq(board.member))
-                .where(board.boardCategory.categoryId.eq(boardCategoryId),
+                .where(categorySearch(boardCategoryId),
                         keywordSearch(keyword), hashtagSearch(tagCategoryId))
                 .orderBy(board.boardId.desc())
                 .offset(pageable.getOffset())
@@ -57,7 +57,7 @@ public class BoardRepositoryImpl implements BoardRepositoryQuerydsl {
                 .from(board)
                 .join(board.member).fetchJoin()
                 .leftJoin(memberImage).on(memberImage.member.eq(board.member))
-                .where(board.boardCategory.categoryId.eq(boardCategoryId),
+                .where(categorySearch(boardCategoryId),
                         keywordSearch(keyword), hashtagSearch(tagCategoryId));
 
         List<Object[]> content = results.stream().map(t -> t.toArray()).collect(Collectors.toList());
@@ -76,13 +76,12 @@ public class BoardRepositoryImpl implements BoardRepositoryQuerydsl {
      * 게시글 사용자 개수 지정 조회
      */
     @Override
-    public List<Object[]> getCustomLimitBoardList(int limit, Long boardCategoryId) {
+    public List<Object[]> getCustomLimitBoardList(int limit) {
         List<Tuple> results = queryFactory
                 .select(board, memberImage, board.commentList.size())
                 .from(board)
                 .join(board.member).fetchJoin()
                 .leftJoin(memberImage).on(memberImage.member.eq(board.member))
-                .where(board.boardCategory.categoryId.eq(boardCategoryId))
                 .orderBy(board.boardId.desc())
                 .limit(limit)
                 .fetch();
@@ -140,6 +139,11 @@ public class BoardRepositoryImpl implements BoardRepositoryQuerydsl {
     private BooleanExpression titleContain(String keyword) {
         return !isEmpty(keyword) ? board.boardTitle.contains(keyword):null;
     }
+
+    private BooleanExpression categorySearch(Long boardCategoryId) {
+        return boardCategoryId != null ? board.boardCategory.categoryId.eq(boardCategoryId) : null;
+    }
+
 
     /**
      * 게시글의 태그 목록 조회
