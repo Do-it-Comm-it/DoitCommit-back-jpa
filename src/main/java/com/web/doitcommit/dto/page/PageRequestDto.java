@@ -35,11 +35,6 @@ public class PageRequestDto {
         this.size = 5;
     }
 
-    public Pageable getPageable(int size){
-        return PageRequest.of(this.page-1, size);
-    }
-
-
     public Pageable getPageable(){
         return PageRequest.of(this.page-1, this.size);
     }

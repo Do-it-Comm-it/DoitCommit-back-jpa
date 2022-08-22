@@ -17,8 +17,11 @@ import java.util.List;
 @AllArgsConstructor
 public class CommentListDto {
 
-    @Schema(description = "댓글 수")
-    private long commentCount;
+    @Schema(description = "총 댓글 수")
+    private long totalCommentCnt;
+
+    @Schema(description = "최상위 댓글 수")
+    private long parentCommentCnt;
 
     @Schema(description = "댓글 리스트")
     private ScrollResultDto<CommentResDto, Object[]> commentResDtoList;

@@ -147,7 +147,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public CommentListDto getCommentList(Long boardId, PageRequestDto pageRequestDto) {
 
-        Page<Object[]> result = commentRepository.getCommentList(boardId, pageRequestDto.getPageable(3));
+        Page<Object[]> result = commentRepository.getCommentList(boardId, pageRequestDto.getPageable());
 
         Function<Object[], CommentResDto> fn = (arr -> {
 
@@ -203,7 +203,7 @@ public class CommentServiceImpl implements CommentService {
         //전체 댓글 수
         long totalCommentCnt = commentRepository.countByBoardId(boardId);
 
-        return new CommentListDto(totalCommentCnt, commentResDtoList, getMemberTagList(boardId));
+        return new CommentListDto(totalCommentCnt, result.getTotalElements(), commentResDtoList, getMemberTagList(boardId));
     }
 
     /**
