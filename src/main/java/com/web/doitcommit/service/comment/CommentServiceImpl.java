@@ -147,7 +147,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public CommentListDto getCommentList(Long boardId, PageRequestDto pageRequestDto) {
 
-        Page<Object[]> result = commentRepository.getCommentList(boardId, pageRequestDto.getPageable(3));
+        Page<Object[]> result = commentRepository.getCommentList(boardId, pageRequestDto.getPageable());
 
         Function<Object[], CommentResDto> fn = (arr -> {
 
