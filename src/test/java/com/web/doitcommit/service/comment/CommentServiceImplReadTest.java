@@ -115,7 +115,7 @@ public class CommentServiceImplReadTest {
         CommentListDto commentListDto = commentService.getCommentList(board.getBoardId(), pageRequestDto);
         //then
         //댓글 수 검증
-        Assertions.assertThat(commentListDto.getCommentCount()).isEqualTo(5);
+        Assertions.assertThat(commentListDto.getTotalCommentCnt()).isEqualTo(5);
 
         //댓글 리스트 검증
         Assertions.assertThat(commentListDto.getCommentResDtoList().getSize()).isEqualTo(4);
