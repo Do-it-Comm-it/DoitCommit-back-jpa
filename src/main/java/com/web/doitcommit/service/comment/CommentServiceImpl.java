@@ -203,7 +203,7 @@ public class CommentServiceImpl implements CommentService {
         //전체 댓글 수
         long totalCommentCnt = commentRepository.countByBoardId(boardId);
 
-        return new CommentListDto(totalCommentCnt, commentResDtoList, getMemberTagList(boardId));
+        return new CommentListDto(totalCommentCnt, result.getTotalElements(), commentResDtoList, getMemberTagList(boardId));
     }
 
     /**
