@@ -38,9 +38,6 @@ public class BoardListResDto {
     @Schema(description = "댓글수")
     private int commentCnt;
 
-    @Schema(description = "조회수")
-    private int boardCnt;
-
     @Schema(description = "좋아요 수")
     private int heartCnt;
 
@@ -71,7 +68,6 @@ public class BoardListResDto {
        this.boardContent = board.getBoardContent();
        this.thumbnailUrl = thumbnailUrl;
        this.commentCnt = commentCnt;
-       this.boardCnt = board.getBoardCnt();
        this.heartCnt = heartCnt;
        this.myHeart = board.getHeartList().stream().anyMatch(heart->heart.getMember().getMemberId().equals(principalId) ? true: false);
        this.myBookmark = board.getBookmarkList().stream().anyMatch(bookmark->bookmark.getMember().getMemberId().equals(principalId) ? true: false);

@@ -147,7 +147,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public CommentListDto getCommentList(Long boardId, PageRequestDto pageRequestDto) {
 
-        Page<Object[]> result = commentRepository.getCommentList(boardId, pageRequestDto.getPageable());
+        Page<Object[]> result = commentRepository.getCommentList(boardId, pageRequestDto.getPageable(3));
 
         Function<Object[], CommentResDto> fn = (arr -> {
 
@@ -234,15 +234,22 @@ public class CommentServiceImpl implements CommentService {
         }
 
         return memberTagList.stream().map(arr -> {
-            Image image = (Image) arr[2];
+            MemberImage memberImage = (MemberImage) arr[2];
 
-            String imageUrl = null;
+            String memberImageUrl = null;
 
-            if(image != null){
-                imageUrl = imageService.getImage(image.getFilePath(), image.getFileNm());
+            if(memberImage != null){
+                //소셜 이미지일 경우
+                if(memberImage.isSocialImg()){
+                    memberImageUrl = memberImage.getImageUrl();
+                }
+                //s3 이미지일 경우
+                else{
+                    memberImageUrl = imageService.getImage(memberImage.getFilePath(), memberImage.getFileNm());
+                }
             }
 
-            return new MemberTagResDto((Long) arr[0], (String) arr[1], imageUrl);
+            return new MemberTagResDto((Long) arr[0], (String) arr[1], memberImageUrl);
         }).collect(Collectors.toList());
     }
 }
