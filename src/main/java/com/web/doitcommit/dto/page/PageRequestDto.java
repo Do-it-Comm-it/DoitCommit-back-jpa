@@ -28,11 +28,14 @@ public class PageRequestDto {
     private Long tagCategoryId;
     @Schema(description = "게시글 카테고리 고유값")
     private Long boardCategoryId;
+    @Schema(description = "정렬 기준")
+    private String sortType;
 
 
     public PageRequestDto(){
         this.page = 1;
         this.size = 5;
+        this.sortType = "DESC";
     }
 
     public Pageable getPageable(){
