@@ -2,8 +2,13 @@ package com.web.doitcommit.domain.board;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.NumberExpression;
+import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.web.doitcommit.domain.bookmark.QBookmark;
@@ -11,6 +16,7 @@ import com.web.doitcommit.domain.hashtag.QBoardHashtag;
 import com.web.doitcommit.domain.hashtag.QTagCategory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.util.CollectionUtils;
 import javax.persistence.EntityManager;
@@ -47,7 +53,7 @@ public class BoardRepositoryImpl implements BoardRepositoryQuerydsl {
                 .leftJoin(memberImage).on(memberImage.member.eq(board.member))
                 .where(categorySearch(boardCategoryId),
                         keywordSearch(keyword), hashtagSearch(tagCategoryId))
-                .orderBy(board.boardId.desc())
+                .orderBy(sort(pageable).stream().toArray(OrderSpecifier[]::new))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -142,6 +148,34 @@ public class BoardRepositoryImpl implements BoardRepositoryQuerydsl {
 
     private BooleanExpression categorySearch(Long boardCategoryId) {
         return boardCategoryId != null ? board.boardCategory.categoryId.eq(boardCategoryId) : null;
+    }
+
+    private List<OrderSpecifier<?>> sort(Pageable page) {
+
+        List<OrderSpecifier<?>> orders = new ArrayList<>();
+
+        //서비스에서 보내준 Pageable 객체에 정렬조건 null 값 체크
+        if (!page.getSort().isEmpty()) {
+            //정렬값이 들어 있으면 for 사용하여 값을 가져온다
+            for (Sort.Order order : page.getSort()) {
+                // 서비스에서 넣어준 DESC or ASC 를 가져온다.
+                Order direction = order.getDirection().isAscending() ? Order.ASC : Order.DESC;
+                // 서비스에서 넣어준 정렬 조건을 스위치 케이스 문을 활용하여 셋팅하여 준다.
+                switch (order.getProperty()) {
+                    case "HEART":
+                        orders.add(new OrderSpecifier(direction, board.heartList.size()));
+                        break;
+                    case "VIEW":
+                        orders.add(new OrderSpecifier(direction, board.boardCnt));
+                        break;
+                    case "DESC":
+                        orders.add(new OrderSpecifier(direction, board.boardId));
+                    default:
+                        break;
+                }
+            }
+        }
+        return orders;
     }
 
 

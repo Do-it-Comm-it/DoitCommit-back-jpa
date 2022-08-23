@@ -41,7 +41,7 @@ public class BoardService {
     @Transactional(readOnly = true)
     public ScrollResultDto<BoardListResDto, Object[]> getBoardList(PageRequestDto requestDto, Long principalId) {
 
-        Pageable pageable = requestDto.getPageable(Sort.by("boardId").ascending());
+        Pageable pageable = requestDto.getPageable(Sort.by(Sort.Direction.DESC, requestDto.getSortType()));
 
         Page<Object[]> results = boardRepository.getBoardListBySearch(
                 requestDto.getKeyword(), requestDto.getTagCategoryId(),
