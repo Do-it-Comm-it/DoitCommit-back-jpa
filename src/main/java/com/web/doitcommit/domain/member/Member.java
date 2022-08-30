@@ -2,11 +2,13 @@ package com.web.doitcommit.domain.member;
 
 import com.web.doitcommit.domain.BaseEntity;
 import com.web.doitcommit.domain.files.MemberImage;
+import com.web.doitcommit.domain.interestTech.MemberInterestTech;
 import lombok.*;
+import org.hibernate.annotations.BatchSize;
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Builder
 @AllArgsConstructor
@@ -43,10 +45,14 @@ public class Member extends BaseEntity {
     @OneToOne(mappedBy = "member",fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private MemberImage memberImage;
 
-    @ElementCollection(fetch = FetchType.LAZY)
+    /*@ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(joinColumns = @JoinColumn(name = "member_id"))
     @Builder.Default
-    private Set<String> interestTechSet = new HashSet<>();
+    private Set<String> interestTechSet = new HashSet<>();*/
+
+    @BatchSize(size = 500)
+    @OneToMany(mappedBy = "member",fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<MemberInterestTech> memberInterestTech = new ArrayList<>();
 
     private String position;
 
@@ -80,9 +86,9 @@ public class Member extends BaseEntity {
         this.email = email;
     }
 
-    public void changeInterestTechSet(Set<String> interestTechSet){
-        this.interestTechSet = interestTechSet;
-    }
+//    public void changeInterestTechSet(Set<String> interestTechSet){
+//        this.interestTechSet = interestTechSet;
+//    }
 
     public void changeGithubUrl(String githubUrl){
         this.githubUrl = githubUrl;
@@ -106,5 +112,10 @@ public class Member extends BaseEntity {
 
     public void changeLeaveDate(LocalDateTime leaveDate){
         this.leaveDate = leaveDate;
+    }
+
+    //연관관계 메서드
+    public void setMemberInterestTech(MemberInterestTech memberInterestTech){
+        this.memberInterestTech.add(memberInterestTech);
     }
 }

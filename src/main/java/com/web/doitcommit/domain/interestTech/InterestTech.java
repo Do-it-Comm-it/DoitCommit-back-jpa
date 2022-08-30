@@ -20,5 +20,8 @@ public class InterestTech {
 
     @Column(unique = true, nullable = false)
     private String interestTechNm;
-    
+
+    public InterestTech(Long interestTechId) {
+        this.interestTechId = interestTechId;
+    }
 }
