@@ -16,7 +16,7 @@ public interface BoardRepositoryQuerydsl {
     /**
      * 게시글 사용자 개수 지정 조회
      */
-    List<Object[]> getCustomLimitBoardList(int limit);
+    List<Object[]> getCustomLimitBoardList(int limit, String order);
 
     /**
      * 북마크 게시글 리스트 조회
