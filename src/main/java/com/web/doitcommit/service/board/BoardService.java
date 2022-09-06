@@ -83,9 +83,9 @@ public class BoardService {
      * 게시글 사용자 개수 지정 조회
      */
     @Transactional(readOnly = true)
-    public List<MainViewBoardListResDto> getCustomLimitBoardList(int limit, Long principalId) {
+    public List<MainViewBoardListResDto> getCustomLimitBoardList(int limit, String order, Long principalId) {
 
-        List<Object[]> results = boardRepository.getCustomLimitBoardList(limit);
+        List<Object[]> results = boardRepository.getCustomLimitBoardList(limit, order);
 
         return results.stream().map(arr -> {
 

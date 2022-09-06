@@ -82,13 +82,22 @@ public class BoardRepositoryImpl implements BoardRepositoryQuerydsl {
      * 게시글 사용자 개수 지정 조회
      */
     @Override
-    public List<Object[]> getCustomLimitBoardList(int limit) {
+    public List<Object[]> getCustomLimitBoardList(int limit, String order) {
+        OrderSpecifier<?> orderBy = board.boardId.desc();
+        switch(order) {
+            case "boardCnt":
+                orderBy = board.boardCnt.desc();
+                break;
+            default:
+                break;
+        }
+
         List<Tuple> results = queryFactory
                 .select(board, memberImage, board.commentList.size())
                 .from(board)
                 .join(board.member).fetchJoin()
                 .leftJoin(memberImage).on(memberImage.member.eq(board.member))
-                .orderBy(board.boardId.desc())
+                .orderBy(orderBy)
                 .limit(limit)
                 .fetch();
 

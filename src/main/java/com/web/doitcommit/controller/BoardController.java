@@ -43,17 +43,19 @@ public class BoardController {
             @ApiResponse(responseCode = "500",  content = @Content(schema = @Schema(example = "{\"error\": \"Internal Server Error\"}")))
     })
     @GetMapping("/list/main")
-    public ResponseEntity<?> getCustomLimitBoardList(@Parameter(hidden = true) @AuthenticationPrincipal PrincipalDetails principalDetails) {
+    public ResponseEntity<?> getCustomLimitBoardList(@RequestParam(value = "limit", required = false, defaultValue = "4") int limit,
+                                                     @RequestParam(value = "order", required = false, defaultValue = "boardId") String order,
+                                                     @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
         List<MainViewBoardListResDto> mainViewBoardListResDtoList;
 
         //비로그인 상태
         if(principalDetails == null){
-            mainViewBoardListResDtoList = boardService.getCustomLimitBoardList(4, null);
+            mainViewBoardListResDtoList = boardService.getCustomLimitBoardList(limit, order,null);
         }
         //로그인 상태
         else{
-            mainViewBoardListResDtoList = boardService.getCustomLimitBoardList(4, principalDetails.getMember().getMemberId());
+            mainViewBoardListResDtoList = boardService.getCustomLimitBoardList(limit, order, principalDetails.getMember().getMemberId());
         }
 
         return new ResponseEntity<>(new CMRespDto<>(1, "메인화면 게시글 리스트 조회 성공", mainViewBoardListResDtoList),HttpStatus.OK);
