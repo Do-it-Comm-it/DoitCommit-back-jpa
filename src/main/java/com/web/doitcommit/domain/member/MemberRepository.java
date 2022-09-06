@@ -8,7 +8,6 @@ import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, Long>, MemberRepositoryQuerydsl {
 
-    @EntityGraph(attributePaths = {"memberInterestTech"}, type = EntityGraph.EntityGraphType.LOAD)
     Optional<Member> findByOauthId(String oauthId);
 
     @Query(value = "SELECT count(*) FROM member WHERE nickname = :nickname", nativeQuery = true)
