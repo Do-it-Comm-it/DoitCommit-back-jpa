@@ -126,7 +126,6 @@ public class TodoServiceImplReadTest {
                 .password("1111")
                 .username(username)
                 .provider(AuthProvider.GOOGLE)
-                .interestTechSet(new HashSet<>(Arrays.asList("Java")))
                 .oauthId(oAuthId)
                 .build();
 

@@ -8,9 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Schema(description = "멤버 정보 dto")
 @Data
@@ -26,7 +24,7 @@ public class MemberInfoDto {
     private String email;
 
     @Schema(description = "관심기술정보", nullable = true)
-    private Set<String> interestTechSet = new HashSet<>();
+    private List interestTechSet;
 
     @Schema(description = "포지션", nullable = true)
     private String position;
@@ -57,7 +55,6 @@ public class MemberInfoDto {
     public MemberInfoDto(Member member) {
         this.nickname = member.getNickname();
         this.email = member.getEmail();
-        this.interestTechSet = member.getInterestTechSet();
         this.position = member.getPosition();
         this.githubUrl = member.getGithubUrl();
         this.url1 = member.getUrl1();

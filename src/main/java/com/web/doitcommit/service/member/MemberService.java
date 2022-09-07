@@ -1,22 +1,23 @@
 package com.web.doitcommit.service.member;
 
-import com.web.doitcommit.domain.files.ImageRepository;
+import com.web.doitcommit.domain.interestTech.InterestTech;
+import com.web.doitcommit.domain.interestTech.MemberInterestTech;
+import com.web.doitcommit.domain.interestTech.MemberInterestTechRepository;
 import com.web.doitcommit.domain.member.Member;
 import com.web.doitcommit.domain.member.MemberRepository;
 import com.web.doitcommit.domain.member.StateType;
 import com.web.doitcommit.dto.member.MemberInfoDto;
 import com.web.doitcommit.dto.member.MemberUpdateDto;
-import com.web.doitcommit.s3.S3Uploader;
 import com.web.doitcommit.service.image.ImageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -24,6 +25,7 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final ImageService imageService;
+    private final MemberInterestTechRepository memberInterestTechRepository;
 
     /**
      * 멤버 정보조회
@@ -35,6 +37,13 @@ public class MemberService {
 
             if(memberRepository.getMemberImage(memberId) != null){
                 memberInfo.setPictureUrl(memberRepository.getMemberImage(memberId));
+            }
+
+            //관심기술정보 목록 조회
+            List interestTechList = memberRepository.getCustomInterestTechList(memberId);
+
+            if (interestTechList.size() != 0) {
+                memberInfo.setInterestTechSet(interestTechList);
             }
 
             return memberInfo;
@@ -72,10 +81,18 @@ public class MemberService {
             imageService.imageMemberRegister(memberEntity, imageFile);
         }
 
+        if(memberUpdateDto.getInterestTechSet() !=null){
+            for (int i = 0; i < memberUpdateDto.getInterestTechSet().size(); i++) {
+                InterestTech interestTech = new InterestTech(memberUpdateDto.getInterestTechSet().get(i));
+                MemberInterestTech memberInterestTech = new MemberInterestTech(memberEntity,interestTech);
+                memberInterestTechRepository.save(memberInterestTech);
+            }
+        }
+
         memberEntity.changeNickname(memberUpdateDto.getNickname());
         memberEntity.changeEmail(memberUpdateDto.getEmail());
         memberEntity.changePosition(memberUpdateDto.getPosition());
-        memberEntity.changeInterestTechSet(memberUpdateDto.getInterestTechSet());
+        //memberEntity.changeInterestTechSet(memberUpdateDto.getInterestTechSet());
         memberEntity.changeGithubUrl(memberUpdateDto.getGithubUrl());
         memberEntity.changeUrl1(memberUpdateDto.getUrl1());
         memberEntity.changeUrl2(memberUpdateDto.getUrl2());

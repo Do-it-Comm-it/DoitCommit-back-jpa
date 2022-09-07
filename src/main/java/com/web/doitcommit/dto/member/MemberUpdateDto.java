@@ -6,10 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.validation.constraints.NotNull;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 @Schema(description = "멤버 업데이트 dto")
 @Data
@@ -32,7 +30,7 @@ public class MemberUpdateDto {
     private String email;
 
     @Schema(description = "관심기술정보", nullable = true)
-    private Set<String> interestTechSet = new HashSet<>();
+    private List<Long> interestTechSet;
 
     @Schema(description = "포지션", nullable = true)
     private String position;

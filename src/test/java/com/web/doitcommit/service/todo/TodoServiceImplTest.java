@@ -261,7 +261,6 @@ class TodoServiceImplTest {
                 .password("1111")
                 .username(username)
                 .provider(AuthProvider.GOOGLE)
-                .interestTechSet(new HashSet<>(Arrays.asList("java")))
                 .oauthId(oAuthId)
                 .build();
 
