@@ -6,10 +6,7 @@ import com.web.doitcommit.domain.interestTech.QInterestTech;
 import com.web.doitcommit.domain.interestTech.QMemberInterestTech;
 
 import javax.persistence.EntityManager;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.web.doitcommit.domain.member.QMember.member;
 import static com.web.doitcommit.domain.files.QMemberImage.memberImage;
@@ -61,5 +58,20 @@ public class MemberRepositoryImpl implements MemberRepositoryQuerydsl {
         }
 
         return interestTechList;
+    }
+
+    /**
+     * 회원 조회 - 프로필 이미지 포함
+     */
+    @Override
+    public Optional<Object[]> findWithImageByMemberId(Long memberId) {
+
+        Tuple tuple = queryFactory.select(member, memberImage)
+                .from(member)
+                .leftJoin(memberImage).on(memberImage.member.eq(member))
+                .where(member.memberId.eq(memberId))
+                .fetchOne();
+
+        return tuple != null ? Optional.of(tuple.toArray()) : Optional.empty();
     }
 }
