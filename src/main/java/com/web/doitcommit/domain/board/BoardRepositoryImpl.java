@@ -104,6 +104,20 @@ public class BoardRepositoryImpl implements BoardRepositoryQuerydsl {
         return results.stream().map(t -> t.toArray()).collect(Collectors.toList());
     }
 
+    /**
+     * 회원별 - 작성한 게시글 리스트 사용자 개수 지정 조회
+     */
+    @Override
+    public List<Board> getCustomLimitBoardListOfMember(int limit, Long memberId) {
+
+        return queryFactory.select(board)
+                .from(board)
+                .where(board.member.memberId.eq(memberId))
+                .orderBy(board.boardCnt.desc())
+                .limit(limit)
+                .fetch();
+    }
+
 
     /**
      * 북마크 게시글 리스트 조회
