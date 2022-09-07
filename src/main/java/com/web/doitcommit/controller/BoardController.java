@@ -92,6 +92,17 @@ public class BoardController {
     }
 
     /**
+     * 회원별 - 작성한 게시글 리스트 사용자 개수 지정 조회
+     */
+    @GetMapping("/members/{memberId}/limit")
+    public ResponseEntity<?> getCustomLimitBoardListOfMember(@PathVariable("memberId") Long memberId,
+                                                             @RequestParam(value = "limit", required = false, defaultValue = "2") int limit){
+
+
+
+    }
+
+    /**
      * 게시글 등록
      */
     @Operation(summary = "게시글 등록 API", description = "게시글을 등록한다.")

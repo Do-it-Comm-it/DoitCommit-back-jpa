@@ -152,6 +152,20 @@ public class BoardService {
         return new ScrollResultDto<>(results, fn);
     }
 
+    /**
+     * 회원별 - 작성한 게시글 리스트 사용자 개수 지정 조회
+     */
+    @Transactional(readOnly = true)
+    public void getCustomLimit(int limit, Long memberId){
+
+        //작성자의 다른 게시글 리스트 조회
+        List<Board> boardList = boardRepository.getCustomLimitBoardListOfMember(limit, memberId);
+
+        //작성자의 다른 게시글 총 개수 조회
+        long totalCnt = boardRepository.countByMemberId(memberId);
+
+
+    }
 
     /**
      * 게시글 등록
