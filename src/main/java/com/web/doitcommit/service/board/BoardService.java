@@ -8,6 +8,7 @@ import com.web.doitcommit.domain.hashtag.BoardHashtag;
 import com.web.doitcommit.domain.hashtag.BoardHashtagRepository;
 import com.web.doitcommit.domain.hashtag.TagCategory;
 import com.web.doitcommit.domain.hashtag.TagCategoryRepository;
+import com.web.doitcommit.domain.member.Member;
 import com.web.doitcommit.domain.member.MemberRepository;
 import com.web.doitcommit.dto.board.*;
 import com.web.doitcommit.dto.page.PageRequestDto;
@@ -33,6 +34,7 @@ public class BoardService {
     private final BoardHashtagRepository boardHashtagRepository;
     private final TagCategoryRepository tagCategoryRepository;
     private final ImageService imageService;
+    private final MemberRepository memberRepository;
 
 
     /**
@@ -152,6 +154,51 @@ public class BoardService {
         return new ScrollResultDto<>(results, fn);
     }
 
+    /**
+     * 회원별 - 작성한 게시글 리스트 사용자 개수 지정 조회
+     */
+    @Transactional(readOnly = true)
+    public BoardListOfMemberResDto getCustomLimitBoardListOfMember(int limit, Long memberId){
+
+        Object[] arr = memberRepository.findWithImageByMemberId(memberId).orElseThrow(() ->
+                new CustomException("존재하지 않는 회원입니다."));
+
+        Member member = (Member) arr[0];
+
+        //회원 프로필 이미지
+        MemberImage memberImage = (MemberImage) arr[1];
+
+        String memberImageUrl = null;
+        if (memberImage != null) {
+            //소셜 이미지일 경우
+            if(memberImage.isSocialImg()){
+                memberImageUrl = memberImage.getImageUrl();
+            }
+            //s3 이미지일 경우
+            else{
+                memberImageUrl = imageService.getImage(memberImage.getFilePath(), memberImage.getFileNm());
+            }
+        }
+
+        //작성자의 다른 게시글 총 개수 조회
+        long totalCnt = boardRepository.countByMemberId(memberId);
+
+        //작성자의 다른 게시글 리스트 조회
+        List<Board> boardList = boardRepository.getCustomLimitBoardListOfMember(limit, memberId);
+
+        List<BoardOfMemberResDto> boardOfMemberResDtoList = boardList.stream().map(board -> {
+
+            //게시글 첫번째 이미지
+            String thumbnailUrl = null;
+            if (board.getBoardImageList() != null && !board.getBoardImageList().isEmpty()) {
+                BoardImage boardImage = board.getBoardImageList().get(0);
+                thumbnailUrl = imageService.getImage(boardImage.getFilePath(), boardImage.getFileNm());
+            }
+            return new BoardOfMemberResDto(board, thumbnailUrl);
+        }).collect(Collectors.toList());
+
+        return new BoardListOfMemberResDto(member, memberImageUrl, totalCnt, boardOfMemberResDtoList);
+    }
 
     /**
      * 게시글 등록

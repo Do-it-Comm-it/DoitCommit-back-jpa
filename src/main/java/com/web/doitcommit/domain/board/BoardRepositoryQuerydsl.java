@@ -19,6 +19,11 @@ public interface BoardRepositoryQuerydsl {
     List<Object[]> getCustomLimitBoardList(int limit, String order);
 
     /**
+     * 회원별 - 작성한 게시글 리스트 사용자 개수 지정 조회
+     */
+    List<Board> getCustomLimitBoardListOfMember(int limit, Long memberId);
+
+    /**
      * 북마크 게시글 리스트 조회
      */
     Page<Object[]> getBoardListByBookmark(String keyword, Long tagCategoryId, Long principalId, Pageable pageable);

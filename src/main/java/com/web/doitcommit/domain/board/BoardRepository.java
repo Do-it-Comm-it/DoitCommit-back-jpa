@@ -18,4 +18,9 @@ public interface BoardRepository extends JpaRepository<Board,Long>, BoardReposit
             "where b.boardId = :boardId")
     List<Object[]> getMemberTagOfWriter(@Param("boardId") Long boardId);
 
+    /**
+     * 회원이 작성한 게시글 총 개수 조회
+     */
+    @Query("select count(b) from Board b where b.member.memberId =:memberId")
+    long countByMemberId(@Param("memberId") Long memberId);
 }
