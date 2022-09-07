@@ -1,5 +1,6 @@
 package com.web.doitcommit.domain.todo;
 
+import com.web.doitcommit.domain.interestTech.MemberInterestTech;
 import com.web.doitcommit.domain.member.AuthProvider;
 import com.web.doitcommit.domain.member.Member;
 import com.web.doitcommit.domain.member.MemberRepository;
@@ -9,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -67,7 +69,6 @@ class TodoRepositoryTest {
                 .password("1111")
                 .username(username)
                 .provider(AuthProvider.GOOGLE)
-                .interestTechSet(new HashSet<>(Arrays.asList("Java")))
                 .oauthId(oAuthId)
                 .build();
 
