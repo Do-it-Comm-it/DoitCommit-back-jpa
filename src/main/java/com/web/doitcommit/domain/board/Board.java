@@ -82,4 +82,21 @@ public class Board extends BaseEntity {
     public void changeBoardCnt(){
         this.boardCnt += 1;
     }
+
+    //카테고리변경
+    /*public void changeCategoryId(BoardCategory boardCategory) {
+        this.boardCategory = boardCategory;
+    }*/
+
+    //제목 변경
+    public void changeTitle(String boardTitle) {
+        this.boardTitle = boardTitle;
+    }
+
+    //내용 변경
+    public void changeContent(String boardContent) {
+        this.boardContent = boardContent;
+    }
+
+
 }
