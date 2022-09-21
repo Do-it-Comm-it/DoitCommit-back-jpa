@@ -187,8 +187,31 @@ public class BoardController {
     })
     @DeleteMapping("/{boardId}")
     public ResponseEntity<?> removeBoard(@Parameter(name = "boardId") @PathVariable("boardId") Long boardId) {
-        boardService.remove(boardId);
+        boardService.removeBoard(boardId);
         return new ResponseEntity<>(new CMRespDto<>(1, "게시글 삭제 성공", null), HttpStatus.OK);
+    }
+
+    /**
+     * 게시글 수정
+     */
+    @Operation(summary = "게시글 수정 API", description = "게시글을 수정한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(example = "{\n" +
+                    "  \"message\": \"게시글 수정 성공\",\n" +
+                    "  \"data\": null,\n" +
+                    "  \"code\": 1\n" +
+                    "}"))),
+            @ApiResponse(responseCode = "400", content = @Content(schema = @Schema(example = "{\"error\": \"Bad Request\"}"))),
+            @ApiResponse(responseCode = "401", content = @Content(schema = @Schema(example = "{\"error\": \"Unauthorized\"}"))),
+            @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(example = "{\"error\": \"Not Found\"}"))),
+            @ApiResponse(responseCode = "500",  content = @Content(schema = @Schema(example = "{\"error\": \"Internal Server Error\"}")))
+    })
+    @PutMapping("")
+    public ResponseEntity<?> modifyBoard(@RequestBody BoardUpdateDto boardUpdateDto){
+
+        boardService.modifyBoard(boardUpdateDto);
+
+        return new ResponseEntity<>(new CMRespDto<>(1, "게시글 수정 성공", null), HttpStatus.OK);
     }
 
 }

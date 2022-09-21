@@ -31,7 +31,16 @@ public class MainViewBoardListResDto {
     @Schema(description = "게시글 해시태그", nullable = true)
     private List<String> boardHashtagNameList;
 
-    public MainViewBoardListResDto(Board board, String writerImageUrl, int commentCnt, Long principalId){
+    @Schema(description = "좋아요 수")
+    private int heartCnt;
+
+    @Schema(description = "좋아요유무")
+    private boolean myHeart;
+
+    @Schema(description = "썸네일")
+    private String thumbnailUrl;
+
+    public MainViewBoardListResDto(Board board, String writerImageUrl, String thumbnailUrl, int commentCnt, Long principalId){
         this.boardId = board.getBoardId();
         this.writerImageUrl = writerImageUrl;
         this.boardTitle = board.getBoardTitle();
@@ -39,6 +48,9 @@ public class MainViewBoardListResDto {
         this.commentCnt = commentCnt;
         this.myBookmark = board.getBookmarkList().stream().anyMatch(bookmark->bookmark.getMember().getMemberId().equals(principalId) ? true: false);
         this.boardHashtagNameList = new ArrayList<>();
+        this.heartCnt = board.getHeartList().size();
+        this.myHeart = board.getHeartList().stream().anyMatch(heart->heart.getMember().getMemberId().equals(principalId) ? true: false);
+        this.thumbnailUrl = thumbnailUrl;
 
         //게시글 해시태크 리스트
         if (board.getBoardHashtag() != null && !board.getBoardHashtag().isEmpty()){
