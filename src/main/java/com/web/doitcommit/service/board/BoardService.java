@@ -91,6 +91,15 @@ public class BoardService {
 
         return results.stream().map(arr -> {
 
+            //게시글 첫번째 이미지
+            Board board = (Board) arr[0];
+
+            String thumbnailUrl = null;
+            if (board.getBoardImageList() != null && !board.getBoardImageList().isEmpty()) {
+                BoardImage boardImage = board.getBoardImageList().get(0);
+                thumbnailUrl = imageService.getImage(boardImage.getFilePath(), boardImage.getFileNm());
+            }
+
             //작성자 프로필 이미지
             MemberImage memberImage = (MemberImage) arr[1];
 
@@ -106,7 +115,7 @@ public class BoardService {
                 }
             }
 
-            return new MainViewBoardListResDto((Board) arr[0], writerImageUrl, (int) arr[2], principalId);
+            return new MainViewBoardListResDto((Board) arr[0], writerImageUrl, thumbnailUrl, (int) arr[2], principalId);
         }).collect(Collectors.toList());
     }
 
@@ -333,7 +342,7 @@ public class BoardService {
      * 게시글 삭제
      */
     @Transactional
-    public void remove(Long boardId) {
+    public void removeBoard(Long boardId) {
         Board board = boardRepository.findById(boardId).orElseThrow(() ->
                 new CustomException("존재하지 않는 게시글입니다."));
         boardRepository.deleteById(boardId);
@@ -345,5 +354,20 @@ public class BoardService {
                 imageService.imageRemove(imageInfo.getFilePath() + "/" + imageInfo.getFileNm());
             }
         }
+    }
+
+    /**
+     * 게시글 수정
+     */
+    @Transactional
+    public void modifyBoard(BoardUpdateDto boardUpdateDto) {
+
+        Board board = boardRepository.findById(boardUpdateDto.getBoardId()).orElseThrow(() ->
+                new CustomException("존재하지 않는 게시글입니다."));
+
+        //if(boardUpdateDto.getCategoryId() != null)  board.changeCategoryId(boardUpdateDto.getCategoryId());
+        if(boardUpdateDto.getBoardTitle() != null)  board.changeTitle(boardUpdateDto.getBoardTitle());
+        if(boardUpdateDto.getBoardContent() != null)  board.changeContent(boardUpdateDto.getBoardContent());
+
     }
 }
