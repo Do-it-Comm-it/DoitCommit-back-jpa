@@ -2,6 +2,8 @@ package com.web.doitcommit.service.board;
 
 import com.web.doitcommit.domain.board.Board;
 import com.web.doitcommit.domain.board.BoardRepository;
+import com.web.doitcommit.domain.boardHistory.BoardHistory;
+import com.web.doitcommit.domain.boardHistory.BoardHistoryRepository;
 import com.web.doitcommit.domain.files.BoardImage;
 import com.web.doitcommit.domain.files.MemberImage;
 import com.web.doitcommit.domain.hashtag.BoardHashtag;
@@ -21,6 +23,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -35,6 +39,7 @@ public class BoardService {
     private final TagCategoryRepository tagCategoryRepository;
     private final ImageService imageService;
     private final MemberRepository memberRepository;
+    private final BoardHistoryRepository boardHistoryRepository;
 
 
     /**
@@ -288,7 +293,12 @@ public class BoardService {
     public BoardResDto GetBoard(Long boardId, Long principalId) {
         Board boardEntity = boardRepository.findById(boardId).orElseThrow(() ->
                 new CustomException("존재하지 않는 게시글입니다."));
+
+        //조회수 증가
         boardEntity.changeBoardCnt();
+
+        //게시글 히스토리 추가
+        addBoardHistory(boardEntity, principalId);
 
         BoardResDto boardResDto = new BoardResDto(boardEntity);
         Map<Long, String> savedImageIdsAndUrl = new HashMap<>();
@@ -327,6 +337,34 @@ public class BoardService {
             boardResDto.setBoardHashtag(boardHashtags);
         }
         return boardResDto;
+    }
+
+    private void addBoardHistory(Board boardEntity, Long principalId) {
+
+        //로그인 상태일 경우
+        if(principalId != null){
+
+            Optional<BoardHistory> result =
+                    boardHistoryRepository.findByBoardIdAndMemberId(boardEntity.getBoardId(), principalId);
+
+            //기존 내역이 존재하는 경우
+            if(result.isPresent()){
+                BoardHistory boardHistory = result.get();
+
+                //조회 일시를 현재로 변경
+                boardHistory.changeViewDateTimeToNow();
+            }
+            //신규 조회일 경우
+            else{
+                BoardHistory boardHistory = BoardHistory.builder()
+                        .board(boardEntity)
+                        .member(Member.builder().memberId(principalId).build())
+                        .viewDateTime(LocalDateTime.now())
+                        .build();
+
+                boardHistoryRepository.save(boardHistory);
+            }
+        }
     }
 
     /**
