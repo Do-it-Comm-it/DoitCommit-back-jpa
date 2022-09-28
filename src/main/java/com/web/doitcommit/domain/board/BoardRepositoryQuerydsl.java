@@ -29,6 +29,11 @@ public interface BoardRepositoryQuerydsl {
     Page<Object[]> getBoardListByBookmark(String keyword, Long tagCategoryId, Long boardCategoryId, Long principalId, Pageable pageable);
 
     /**
+     * 게시글 조회 히스토리 내역 조회
+     */
+    Page<Object[]> getBoardListByBoardHistory(String keyword, Long tagCategoryId, Long boardCategoryId, Long principalId, Pageable pageable);
+
+    /**
      * 게시글의 태그 목록 조회
      */
     List getCustomTagList(Long boardId);

@@ -11,6 +11,7 @@ import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.web.doitcommit.domain.boardHistory.QBoardHistory;
 import com.web.doitcommit.domain.bookmark.QBookmark;
 import com.web.doitcommit.domain.hashtag.QBoardHashtag;
 import com.web.doitcommit.domain.hashtag.QTagCategory;
@@ -24,6 +25,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.web.doitcommit.domain.board.QBoard.board;
+import static com.web.doitcommit.domain.boardHistory.QBoardHistory.boardHistory;
 import static com.web.doitcommit.domain.bookmark.QBookmark.bookmark;
 import static com.web.doitcommit.domain.files.QBoardImage.boardImage;
 import static com.web.doitcommit.domain.files.QImage.image;
@@ -146,6 +148,39 @@ public class BoardRepositoryImpl implements BoardRepositoryQuerydsl {
                 .where(categorySearch(boardCategoryId),
                         keywordSearch(keyword), hashtagSearch(tagCategoryId),
                         bookmark.member.memberId.eq(principalId));
+
+        List<Object[]> content = results.stream().map(t -> t.toArray()).collect(Collectors.toList());
+
+        return PageableExecutionUtils.getPage(content, pageable, () -> countQuery.fetchCount());
+    }
+
+    /**
+     * 게시글 조회 히스토리 내역 조회
+     */
+    @Override
+    public Page<Object[]> getBoardListByBoardHistory(String keyword, Long tagCategoryId, Long boardCategoryId, Long principalId, Pageable pageable) {
+
+        List<Tuple> results = queryFactory
+                .select(board, memberImage, board.commentList.size(), board.heartList.size())
+                .from(board)
+                .join(board.member).fetchJoin()
+                .leftJoin(memberImage).on(memberImage.member.eq(board.member))
+                .join(boardHistory).on(boardHistory.board.eq(board))
+                .where(categorySearch(boardCategoryId),
+                        keywordSearch(keyword), hashtagSearch(tagCategoryId),
+                        boardHistory.member.memberId.eq(principalId))
+                .orderBy(boardHistory.viewDateTime.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        JPAQuery<Board> countQuery = queryFactory
+                .select(board)
+                .from(board)
+                .join(boardHistory).on(boardHistory.board.eq(board))
+                .where(categorySearch(boardCategoryId),
+                        keywordSearch(keyword), hashtagSearch(tagCategoryId),
+                        boardHistory.member.memberId.eq(principalId));
 
         List<Object[]> content = results.stream().map(t -> t.toArray()).collect(Collectors.toList());
 
