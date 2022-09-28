@@ -168,6 +168,49 @@ public class BoardService {
         return new ScrollResultDto<>(results, fn);
     }
 
+    @Transactional(readOnly = true)
+    public ScrollResultDto<BoardListResDto, Object[]> getBoardHistoryList(PageRequestDto requestDto, Long principalId){
+
+        Pageable pageable = requestDto.getPageable();
+
+        Page<Object[]> results = boardRepository.getBoardListByBoardHistory(requestDto.getKeyword(),
+                requestDto.getTagCategoryId(), requestDto.getBoardCategoryId(), principalId, pageable);
+
+        Function<Object[], BoardListResDto> fn = (arr -> {
+
+            //게시글 첫번째 이미지
+            Board board = (Board) arr[0];
+
+            String thumbnailUrl = null;
+            if (board.getBoardImageList() != null && !board.getBoardImageList().isEmpty()) {
+                BoardImage boardImage = board.getBoardImageList().get(0);
+                thumbnailUrl = imageService.getImage(boardImage.getFilePath(), boardImage.getFileNm());
+            }
+
+            //작성자 프로필 이미지
+            MemberImage memberImage = (MemberImage) arr[1];
+
+            String writerImageUrl = null;
+            if (memberImage != null) {
+                //소셜 이미지일 경우
+                if(memberImage.isSocialImg()){
+                    writerImageUrl = memberImage.getImageUrl();
+                }
+                //s3 이미지일 경우
+                else{
+                    writerImageUrl = imageService.getImage(memberImage.getFilePath(), memberImage.getFileNm());
+                }
+            }
+
+            return new BoardListResDto((Board) arr[0], writerImageUrl, thumbnailUrl, (int) arr[2], (int) arr[3], principalId);
+        });
+
+        return new ScrollResultDto<>(results, fn);
+    }
+
+
+
+
     /**
      * 회원별 - 작성한 게시글 리스트 사용자 개수 지정 조회
      */
