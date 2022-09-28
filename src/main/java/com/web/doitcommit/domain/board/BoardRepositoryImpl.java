@@ -125,7 +125,7 @@ public class BoardRepositoryImpl implements BoardRepositoryQuerydsl {
      * 북마크 게시글 리스트 조회
      */
     @Override
-    public Page<Object[]> getBoardListByBookmark(String keyword, Long tagCategoryId, Long principalId, Pageable pageable) {
+    public Page<Object[]> getBoardListByBookmark(String keyword, Long tagCategoryId, Long boardCategoryId, Long principalId, Pageable pageable) {
 
         List<Tuple> results = queryFactory
                 .select(board, memberImage, board.commentList.size(), board.heartList.size())
@@ -133,7 +133,7 @@ public class BoardRepositoryImpl implements BoardRepositoryQuerydsl {
                 .join(board.member).fetchJoin()
                 .leftJoin(memberImage).on(memberImage.member.eq(board.member))
                 .leftJoin(bookmark).on(bookmark.board.boardId.eq(board.boardId))
-                .where(board.boardCategory.categoryId.eq(2L),
+                .where(categorySearch(boardCategoryId),
                         keywordSearch(keyword), hashtagSearch(tagCategoryId),
                         bookmark.member.memberId.eq(principalId))
                 .orderBy(board.boardId.desc())
@@ -141,14 +141,13 @@ public class BoardRepositoryImpl implements BoardRepositoryQuerydsl {
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        JPAQuery<Tuple> countQuery = queryFactory
-                .select(board, memberImage)
+        JPAQuery<Board> countQuery = queryFactory
+                .select(board)
                 .from(board)
-                .join(board.member).fetchJoin()
-                .leftJoin(memberImage).on(memberImage.member.eq(board.member))
                 .leftJoin(bookmark).on(bookmark.board.boardId.eq(board.boardId))
-                .where(board.boardCategory.categoryId.eq(1L),
-                        keywordSearch(keyword), hashtagSearch(tagCategoryId));
+                .where(categorySearch(boardCategoryId),
+                        keywordSearch(keyword), hashtagSearch(tagCategoryId),
+                        bookmark.member.memberId.eq(principalId));
 
         List<Object[]> content = results.stream().map(t -> t.toArray()).collect(Collectors.toList());
 
