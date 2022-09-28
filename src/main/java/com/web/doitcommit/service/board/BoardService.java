@@ -2,6 +2,8 @@ package com.web.doitcommit.service.board;
 
 import com.web.doitcommit.domain.board.Board;
 import com.web.doitcommit.domain.board.BoardRepository;
+import com.web.doitcommit.domain.boardHistory.BoardHistory;
+import com.web.doitcommit.domain.boardHistory.BoardHistoryRepository;
 import com.web.doitcommit.domain.files.BoardImage;
 import com.web.doitcommit.domain.files.MemberImage;
 import com.web.doitcommit.domain.hashtag.BoardHashtag;
@@ -21,6 +23,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -35,6 +39,7 @@ public class BoardService {
     private final TagCategoryRepository tagCategoryRepository;
     private final ImageService imageService;
     private final MemberRepository memberRepository;
+    private final BoardHistoryRepository boardHistoryRepository;
 
 
     /**
@@ -128,8 +133,8 @@ public class BoardService {
         Pageable pageable = requestDto.getPageable(Sort.by("boardId").ascending());
 
         Page<Object[]> results = boardRepository.getBoardListByBookmark(
-                requestDto.getKeyword(), requestDto.getTagCategoryId(),
-                principalId, pageable);
+                requestDto.getKeyword(), requestDto.getTagCategoryId()
+                ,requestDto.getBoardCategoryId(), principalId, pageable);
 
         Function<Object[], BoardListResDto> fn = (arr -> {
 
@@ -162,6 +167,49 @@ public class BoardService {
 
         return new ScrollResultDto<>(results, fn);
     }
+
+    @Transactional(readOnly = true)
+    public ScrollResultDto<BoardListResDto, Object[]> getBoardHistoryList(PageRequestDto requestDto, Long principalId){
+
+        Pageable pageable = requestDto.getPageable();
+
+        Page<Object[]> results = boardRepository.getBoardListByBoardHistory(requestDto.getKeyword(),
+                requestDto.getTagCategoryId(), requestDto.getBoardCategoryId(), principalId, pageable);
+
+        Function<Object[], BoardListResDto> fn = (arr -> {
+
+            //게시글 첫번째 이미지
+            Board board = (Board) arr[0];
+
+            String thumbnailUrl = null;
+            if (board.getBoardImageList() != null && !board.getBoardImageList().isEmpty()) {
+                BoardImage boardImage = board.getBoardImageList().get(0);
+                thumbnailUrl = imageService.getImage(boardImage.getFilePath(), boardImage.getFileNm());
+            }
+
+            //작성자 프로필 이미지
+            MemberImage memberImage = (MemberImage) arr[1];
+
+            String writerImageUrl = null;
+            if (memberImage != null) {
+                //소셜 이미지일 경우
+                if(memberImage.isSocialImg()){
+                    writerImageUrl = memberImage.getImageUrl();
+                }
+                //s3 이미지일 경우
+                else{
+                    writerImageUrl = imageService.getImage(memberImage.getFilePath(), memberImage.getFileNm());
+                }
+            }
+
+            return new BoardListResDto((Board) arr[0], writerImageUrl, thumbnailUrl, (int) arr[2], (int) arr[3], principalId);
+        });
+
+        return new ScrollResultDto<>(results, fn);
+    }
+
+
+
 
     /**
      * 회원별 - 작성한 게시글 리스트 사용자 개수 지정 조회
@@ -288,7 +336,12 @@ public class BoardService {
     public BoardResDto GetBoard(Long boardId, Long principalId) {
         Board boardEntity = boardRepository.findById(boardId).orElseThrow(() ->
                 new CustomException("존재하지 않는 게시글입니다."));
+
+        //조회수 증가
         boardEntity.changeBoardCnt();
+
+        //게시글 히스토리 추가
+        addBoardHistory(boardEntity, principalId);
 
         BoardResDto boardResDto = new BoardResDto(boardEntity);
         Map<Long, String> savedImageIdsAndUrl = new HashMap<>();
@@ -327,6 +380,34 @@ public class BoardService {
             boardResDto.setBoardHashtag(boardHashtags);
         }
         return boardResDto;
+    }
+
+    private void addBoardHistory(Board boardEntity, Long principalId) {
+
+        //로그인 상태일 경우
+        if(principalId != null){
+
+            Optional<BoardHistory> result =
+                    boardHistoryRepository.findByBoardIdAndMemberId(boardEntity.getBoardId(), principalId);
+
+            //기존 내역이 존재하는 경우
+            if(result.isPresent()){
+                BoardHistory boardHistory = result.get();
+
+                //조회 일시를 현재로 변경
+                boardHistory.changeViewDateTimeToNow();
+            }
+            //신규 조회일 경우
+            else{
+                BoardHistory boardHistory = BoardHistory.builder()
+                        .board(boardEntity)
+                        .member(Member.builder().memberId(principalId).build())
+                        .viewDateTime(LocalDateTime.now())
+                        .build();
+
+                boardHistoryRepository.save(boardHistory);
+            }
+        }
     }
 
     /**
