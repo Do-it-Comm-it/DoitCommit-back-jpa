@@ -133,8 +133,8 @@ public class BoardService {
         Pageable pageable = requestDto.getPageable(Sort.by("boardId").ascending());
 
         Page<Object[]> results = boardRepository.getBoardListByBookmark(
-                requestDto.getKeyword(), requestDto.getTagCategoryId(),
-                principalId, pageable);
+                requestDto.getKeyword(), requestDto.getTagCategoryId()
+                ,requestDto.getBoardCategoryId(), principalId, pageable);
 
         Function<Object[], BoardListResDto> fn = (arr -> {
 
