@@ -403,11 +403,11 @@ public class BoardService {
             //신규 조회일 경우
             else{
                 BoardHistory boardHistory = BoardHistory.builder()
-                        .board(boardEntity)
                         .member(Member.builder().memberId(principalId).build())
                         .viewDateTime(LocalDateTime.now())
                         .build();
 
+                boardHistory.setBoard(boardEntity);
                 boardHistoryRepository.save(boardHistory);
             }
         }
