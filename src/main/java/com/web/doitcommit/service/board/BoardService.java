@@ -168,6 +168,9 @@ public class BoardService {
         return new ScrollResultDto<>(results, fn);
     }
 
+    /**
+     * 조회한 게시글 히스토리 내역 조회
+     */
     @Transactional(readOnly = true)
     public ScrollResultDto<BoardListResDto, Object[]> getBoardHistoryList(PageRequestDto requestDto, Long principalId){
 
