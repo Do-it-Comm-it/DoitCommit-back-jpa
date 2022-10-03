@@ -35,6 +35,9 @@ public class BoardListResDto {
     @Schema(description = "썸네일")
     private String thumbnailUrl;
 
+    @Schema(description = "조회수")
+    private int boardCnt;
+
     @Schema(description = "댓글수")
     private int commentCnt;
 
@@ -67,6 +70,7 @@ public class BoardListResDto {
        this.boardTitle = board.getBoardTitle();
        this.boardContent = board.getBoardContent();
        this.thumbnailUrl = thumbnailUrl;
+       this.boardCnt = board.getBoardCnt();
        this.commentCnt = commentCnt;
        this.heartCnt = heartCnt;
        this.myHeart = board.getHeartList().stream().anyMatch(heart->heart.getMember().getMemberId().equals(principalId) ? true: false);
