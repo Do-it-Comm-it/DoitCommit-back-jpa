@@ -168,6 +168,9 @@ public class BoardService {
         return new ScrollResultDto<>(results, fn);
     }
 
+    /**
+     * 조회한 게시글 히스토리 내역 조회
+     */
     @Transactional(readOnly = true)
     public ScrollResultDto<BoardListResDto, Object[]> getBoardHistoryList(PageRequestDto requestDto, Long principalId){
 
@@ -400,11 +403,11 @@ public class BoardService {
             //신규 조회일 경우
             else{
                 BoardHistory boardHistory = BoardHistory.builder()
-                        .board(boardEntity)
                         .member(Member.builder().memberId(principalId).build())
                         .viewDateTime(LocalDateTime.now())
                         .build();
 
+                boardHistory.setBoard(boardEntity);
                 boardHistoryRepository.save(boardHistory);
             }
         }
