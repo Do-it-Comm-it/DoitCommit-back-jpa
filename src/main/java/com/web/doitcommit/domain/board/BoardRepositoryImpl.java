@@ -136,7 +136,7 @@ public class BoardRepositoryImpl implements BoardRepositoryQuerydsl {
                 .where(categorySearch(boardCategoryId),
                         keywordSearch(keyword), hashtagSearch(tagCategoryId),
                         bookmark.member.memberId.eq(principalId))
-                .orderBy(board.boardId.desc())
+                .orderBy(bookmark.bookmarkId.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
