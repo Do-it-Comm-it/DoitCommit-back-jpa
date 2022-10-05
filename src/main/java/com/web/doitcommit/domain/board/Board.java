@@ -88,9 +88,9 @@ public class Board extends BaseEntity {
     }
 
     //카테고리변경
-    /*public void changeCategoryId(BoardCategory boardCategory) {
-        this.boardCategory = boardCategory;
-    }*/
+    public void changeCategoryId(Long categoryId) {
+        this.boardCategory = BoardCategory.builder().categoryId(categoryId).build();
+    }
 
     //제목 변경
     public void changeTitle(String boardTitle) {
