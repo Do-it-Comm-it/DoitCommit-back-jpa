@@ -13,6 +13,7 @@ import com.web.doitcommit.domain.hashtag.TagCategoryRepository;
 import com.web.doitcommit.domain.member.Member;
 import com.web.doitcommit.domain.member.MemberRepository;
 import com.web.doitcommit.dto.board.*;
+import com.web.doitcommit.dto.image.ImageForEditorRegDto;
 import com.web.doitcommit.dto.page.PageRequestDto;
 import com.web.doitcommit.dto.page.ScrollResultDto;
 import com.web.doitcommit.handler.exception.CustomException;
@@ -37,10 +38,9 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final BoardHashtagRepository boardHashtagRepository;
     private final TagCategoryRepository tagCategoryRepository;
-    private final ImageService imageService;
     private final MemberRepository memberRepository;
     private final BoardHistoryRepository boardHistoryRepository;
-
+    private final ImageService imageService;
 
     /**
      * 게시글 목록 조회
@@ -71,11 +71,11 @@ public class BoardService {
             String writerImageUrl = null;
             if (memberImage != null) {
                 //소셜 이미지일 경우
-                if(memberImage.isSocialImg()){
+                if (memberImage.isSocialImg()) {
                     writerImageUrl = memberImage.getImageUrl();
                 }
                 //s3 이미지일 경우
-                else{
+                else {
                     writerImageUrl = imageService.getImage(memberImage.getFilePath(), memberImage.getFileNm());
                 }
             }
@@ -111,11 +111,11 @@ public class BoardService {
             String writerImageUrl = null;
             if (memberImage != null) {
                 //소셜 이미지일 경우
-                if(memberImage.isSocialImg()){
+                if (memberImage.isSocialImg()) {
                     writerImageUrl = memberImage.getImageUrl();
                 }
                 //s3 이미지일 경우
-                else{
+                else {
                     writerImageUrl = imageService.getImage(memberImage.getFilePath(), memberImage.getFileNm());
                 }
             }
@@ -134,7 +134,7 @@ public class BoardService {
 
         Page<Object[]> results = boardRepository.getBoardListByBookmark(
                 requestDto.getKeyword(), requestDto.getTagCategoryId()
-                ,requestDto.getBoardCategoryId(), principalId, pageable);
+                , requestDto.getBoardCategoryId(), principalId, pageable);
 
         Function<Object[], BoardListResDto> fn = (arr -> {
 
@@ -153,11 +153,11 @@ public class BoardService {
             String writerImageUrl = null;
             if (memberImage != null) {
                 //소셜 이미지일 경우
-                if(memberImage.isSocialImg()){
+                if (memberImage.isSocialImg()) {
                     writerImageUrl = memberImage.getImageUrl();
                 }
                 //s3 이미지일 경우
-                else{
+                else {
                     writerImageUrl = imageService.getImage(memberImage.getFilePath(), memberImage.getFileNm());
                 }
             }
@@ -172,7 +172,7 @@ public class BoardService {
      * 조회한 게시글 히스토리 내역 조회
      */
     @Transactional(readOnly = true)
-    public ScrollResultDto<BoardListResDto, Object[]> getBoardHistoryList(PageRequestDto requestDto, Long principalId){
+    public ScrollResultDto<BoardListResDto, Object[]> getBoardHistoryList(PageRequestDto requestDto, Long principalId) {
 
         Pageable pageable = requestDto.getPageable();
 
@@ -196,11 +196,11 @@ public class BoardService {
             String writerImageUrl = null;
             if (memberImage != null) {
                 //소셜 이미지일 경우
-                if(memberImage.isSocialImg()){
+                if (memberImage.isSocialImg()) {
                     writerImageUrl = memberImage.getImageUrl();
                 }
                 //s3 이미지일 경우
-                else{
+                else {
                     writerImageUrl = imageService.getImage(memberImage.getFilePath(), memberImage.getFileNm());
                 }
             }
@@ -212,13 +212,11 @@ public class BoardService {
     }
 
 
-
-
     /**
      * 회원별 - 작성한 게시글 리스트 사용자 개수 지정 조회
      */
     @Transactional(readOnly = true)
-    public BoardListOfMemberResDto getCustomLimitBoardListOfMember(int limit, Long memberId){
+    public BoardListOfMemberResDto getCustomLimitBoardListOfMember(int limit, Long memberId) {
 
         Object[] arr = memberRepository.findWithImageByMemberId(memberId).orElseThrow(() ->
                 new CustomException("존재하지 않는 회원입니다."));
@@ -231,11 +229,11 @@ public class BoardService {
         String memberImageUrl = null;
         if (memberImage != null) {
             //소셜 이미지일 경우
-            if(memberImage.isSocialImg()){
+            if (memberImage.isSocialImg()) {
                 memberImageUrl = memberImage.getImageUrl();
             }
             //s3 이미지일 경우
-            else{
+            else {
                 memberImageUrl = imageService.getImage(memberImage.getFilePath(), memberImage.getFileNm());
             }
         }
@@ -269,67 +267,17 @@ public class BoardService {
 
         Board board = boardRepository.save(boardEntity);
 
-        if(boardRegDto.getBoardHashtag() !=null){
+        //해시태그 등록
+        if (boardRegDto.getBoardHashtag() != null) {
             for (int i = 0; i < boardRegDto.getBoardHashtag().size(); i++) {
                 TagCategory tagCategory = new TagCategory(boardRegDto.getBoardHashtag().get(i));
-                BoardHashtag boardHashtag = new BoardHashtag(board,tagCategory);
+                BoardHashtag boardHashtag = new BoardHashtag(board, tagCategory);
                 boardHashtagRepository.save(boardHashtag);
             }
         }
 
-        ImageRegDto[] allImageArr = new ImageRegDto[0];
-        if(boardRegDto.getAllImageArr() !=null){
-            allImageArr = boardRegDto.getAllImageArr();
-        }
-
-        ImageRegDto[] imageArr = new ImageRegDto[0];
-        if(boardRegDto.getImageArr() !=null){
-            imageArr = boardRegDto.getImageArr();
-        }
-
-        //S3에서 이미지 삭제
-        if(allImageArr.length != 0) {
-            removeImage(allImageArr, imageArr);
-        }
-        //DB에 이미지 등록
-        if(imageArr.length != 0) {
-            registerImage(board, imageArr);
-        }
-    }
-
-    /**
-     * S3에서 이미지 삭제
-     */
-    @Transactional
-    public void removeImage(ImageRegDto[] allImageArr,
-                            ImageRegDto[] imageArr) {
-        List<String> allImageList = new ArrayList<String>();
-        List<String> imageList = new ArrayList<String>();
-        //반환한 전체 url list
-        for (int i = 0; i < allImageArr.length; i++) {
-            allImageList.add(allImageArr[i].getFilePath() + "/" + allImageArr[i].getFileNm());
-        }
-        //등록한 url list
-        for (int i = 0; i < imageArr.length; i++) {
-            imageList.add(imageArr[i].getFilePath() + "/" + imageArr[i].getFileNm());
-        }
-        //S3에서 삭제해야할 url
-        allImageList.removeAll(imageList);
-        if (allImageList.size() != 0) {
-            for (int i = 0; i < allImageList.size(); i++) {
-                imageService.imageRemove(allImageList.get(i));
-            }
-        }
-    }
-
-    /**
-     * DB에 이미지 등록
-     */
-    @Transactional
-    public void registerImage(Board board, ImageRegDto[] imageArr) {
-        if (imageArr.length != 0) {
-            imageService.imageBoardDbRegister(board, imageArr);
-        }
+        //게시글 이미지 핸들러로 보냄
+        imageService.handleEditorImage(board, boardRegDto.getImageForEditorRegDto());
     }
 
     /**
@@ -388,20 +336,20 @@ public class BoardService {
     private void addBoardHistory(Board boardEntity, Long principalId) {
 
         //로그인 상태일 경우
-        if(principalId != null){
+        if (principalId != null) {
 
             Optional<BoardHistory> result =
                     boardHistoryRepository.findByBoardIdAndMemberId(boardEntity.getBoardId(), principalId);
 
             //기존 내역이 존재하는 경우
-            if(result.isPresent()){
+            if (result.isPresent()) {
                 BoardHistory boardHistory = result.get();
 
                 //조회 일시를 현재로 변경
                 boardHistory.changeViewDateTimeToNow();
             }
             //신규 조회일 경우
-            else{
+            else {
                 BoardHistory boardHistory = BoardHistory.builder()
                         .member(Member.builder().memberId(principalId).build())
                         .viewDateTime(LocalDateTime.now())
@@ -435,7 +383,7 @@ public class BoardService {
         //s3에서 삭제된 게시글 이미지 삭제
         if (imageInfoArr.size() != 0) {
             for (BoardImage imageInfo : imageInfoArr) {
-                imageService.imageRemove(imageInfo.getFilePath() + "/" + imageInfo.getFileNm());
+                imageService.imageRemoveFromS3(imageInfo.getFilePath() + "/" + imageInfo.getFileNm());
             }
         }
     }
@@ -449,9 +397,21 @@ public class BoardService {
         Board board = boardRepository.findById(boardUpdateDto.getBoardId()).orElseThrow(() ->
                 new CustomException("존재하지 않는 게시글입니다."));
 
-        //if(boardUpdateDto.getCategoryId() != null)  board.changeCategoryId(boardUpdateDto.getCategoryId());
-        if(boardUpdateDto.getBoardTitle() != null)  board.changeTitle(boardUpdateDto.getBoardTitle());
-        if(boardUpdateDto.getBoardContent() != null)  board.changeContent(boardUpdateDto.getBoardContent());
+        //기존 해시태그 삭제
+        boardHashtagRepository.deleteBoardHashtagByBoardId(boardUpdateDto.getBoardId());
 
+        if (boardUpdateDto.getCategoryId() != null) board.changeCategoryId(boardUpdateDto.getCategoryId());
+        board.changeTitle(boardUpdateDto.getBoardTitle());
+        board.changeContent(boardUpdateDto.getBoardContent());
+
+        //해시태그 등록
+        if (boardUpdateDto.getBoardHashtag() != null) {
+            for (int i = 0; i < boardUpdateDto.getBoardHashtag().size(); i++) {
+                TagCategory tagCategory = new TagCategory(boardUpdateDto.getBoardHashtag().get(i));
+                BoardHashtag boardHashtag = new BoardHashtag(board, tagCategory);
+                boardHashtagRepository.save(boardHashtag);
+            }
+        }
+        imageService.handleEditorImage(board, boardUpdateDto.getImageForEditorRegDto());
     }
 }
