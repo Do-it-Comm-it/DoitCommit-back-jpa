@@ -13,6 +13,7 @@ import com.web.doitcommit.domain.hashtag.TagCategoryRepository;
 import com.web.doitcommit.domain.member.Member;
 import com.web.doitcommit.domain.member.MemberRepository;
 import com.web.doitcommit.dto.board.*;
+import com.web.doitcommit.dto.image.ImageForEditorRegDto;
 import com.web.doitcommit.dto.page.PageRequestDto;
 import com.web.doitcommit.dto.page.ScrollResultDto;
 import com.web.doitcommit.handler.exception.CustomException;
@@ -274,14 +275,9 @@ public class BoardService {
                 boardHashtagRepository.save(boardHashtag);
             }
         }
-        //이미지 dto에 추가
-        BoardImageDto boardImageDto = BoardImageDto.builder()
-                .allImageArr(boardRegDto.getAllImageArr())
-                .imageArr(boardRegDto.getImageArr())
-                .build();
 
         //게시글 이미지 핸들러로 보냄
-        imageService.handlerBoardImage(board, boardImageDto);
+        imageService.handleEditorImage(board, boardRegDto.getImageForEditorRegDto());
     }
 
     /**
@@ -387,7 +383,7 @@ public class BoardService {
         //s3에서 삭제된 게시글 이미지 삭제
         if (imageInfoArr.size() != 0) {
             for (BoardImage imageInfo : imageInfoArr) {
-                imageService.imageRemove(imageInfo.getFilePath() + "/" + imageInfo.getFileNm());
+                imageService.imageRemoveFromS3(imageInfo.getFilePath() + "/" + imageInfo.getFileNm());
             }
         }
     }
@@ -405,8 +401,8 @@ public class BoardService {
         boardHashtagRepository.deleteBoardHashtagByBoardId(boardUpdateDto.getBoardId());
 
         if (boardUpdateDto.getCategoryId() != null) board.changeCategoryId(boardUpdateDto.getCategoryId());
-        if (boardUpdateDto.getBoardTitle() != null) board.changeTitle(boardUpdateDto.getBoardTitle());
-        if (boardUpdateDto.getBoardContent() != null) board.changeContent(boardUpdateDto.getBoardContent());
+        board.changeTitle(boardUpdateDto.getBoardTitle());
+        board.changeContent(boardUpdateDto.getBoardContent());
 
         //해시태그 등록
         if (boardUpdateDto.getBoardHashtag() != null) {
@@ -416,13 +412,6 @@ public class BoardService {
                 boardHashtagRepository.save(boardHashtag);
             }
         }
-        //이미지 dto에 추가
-        BoardImageDto boardImageDto = BoardImageDto.builder()
-                .allImageArr(boardUpdateDto.getAllImageArr())
-                .imageArr(boardUpdateDto.getImageArr())
-                .deletedImageArr(boardUpdateDto.getDeletedImageArr())
-                .build();
-
-        imageService.handlerBoardImage(board, boardImageDto);
+        imageService.handleEditorImage(board, boardUpdateDto.getImageForEditorRegDto());
     }
 }

@@ -3,6 +3,7 @@ package com.web.doitcommit.dto.board;
 import com.web.doitcommit.domain.board.Board;
 import com.web.doitcommit.domain.boardCategory.BoardCategory;
 import com.web.doitcommit.domain.member.Member;
+import com.web.doitcommit.dto.image.ImageForEditorRegDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -13,10 +14,10 @@ import java.util.List;
 
 @Schema(description = "게시글 등록 dto")
 @Getter
-@SuperBuilder
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class BoardRegDto extends BoardImageDto{
+public class BoardRegDto {
 
     @Schema(description = "카테고리 아이디")
     private Long categoryId;
@@ -31,6 +32,9 @@ public class BoardRegDto extends BoardImageDto{
 
     @Schema(description = "태그", nullable = true)
     private List<Long> boardHashtag;
+
+    @Schema(description = "에디터에서 가지고온 이미지", nullable = true)
+    private ImageForEditorRegDto imageForEditorRegDto;
 
     public Board toEntity(Long principalId){
         Board board = Board.builder()
