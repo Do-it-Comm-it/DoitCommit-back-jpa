@@ -37,7 +37,7 @@ public class HashtagCategoryController {
             @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(example = "{\"error\": \"Not Found\"}"))),
             @ApiResponse(responseCode = "500",  content = @Content(schema = @Schema(example = "{\"error\": \"Internal Server Error\"}")))
     })
-    @GetMapping("/tag")
+    @GetMapping("/hashtags")
     public ResponseEntity<?> getTagList() {
         List<HashtagCategoryResDto> hashtagCategoryResDto = hashtagCategoryService.getBoardTagList();
         return new ResponseEntity<>(new CMRespDto<>(1, "태그 리스트 조회 성공", hashtagCategoryResDto),HttpStatus.OK);
