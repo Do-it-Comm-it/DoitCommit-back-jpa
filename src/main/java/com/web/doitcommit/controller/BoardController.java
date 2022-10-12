@@ -45,7 +45,7 @@ public class BoardController {
     @GetMapping("/list/main")
     public ResponseEntity<?> getCustomLimitBoardList(@RequestParam(value = "limit", required = false, defaultValue = "4") int limit,
                                                      @RequestParam(value = "order", required = false, defaultValue = "boardId") String order,
-                                                     @AuthenticationPrincipal PrincipalDetails principalDetails) {
+                                                     @Parameter(hidden = true) @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
         List<MainViewBoardListResDto> mainViewBoardListResDtoList;
 
