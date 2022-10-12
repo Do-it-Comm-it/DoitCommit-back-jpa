@@ -1,4 +1,4 @@
-package com.web.doitcommit.dto.board;
+package com.web.doitcommit.dto.hashtagCategory;
 
 import com.web.doitcommit.domain.hashtagCategory.HashtagCategory;
 import io.swagger.v3.oas.annotations.media.Schema;

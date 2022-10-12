@@ -362,15 +362,6 @@ public class BoardService {
     }
 
     /**
-     * 태그 목록 조회
-     */
-    @Transactional(readOnly = true)
-    public List<HashtagCategoryResDto> getBoardTagList() {
-        List<HashtagCategory> result = HashtagCategoryRepository.findAll();
-        return result.stream().map(tag -> new HashtagCategoryResDto(tag)).collect(Collectors.toList());
-    }
-
-    /**
      * 게시글 삭제
      */
     @Transactional
