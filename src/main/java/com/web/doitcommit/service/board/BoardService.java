@@ -2,18 +2,18 @@ package com.web.doitcommit.service.board;
 
 import com.web.doitcommit.domain.board.Board;
 import com.web.doitcommit.domain.board.BoardRepository;
+import com.web.doitcommit.domain.boardHashtag.BoardHashtag;
+import com.web.doitcommit.domain.boardHashtag.BoardHashtagRepository;
 import com.web.doitcommit.domain.boardHistory.BoardHistory;
 import com.web.doitcommit.domain.boardHistory.BoardHistoryRepository;
 import com.web.doitcommit.domain.files.BoardImage;
 import com.web.doitcommit.domain.files.MemberImage;
-import com.web.doitcommit.domain.hashtag.BoardHashtag;
-import com.web.doitcommit.domain.hashtag.BoardHashtagRepository;
-import com.web.doitcommit.domain.hashtag.HashtagCategory;
-import com.web.doitcommit.domain.hashtag.HashtagCategoryRepository;
+
+import com.web.doitcommit.domain.hashtagCategory.HashtagCategory;
+import com.web.doitcommit.domain.hashtagCategory.HashtagCategoryRepository;
 import com.web.doitcommit.domain.member.Member;
 import com.web.doitcommit.domain.member.MemberRepository;
 import com.web.doitcommit.dto.board.*;
-import com.web.doitcommit.dto.image.ImageForEditorRegDto;
 import com.web.doitcommit.dto.page.PageRequestDto;
 import com.web.doitcommit.dto.page.ScrollResultDto;
 import com.web.doitcommit.handler.exception.CustomException;
@@ -359,15 +359,6 @@ public class BoardService {
                 boardHistoryRepository.save(boardHistory);
             }
         }
-    }
-
-    /**
-     * 태그 목록 조회
-     */
-    @Transactional(readOnly = true)
-    public List<HashtagCategoryResDto> getBoardTagList() {
-        List<HashtagCategory> result = HashtagCategoryRepository.findAll();
-        return result.stream().map(tag -> new HashtagCategoryResDto(tag)).collect(Collectors.toList());
     }
 
     /**

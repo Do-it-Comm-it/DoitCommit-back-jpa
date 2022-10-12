@@ -1,9 +1,9 @@
-package com.web.doitcommit.service.popularTag;
+package com.web.doitcommit.service.hashtagCategory;
 
-import com.web.doitcommit.domain.board.BoardRepository;
-import com.web.doitcommit.domain.hashtag.HashtagCategoryRepository;
-import com.web.doitcommit.dto.popularTag.PoplarTagResDto;
-import com.web.doitcommit.handler.exception.CustomException;
+import com.web.doitcommit.domain.hashtagCategory.HashtagCategory;
+import com.web.doitcommit.domain.hashtagCategory.HashtagCategoryRepository;
+import com.web.doitcommit.dto.hashtagCategory.HashtagCategoryResDto;
+import com.web.doitcommit.dto.hashtagCategory.PopularTagResDto;
 import com.web.doitcommit.redis.RedisService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,10 +11,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,10 +19,19 @@ import java.util.stream.Collectors;
 @Transactional
 @RequiredArgsConstructor
 @Service
-public class PopularTagService {
+public class HashtagCategoryService {
 
-    private final HashtagCategoryRepository HashtagCategoryRepository;
+    private final HashtagCategoryRepository hashtagCategoryRepository;
     private final RedisService redisService;
+
+    /**
+     * 해시태그 목록 조회
+     */
+    @Transactional(readOnly = true)
+    public List<HashtagCategoryResDto> getBoardTagList() {
+        List<HashtagCategory> result = hashtagCategoryRepository.findAll();
+        return result.stream().map(tag -> new HashtagCategoryResDto(tag)).collect(Collectors.toList());
+    }
 
     /**
      * Redis 인기태그 갱신
@@ -34,7 +40,7 @@ public class PopularTagService {
     @Transactional
     public void UpdatePopularTag(){
         //금일 인기태그 리스트 추가
-        List<Object[]> popularTagList = HashtagCategoryRepository.getLimitPopularTagListForPeriod(7);
+        List<Object[]> popularTagList = hashtagCategoryRepository.getLimitPopularTagListForPeriod(7);
         redisService.setList(popularTagList);
 
         List<Object[]> result = redisService.getValues(LocalDate.now().toString());
@@ -51,11 +57,11 @@ public class PopularTagService {
      * 상단 8개 인기태그 리스트 - redis 조회
      */
     @Transactional(readOnly = true)
-    public List<PoplarTagResDto> getLimitPopularTagListFor7Days(){
+    public List<PopularTagResDto> getLimitPopularTagListFor7Days(){
 
         List<Object[]> result = redisService.getValues(LocalDate.now().toString());
 
-        return result.stream().map(arr -> new PoplarTagResDto(
+        return result.stream().map(arr -> new PopularTagResDto(
                 (Long) arr[0], (String) arr[1], ((Long) arr[2]).intValue())).collect(Collectors.toList());
     }
 
@@ -63,11 +69,11 @@ public class PopularTagService {
      * 상단 8개 인기태그 리스트 조회 - db 조회
      */
     @Transactional(readOnly = true)
-    public List<PoplarTagResDto> getLimitPopularTagList(){
+    public List<PopularTagResDto> getLimitPopularTagList(){
 
-        List<Object[]> result = HashtagCategoryRepository.getLimitPopularTagList();
+        List<Object[]> result = hashtagCategoryRepository.getLimitPopularTagList();
 
-        return result.stream().map(arr -> new PoplarTagResDto(
+        return result.stream().map(arr -> new PopularTagResDto(
                 (Long) arr[0], (String) arr[1], ((Long) arr[2]).intValue())).collect(Collectors.toList());
     }
 
@@ -75,13 +81,13 @@ public class PopularTagService {
      * 지정된 기간동안 {tagId, tagName, count} 모든 태그 리스트
      */
     @Transactional(readOnly = true)
-    public List<PoplarTagResDto> getAllPopularTagListForPeriod(int period){
+    public List<PopularTagResDto> getAllPopularTagListForPeriod(int period){
 
-        List<Object[]> result = HashtagCategoryRepository.getAllPopularTagListForPeriod(period);
+        List<Object[]> result = hashtagCategoryRepository.getAllPopularTagListForPeriod(period);
 
         System.out.println(result.size());
 
-        return result.stream().map(arr -> new PoplarTagResDto(
+        return result.stream().map(arr -> new PopularTagResDto(
                 (Long) arr[0], (String) arr[1], ((Long) arr[2]).intValue())).collect(Collectors.toList());
     }
 }

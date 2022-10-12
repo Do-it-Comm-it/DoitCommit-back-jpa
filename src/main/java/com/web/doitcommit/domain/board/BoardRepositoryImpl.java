@@ -11,10 +11,11 @@ import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.web.doitcommit.domain.boardHashtag.QBoardHashtag;
 import com.web.doitcommit.domain.boardHistory.QBoardHistory;
 import com.web.doitcommit.domain.bookmark.QBookmark;
-import com.web.doitcommit.domain.hashtag.QBoardHashtag;
-import com.web.doitcommit.domain.hashtag.QHashtagCategory;
+
+import com.web.doitcommit.domain.hashtagCategory.QHashtagCategory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;

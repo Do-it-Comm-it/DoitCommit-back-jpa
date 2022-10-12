@@ -1,8 +1,10 @@
-package com.web.doitcommit.domain.hashtag;
+package com.web.doitcommit.domain.boardHashtag;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
+
 import javax.persistence.EntityManager;
-import static com.web.doitcommit.domain.hashtag.QBoardHashtag.boardHashtag;
+
+import static com.web.doitcommit.domain.boardHashtag.QBoardHashtag.boardHashtag;
 
 public class BoardHashtagRepositoryImpl implements BoardHashtagRepositoryQuerydsl {
 
