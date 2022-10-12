@@ -19,6 +19,9 @@ public class BoardResDto {
     @Schema(description = "글쓴이")
     private String writer;
 
+    @Schema(description = "글쓴이 아이디")
+    private Long writerId;
+
     @Schema(description = "카테고리 아이디")
     private Long categoryId;
 
@@ -54,6 +57,7 @@ public class BoardResDto {
     public BoardResDto(Board board){
         boardId = board.getBoardId();
         writer = board.getMember().getNickname();
+        writerId = board.getMember().getMemberId();
         boardTitle = board.getBoardTitle();
         boardContent = board.getBoardContent();
         categoryId = board.getBoardCategory().getCategoryId();
