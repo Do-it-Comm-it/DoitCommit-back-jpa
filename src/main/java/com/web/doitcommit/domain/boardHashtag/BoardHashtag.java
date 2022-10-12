@@ -1,7 +1,9 @@
-package com.web.doitcommit.domain.hashtag;
+package com.web.doitcommit.domain.boardHashtag;
 
 import com.web.doitcommit.domain.board.Board;
-import lombok.*;
+import com.web.doitcommit.domain.hashtagCategory.HashtagCategory;
+import lombok.Getter;
+import lombok.ToString;
 
 import javax.persistence.*;
 

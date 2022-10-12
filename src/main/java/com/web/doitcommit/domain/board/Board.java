@@ -1,9 +1,9 @@
 package com.web.doitcommit.domain.board;
 
 import com.web.doitcommit.domain.BaseEntity;
+import com.web.doitcommit.domain.boardHashtag.BoardHashtag;
 import com.web.doitcommit.domain.boardHistory.BoardHistory;
 import com.web.doitcommit.domain.files.BoardImage;
-import com.web.doitcommit.domain.hashtag.BoardHashtag;
 import com.web.doitcommit.domain.heart.Heart;
 import com.web.doitcommit.domain.boardCategory.BoardCategory;
 import com.web.doitcommit.domain.member.Member;

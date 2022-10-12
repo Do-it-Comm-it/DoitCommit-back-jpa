@@ -1,4 +1,4 @@
-package com.web.doitcommit.domain.hashtag;
+package com.web.doitcommit.domain.boardHashtag;
 
 public interface BoardHashtagRepositoryQuerydsl {
 

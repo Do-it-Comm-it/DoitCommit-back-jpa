@@ -1,6 +1,6 @@
 package com.web.doitcommit.dto.board;
 
-import com.web.doitcommit.domain.hashtag.HashtagCategory;
+import com.web.doitcommit.domain.hashtagCategory.HashtagCategory;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 

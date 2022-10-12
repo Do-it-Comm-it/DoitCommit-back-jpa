@@ -1,9 +1,8 @@
-package com.web.doitcommit.domain.hashtag;
+package com.web.doitcommit.domain.hashtagCategory;
 
 import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.web.doitcommit.domain.board.QBoard;
-import org.springframework.data.jpa.repository.Query;
+import com.web.doitcommit.domain.boardHashtag.QBoardHashtag;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
@@ -11,9 +10,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.web.doitcommit.domain.board.QBoard.board;
-import static com.web.doitcommit.domain.hashtag.QBoardHashtag.boardHashtag;
-import static com.web.doitcommit.domain.hashtag.QHashtagCategory.hashtagCategory;
-import static io.lettuce.core.GeoArgs.Sort.desc;
+import static com.web.doitcommit.domain.boardHashtag.QBoardHashtag.boardHashtag;
+import static com.web.doitcommit.domain.hashtagCategory.QHashtagCategory.hashtagCategory;
 
 public class HashtagCategoryRepositoryImpl implements HashtagCategoryRepositoryQuerydsl {
 

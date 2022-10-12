@@ -2,8 +2,8 @@ package com.web.doitcommit.dto.board;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.web.doitcommit.domain.board.Board;
+import com.web.doitcommit.domain.boardHashtag.BoardHashtag;
 import com.web.doitcommit.domain.files.Image;
-import com.web.doitcommit.domain.hashtag.BoardHashtag;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import java.time.LocalDateTime;

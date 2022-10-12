@@ -1,9 +1,7 @@
 package com.web.doitcommit.service.popularTag;
 
-import com.web.doitcommit.domain.board.BoardRepository;
-import com.web.doitcommit.domain.hashtag.HashtagCategoryRepository;
+import com.web.doitcommit.domain.hashtagCategory.HashtagCategoryRepository;
 import com.web.doitcommit.dto.popularTag.PoplarTagResDto;
-import com.web.doitcommit.handler.exception.CustomException;
 import com.web.doitcommit.redis.RedisService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,10 +9,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,7 +19,7 @@ import java.util.stream.Collectors;
 @Service
 public class PopularTagService {
 
-    private final HashtagCategoryRepository HashtagCategoryRepository;
+    private final HashtagCategoryRepository hashtagCategoryRepository;
     private final RedisService redisService;
 
     /**
@@ -34,7 +29,7 @@ public class PopularTagService {
     @Transactional
     public void UpdatePopularTag(){
         //금일 인기태그 리스트 추가
-        List<Object[]> popularTagList = HashtagCategoryRepository.getLimitPopularTagListForPeriod(7);
+        List<Object[]> popularTagList = hashtagCategoryRepository.getLimitPopularTagListForPeriod(7);
         redisService.setList(popularTagList);
 
         List<Object[]> result = redisService.getValues(LocalDate.now().toString());
@@ -65,7 +60,7 @@ public class PopularTagService {
     @Transactional(readOnly = true)
     public List<PoplarTagResDto> getLimitPopularTagList(){
 
-        List<Object[]> result = HashtagCategoryRepository.getLimitPopularTagList();
+        List<Object[]> result = hashtagCategoryRepository.getLimitPopularTagList();
 
         return result.stream().map(arr -> new PoplarTagResDto(
                 (Long) arr[0], (String) arr[1], ((Long) arr[2]).intValue())).collect(Collectors.toList());
@@ -77,7 +72,7 @@ public class PopularTagService {
     @Transactional(readOnly = true)
     public List<PoplarTagResDto> getAllPopularTagListForPeriod(int period){
 
-        List<Object[]> result = HashtagCategoryRepository.getAllPopularTagListForPeriod(period);
+        List<Object[]> result = hashtagCategoryRepository.getAllPopularTagListForPeriod(period);
 
         System.out.println(result.size());
 
