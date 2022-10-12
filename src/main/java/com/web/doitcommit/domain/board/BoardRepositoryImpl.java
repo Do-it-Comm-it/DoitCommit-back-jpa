@@ -11,10 +11,11 @@ import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.web.doitcommit.domain.boardHashtag.QBoardHashtag;
 import com.web.doitcommit.domain.boardHistory.QBoardHistory;
 import com.web.doitcommit.domain.bookmark.QBookmark;
-import com.web.doitcommit.domain.hashtag.QBoardHashtag;
-import com.web.doitcommit.domain.hashtag.QTagCategory;
+
+import com.web.doitcommit.domain.hashtagCategory.QHashtagCategory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -45,7 +46,7 @@ public class BoardRepositoryImpl implements BoardRepositoryQuerydsl {
      * 게시판 리스트 조회
      */
     @Override
-    public Page<Object[]> getBoardListBySearch(String keyword, Long tagCategoryId,
+    public Page<Object[]> getBoardListBySearch(String keyword, Long HashtagCategoryId,
                                                         Long boardCategoryId, Pageable pageable) {
 
         List<Tuple> results = queryFactory
@@ -54,7 +55,7 @@ public class BoardRepositoryImpl implements BoardRepositoryQuerydsl {
                 .join(board.member).fetchJoin()
                 .leftJoin(memberImage).on(memberImage.member.eq(board.member))
                 .where(categorySearch(boardCategoryId),
-                        keywordSearch(keyword), hashtagSearch(tagCategoryId))
+                        keywordSearch(keyword), hashtagSearch(HashtagCategoryId))
                 .orderBy(sort(pageable).stream().toArray(OrderSpecifier[]::new))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -66,7 +67,7 @@ public class BoardRepositoryImpl implements BoardRepositoryQuerydsl {
                 .join(board.member).fetchJoin()
                 .leftJoin(memberImage).on(memberImage.member.eq(board.member))
                 .where(categorySearch(boardCategoryId),
-                        keywordSearch(keyword), hashtagSearch(tagCategoryId));
+                        keywordSearch(keyword), hashtagSearch(HashtagCategoryId));
 
         List<Object[]> content = results.stream().map(t -> t.toArray()).collect(Collectors.toList());
 
@@ -125,7 +126,7 @@ public class BoardRepositoryImpl implements BoardRepositoryQuerydsl {
      * 북마크 게시글 리스트 조회
      */
     @Override
-    public Page<Object[]> getBoardListByBookmark(String keyword, Long tagCategoryId, Long boardCategoryId, Long principalId, Pageable pageable) {
+    public Page<Object[]> getBoardListByBookmark(String keyword, Long HashtagCategoryId, Long boardCategoryId, Long principalId, Pageable pageable) {
 
         List<Tuple> results = queryFactory
                 .select(board, memberImage, board.commentList.size(), board.heartList.size())
@@ -134,9 +135,9 @@ public class BoardRepositoryImpl implements BoardRepositoryQuerydsl {
                 .leftJoin(memberImage).on(memberImage.member.eq(board.member))
                 .leftJoin(bookmark).on(bookmark.board.boardId.eq(board.boardId))
                 .where(categorySearch(boardCategoryId),
-                        keywordSearch(keyword), hashtagSearch(tagCategoryId),
+                        keywordSearch(keyword), hashtagSearch(HashtagCategoryId),
                         bookmark.member.memberId.eq(principalId))
-                .orderBy(board.boardId.desc())
+                .orderBy(bookmark.bookmarkId.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -146,7 +147,7 @@ public class BoardRepositoryImpl implements BoardRepositoryQuerydsl {
                 .from(board)
                 .leftJoin(bookmark).on(bookmark.board.boardId.eq(board.boardId))
                 .where(categorySearch(boardCategoryId),
-                        keywordSearch(keyword), hashtagSearch(tagCategoryId),
+                        keywordSearch(keyword), hashtagSearch(HashtagCategoryId),
                         bookmark.member.memberId.eq(principalId));
 
         List<Object[]> content = results.stream().map(t -> t.toArray()).collect(Collectors.toList());
@@ -158,7 +159,7 @@ public class BoardRepositoryImpl implements BoardRepositoryQuerydsl {
      * 게시글 조회 히스토리 내역 조회
      */
     @Override
-    public Page<Object[]> getBoardListByBoardHistory(String keyword, Long tagCategoryId, Long boardCategoryId, Long principalId, Pageable pageable) {
+    public Page<Object[]> getBoardListByBoardHistory(String keyword, Long HashtagCategoryId, Long boardCategoryId, Long principalId, Pageable pageable) {
 
         List<Tuple> results = queryFactory
                 .select(board, memberImage, board.commentList.size(), board.heartList.size())
@@ -167,7 +168,7 @@ public class BoardRepositoryImpl implements BoardRepositoryQuerydsl {
                 .leftJoin(memberImage).on(memberImage.member.eq(board.member))
                 .join(boardHistory).on(boardHistory.board.eq(board))
                 .where(categorySearch(boardCategoryId),
-                        keywordSearch(keyword), hashtagSearch(tagCategoryId),
+                        keywordSearch(keyword), hashtagSearch(HashtagCategoryId),
                         boardHistory.member.memberId.eq(principalId))
                 .orderBy(boardHistory.viewDateTime.desc())
                 .offset(pageable.getOffset())
@@ -179,7 +180,7 @@ public class BoardRepositoryImpl implements BoardRepositoryQuerydsl {
                 .from(board)
                 .join(boardHistory).on(boardHistory.board.eq(board))
                 .where(categorySearch(boardCategoryId),
-                        keywordSearch(keyword), hashtagSearch(tagCategoryId),
+                        keywordSearch(keyword), hashtagSearch(HashtagCategoryId),
                         boardHistory.member.memberId.eq(principalId));
 
         List<Object[]> content = results.stream().map(t -> t.toArray()).collect(Collectors.toList());
@@ -187,8 +188,8 @@ public class BoardRepositoryImpl implements BoardRepositoryQuerydsl {
         return PageableExecutionUtils.getPage(content, pageable, () -> countQuery.fetchCount());
     }
 
-    private BooleanExpression hashtagSearch(Long tagCategoryId) {
-        return tagCategoryId != null ? board.boardHashtag.any().tagCategory.tagId.eq(tagCategoryId) : null;
+    private BooleanExpression hashtagSearch(Long HashtagCategoryId) {
+        return HashtagCategoryId != null ? board.boardHashtag.any().hashtagCategory.hashtagId.eq(HashtagCategoryId) : null;
     }
 
     private BooleanExpression keywordSearch(String keyword){
@@ -242,13 +243,13 @@ public class BoardRepositoryImpl implements BoardRepositoryQuerydsl {
      */
     @Override
     public List getCustomTagList(Long boardId) {
-        QTagCategory tagCategory = QTagCategory.tagCategory;
+        QHashtagCategory hashtagCategory = QHashtagCategory.hashtagCategory;
         QBoardHashtag boardHashtag = QBoardHashtag.boardHashtag;
 
         List<Tuple> results = queryFactory
-                .select(tagCategory.tagId, tagCategory.tagName)
-                .from(tagCategory)
-                .leftJoin(boardHashtag).on(tagCategory.tagId.eq(boardHashtag.tagCategory.tagId))
+                .select(hashtagCategory.hashtagId, hashtagCategory.tagName)
+                .from(hashtagCategory)
+                .leftJoin(boardHashtag).on(hashtagCategory.hashtagId.eq(boardHashtag.hashtagCategory.hashtagId))
                 .where(boardHashtag.board.boardId.eq(boardId))
                 .fetch();
 
@@ -256,7 +257,7 @@ public class BoardRepositoryImpl implements BoardRepositoryQuerydsl {
         List tagList = new ArrayList();
         for (Tuple result : results) {
             Map<Long,String> tagMap = new HashMap<>();
-            tagMap.put(result.get(tagCategory.tagId), result.get(tagCategory.tagName));
+            tagMap.put(result.get(hashtagCategory.hashtagId), result.get(hashtagCategory.tagName));
             tagList.add(tagMap);
         }
 

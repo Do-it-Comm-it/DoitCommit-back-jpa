@@ -1,8 +1,9 @@
 package com.web.doitcommit.domain.board;
 
 import com.web.doitcommit.domain.BaseEntity;
+import com.web.doitcommit.domain.boardHashtag.BoardHashtag;
+import com.web.doitcommit.domain.boardHistory.BoardHistory;
 import com.web.doitcommit.domain.files.BoardImage;
-import com.web.doitcommit.domain.hashtag.BoardHashtag;
 import com.web.doitcommit.domain.heart.Heart;
 import com.web.doitcommit.domain.boardCategory.BoardCategory;
 import com.web.doitcommit.domain.member.Member;
@@ -69,12 +70,15 @@ public class Board extends BaseEntity {
     @OneToMany(mappedBy = "board",fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<BoardHashtag> boardHashtag = new ArrayList<>();
 
+    @BatchSize(size = 500)
+    @OneToMany(mappedBy = "board",fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<BoardHistory> boardHistoryList = new ArrayList<>();
+
     //연관관계 메서드
     public void setBoardImage(BoardImage boardImage){
         this.getBoardImageList().add(boardImage);
     }
 
-    //연관관계 메서드
     public void setBoardHashtag(BoardHashtag boardHashtag){
         this.boardHashtag.add(boardHashtag);
     }
@@ -84,9 +88,9 @@ public class Board extends BaseEntity {
     }
 
     //카테고리변경
-    /*public void changeCategoryId(BoardCategory boardCategory) {
-        this.boardCategory = boardCategory;
-    }*/
+    public void changeCategoryId(Long categoryId) {
+        this.boardCategory = BoardCategory.builder().categoryId(categoryId).build();
+    }
 
     //제목 변경
     public void changeTitle(String boardTitle) {

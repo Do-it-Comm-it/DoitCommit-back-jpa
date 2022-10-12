@@ -45,7 +45,7 @@ public class BoardController {
     @GetMapping("/list/main")
     public ResponseEntity<?> getCustomLimitBoardList(@RequestParam(value = "limit", required = false, defaultValue = "4") int limit,
                                                      @RequestParam(value = "order", required = false, defaultValue = "boardId") String order,
-                                                     @AuthenticationPrincipal PrincipalDetails principalDetails) {
+                                                     @Parameter(hidden = true) @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
         List<MainViewBoardListResDto> mainViewBoardListResDtoList;
 
@@ -153,22 +153,7 @@ public class BoardController {
         return new ResponseEntity<>(new CMRespDto<>(1, "게시글 조회 성공", boardResDto), HttpStatus.OK);
     }
 
-    /**
-     * 태그 목록 조회
-     */
-    @Operation(summary = "태그 목록 조회 API", description = "태그 목록 조회을 조회한다.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", content = @Content(array = @ArraySchema(schema = @Schema(implementation = TagCategoryResDto.class)))),
-            @ApiResponse(responseCode = "400", content = @Content(schema = @Schema(example = "{\"error\": \"Bad Request\"}"))),
-            @ApiResponse(responseCode = "401", content = @Content(schema = @Schema(example = "{\"error\": \"Unauthorized\"}"))),
-            @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(example = "{\"error\": \"Not Found\"}"))),
-            @ApiResponse(responseCode = "500",  content = @Content(schema = @Schema(example = "{\"error\": \"Internal Server Error\"}")))
-    })
-    @GetMapping("/tag")
-    public ResponseEntity<?> getTagList() {
-        List<TagCategoryResDto> tagCategoryResDto = boardService.getBoardTagList();
-        return new ResponseEntity<>(new CMRespDto<>(1, "태그 리스트 조회 성공", tagCategoryResDto),HttpStatus.OK);
-    }
+
 
     /**
      * 게시글 삭제

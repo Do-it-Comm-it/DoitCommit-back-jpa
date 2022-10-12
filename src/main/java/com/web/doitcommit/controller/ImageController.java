@@ -40,7 +40,7 @@ public class ImageController {
     })
     @PostMapping(value ="", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<?> createBoardS3(MultipartFile imageFile) throws IOException {
-        Map<String, Object> result = imageService.imageBoardRegister(imageFile);
+        Map<String, Object> result = imageService.imageEditorS3Register(imageFile);
         return new ResponseEntity<>(new CMRespDto<>(1, "S3 url 반환 성공", result), HttpStatus.CREATED);
     }
 }

@@ -1,7 +1,9 @@
-package com.web.doitcommit.domain.hashtag;
+package com.web.doitcommit.domain.boardHashtag;
 
 import com.web.doitcommit.domain.board.Board;
-import lombok.*;
+import com.web.doitcommit.domain.hashtagCategory.HashtagCategory;
+import lombok.Getter;
+import lombok.ToString;
 
 import javax.persistence.*;
 
@@ -19,14 +21,14 @@ public class BoardHashtag {
     private Board board;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "tag_id")
-    private TagCategory tagCategory;
+    @JoinColumn(name = "hashtag_id")
+    private HashtagCategory hashtagCategory;
 
     protected BoardHashtag(){}
 
-    public BoardHashtag(Board board, TagCategory tagCategory) {
+    public BoardHashtag(Board board, HashtagCategory hashtagCategory) {
         this.board = board;
-        this.tagCategory = tagCategory;
+        this.hashtagCategory = hashtagCategory;
         board.setBoardHashtag(this);
     }
 }

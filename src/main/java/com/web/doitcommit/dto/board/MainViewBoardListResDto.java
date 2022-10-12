@@ -1,7 +1,7 @@
 package com.web.doitcommit.dto.board;
 
 import com.web.doitcommit.domain.board.Board;
-import com.web.doitcommit.domain.hashtag.BoardHashtag;
+import com.web.doitcommit.domain.boardHashtag.BoardHashtag;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import java.util.ArrayList;
@@ -56,7 +56,7 @@ public class MainViewBoardListResDto {
         if (board.getBoardHashtag() != null && !board.getBoardHashtag().isEmpty()){
             List<BoardHashtag> boardHashtagList = board.getBoardHashtag();
             for (BoardHashtag boardHashtag : boardHashtagList){
-                this.boardHashtagNameList.add(boardHashtag.getTagCategory().getTagName());
+                this.boardHashtagNameList.add(boardHashtag.getHashtagCategory().getTagName());
             }
         }
     }

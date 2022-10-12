@@ -11,10 +11,7 @@ import com.web.doitcommit.domain.comment.MemberTag;
 import com.web.doitcommit.domain.comment.MemberTagRepository;
 import com.web.doitcommit.domain.files.MemberImage;
 import com.web.doitcommit.domain.files.MemberImageRepository;
-import com.web.doitcommit.domain.hashtag.BoardHashtag;
 import com.web.doitcommit.domain.hashtag.BoardHashtagRepository;
-import com.web.doitcommit.domain.hashtag.TagCategory;
-import com.web.doitcommit.domain.hashtag.TagCategoryRepository;
 import com.web.doitcommit.domain.member.AuthProvider;
 import com.web.doitcommit.domain.member.Member;
 import com.web.doitcommit.domain.member.MemberRepository;
@@ -45,7 +42,7 @@ class CommentServiceImplTest {
     @Autowired MemberTagRepository memberTagRepository;
     @Autowired CommentRepository commentRepository;
     @Autowired MemberImageRepository memberImageRepository;
-    @Autowired TagCategoryRepository tagCategoryRepository;
+    @Autowired HashtagCategoryRepository hashtagCategoryRepository;
     @Autowired BoardHashtagRepository boardHashtagRepository;
     @Autowired ImageService imageService;
 
@@ -198,11 +195,11 @@ class CommentServiceImplTest {
         }
     }
 
-    private TagCategory createTagCategory(String tagName) {
+    private HashtagCategory createHashtagCategory(String tagName) {
 
-        TagCategory tagCategory = TagCategory.builder().tagName(tagName).build();
+        HashtagCategory hashtagCategory = HashtagCategory.builder().tagName(tagName).build();
 
-        return tagCategoryRepository.save(tagCategory);
+        return hashtagCategoryRepository.save(hashtagCategory);
     }
 
     private MemberImage createMemberImage (Member member, String filePath, String testFileNm){

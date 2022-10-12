@@ -25,7 +25,7 @@ public class PageRequestDto {
     @Schema(description = "검색어")
     private String keyword;
     @Schema(description = "해시태그 고유값")
-    private Long tagCategoryId;
+    private Long HashtagCategoryId;
     @Schema(description = "게시글 카테고리 고유값")
     private Long boardCategoryId;
     @Schema(description = "정렬 기준")

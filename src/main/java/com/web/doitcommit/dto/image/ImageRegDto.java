@@ -1,4 +1,4 @@
-package com.web.doitcommit.dto.board;
+package com.web.doitcommit.dto.image;
 
 import lombok.Getter;
 

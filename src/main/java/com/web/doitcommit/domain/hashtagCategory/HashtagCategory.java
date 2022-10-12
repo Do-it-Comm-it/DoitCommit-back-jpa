@@ -1,4 +1,4 @@
-package com.web.doitcommit.domain.hashtag;
+package com.web.doitcommit.domain.hashtagCategory;
 
 import lombok.*;
 
@@ -14,15 +14,15 @@ import javax.persistence.*;
 @Getter
 @ToString
 @Entity
-public class TagCategory {
+public class HashtagCategory {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long tagId;
+    private Long hashtagId;
 
     @Column(unique = true, nullable = false)
     private String tagName;
 
-    public TagCategory(Long tagId) {
-        this.tagId = tagId;
+    public HashtagCategory(Long hashtagId) {
+        this.hashtagId = hashtagId;
     }
 }

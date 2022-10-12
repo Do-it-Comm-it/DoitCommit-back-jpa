@@ -2,8 +2,8 @@ package com.web.doitcommit.dto.board;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.web.doitcommit.domain.board.Board;
+import com.web.doitcommit.domain.boardHashtag.BoardHashtag;
 import com.web.doitcommit.domain.files.Image;
-import com.web.doitcommit.domain.hashtag.BoardHashtag;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import java.time.LocalDateTime;
@@ -34,6 +34,9 @@ public class BoardListResDto {
 
     @Schema(description = "썸네일")
     private String thumbnailUrl;
+
+    @Schema(description = "조회수")
+    private int boardCnt;
 
     @Schema(description = "댓글수")
     private int commentCnt;
@@ -67,6 +70,7 @@ public class BoardListResDto {
        this.boardTitle = board.getBoardTitle();
        this.boardContent = board.getBoardContent();
        this.thumbnailUrl = thumbnailUrl;
+       this.boardCnt = board.getBoardCnt();
        this.commentCnt = commentCnt;
        this.heartCnt = heartCnt;
        this.myHeart = board.getHeartList().stream().anyMatch(heart->heart.getMember().getMemberId().equals(principalId) ? true: false);
@@ -80,7 +84,7 @@ public class BoardListResDto {
        if (board.getBoardHashtag() != null && !board.getBoardHashtag().isEmpty()){
            List<BoardHashtag> boardHashtagList = board.getBoardHashtag();
            for (BoardHashtag boardHashtag : boardHashtagList){
-               this.boardHashtagNameList.add(boardHashtag.getTagCategory().getTagName());
+               this.boardHashtagNameList.add(boardHashtag.getHashtagCategory().getTagName());
            }
        }
     }
