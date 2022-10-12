@@ -277,7 +277,9 @@ public class BoardService {
         }
 
         //게시글 이미지 핸들러로 보냄
-        imageService.handleEditorImage(board, boardRegDto.getImageForEditorRegDto());
+        if(boardRegDto.getImageForEditorRegDto() != null){
+            imageService.handleEditorImage(board, boardRegDto.getImageForEditorRegDto());
+        }
     }
 
     /**

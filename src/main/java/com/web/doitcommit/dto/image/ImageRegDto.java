@@ -1,8 +1,11 @@
 package com.web.doitcommit.dto.image;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Getter
+@Data
 public class ImageRegDto {
 
     private String fileNm;
