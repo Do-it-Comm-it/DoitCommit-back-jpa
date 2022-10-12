@@ -1,11 +1,11 @@
 package com.web.doitcommit.dto.board;
 
-import com.web.doitcommit.domain.hashtag.TagCategory;
+import com.web.doitcommit.domain.hashtag.HashtagCategory;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 
 @Getter
-public class TagCategoryResDto {
+public class HashtagCategoryResDto {
 
     @Schema(description = "태그아이디")
     private Long tagId;
@@ -13,8 +13,8 @@ public class TagCategoryResDto {
     @Schema(description = "태그명")
     private String tagName;
 
-    public TagCategoryResDto(TagCategory tagCategory){
-        tagId = tagCategory.getTagId();
-        tagName = tagCategory.getTagName();
+    public HashtagCategoryResDto(HashtagCategory hashtagCategory){
+        tagId = hashtagCategory.getHashtagId();
+        tagName = hashtagCategory.getTagName();
     }
 }

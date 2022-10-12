@@ -12,14 +12,14 @@ import java.util.stream.Collectors;
 
 import static com.web.doitcommit.domain.board.QBoard.board;
 import static com.web.doitcommit.domain.hashtag.QBoardHashtag.boardHashtag;
-import static com.web.doitcommit.domain.hashtag.QTagCategory.tagCategory;
+import static com.web.doitcommit.domain.hashtag.QHashtagCategory.hashtagCategory;
 import static io.lettuce.core.GeoArgs.Sort.desc;
 
-public class TagCategoryRepositoryImpl implements TagCategoryRepositoryQuerydsl {
+public class HashtagCategoryRepositoryImpl implements HashtagCategoryRepositoryQuerydsl {
 
     private final JPAQueryFactory queryFactory;
 
-    public TagCategoryRepositoryImpl(EntityManager entityManager) {
+    public HashtagCategoryRepositoryImpl(EntityManager entityManager) {
         this.queryFactory = new JPAQueryFactory(entityManager);
     }
 
@@ -29,13 +29,13 @@ public class TagCategoryRepositoryImpl implements TagCategoryRepositoryQuerydsl 
     @Override
     public List<Object[]> getLimitPopularTagListForPeriod(int period) {
 
-        List<Tuple> result = queryFactory.select(tagCategory.tagId, tagCategory.tagName, tagCategory.tagId.count())
-                .from(tagCategory)
-                .join(boardHashtag).on(boardHashtag.tagCategory.tagId.eq(tagCategory.tagId))
+        List<Tuple> result = queryFactory.select(hashtagCategory.hashtagId, hashtagCategory.tagName, hashtagCategory.hashtagId.count())
+                .from(hashtagCategory)
+                .join(boardHashtag).on(boardHashtag.hashtagCategory.hashtagId.eq(hashtagCategory.hashtagId))
                 .join(board).on(board.boardId.eq(boardHashtag.board.boardId))
                 .where(board.modDate.between(LocalDateTime.now().minusDays(period), LocalDateTime.now()))
-                .groupBy(tagCategory.tagId)
-                .orderBy(tagCategory.count().desc())
+                .groupBy(hashtagCategory.hashtagId)
+                .orderBy(hashtagCategory.count().desc())
                 .limit(8)
                 .fetch();
 
@@ -48,12 +48,12 @@ public class TagCategoryRepositoryImpl implements TagCategoryRepositoryQuerydsl 
     @Override
     public List<Object[]> getLimitPopularTagList() {
 
-        List<Tuple> result = queryFactory.select(tagCategory.tagId, tagCategory.tagName, tagCategory.tagId.count())
-                .from(tagCategory)
-                .join(boardHashtag).on(boardHashtag.tagCategory.tagId.eq(tagCategory.tagId))
+        List<Tuple> result = queryFactory.select(hashtagCategory.hashtagId, hashtagCategory.tagName, hashtagCategory.hashtagId.count())
+                .from(hashtagCategory)
+                .join(boardHashtag).on(boardHashtag.hashtagCategory.hashtagId.eq(hashtagCategory.hashtagId))
                 .join(board).on(board.boardId.eq(boardHashtag.board.boardId))
-                .groupBy(tagCategory.tagId)
-                .orderBy(tagCategory.count().desc())
+                .groupBy(hashtagCategory.hashtagId)
+                .orderBy(hashtagCategory.count().desc())
                 .limit(8)
                 .fetch();
 
@@ -66,13 +66,13 @@ public class TagCategoryRepositoryImpl implements TagCategoryRepositoryQuerydsl 
     @Override
     public List<Object[]> getAllPopularTagListForPeriod(int period) {
 
-        List<Tuple> result = queryFactory.select(tagCategory.tagId, tagCategory.tagName, tagCategory.tagId.count())
-                .from(tagCategory)
-                .join(boardHashtag).on(boardHashtag.tagCategory.tagId.eq(tagCategory.tagId))
+        List<Tuple> result = queryFactory.select(hashtagCategory.hashtagId, hashtagCategory.tagName, hashtagCategory.hashtagId.count())
+                .from(hashtagCategory)
+                .join(boardHashtag).on(boardHashtag.hashtagCategory.hashtagId.eq(hashtagCategory.hashtagId))
                 .join(board).on(board.boardId.eq(boardHashtag.board.boardId))
                 .where(board.modDate.between(LocalDateTime.now().minusDays(period), LocalDateTime.now()))
-                .groupBy(tagCategory.tagId)
-                .orderBy(tagCategory.count().desc())
+                .groupBy(hashtagCategory.hashtagId)
+                .orderBy(hashtagCategory.count().desc())
                 .fetch();
 
         return result.stream().map(t -> t.toArray()).collect(Collectors.toList());

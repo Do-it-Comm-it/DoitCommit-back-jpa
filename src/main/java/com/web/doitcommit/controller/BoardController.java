@@ -158,7 +158,7 @@ public class BoardController {
      */
     @Operation(summary = "태그 목록 조회 API", description = "태그 목록 조회을 조회한다.")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", content = @Content(array = @ArraySchema(schema = @Schema(implementation = TagCategoryResDto.class)))),
+            @ApiResponse(responseCode = "200", content = @Content(array = @ArraySchema(schema = @Schema(implementation = HashtagCategoryResDto.class)))),
             @ApiResponse(responseCode = "400", content = @Content(schema = @Schema(example = "{\"error\": \"Bad Request\"}"))),
             @ApiResponse(responseCode = "401", content = @Content(schema = @Schema(example = "{\"error\": \"Unauthorized\"}"))),
             @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(example = "{\"error\": \"Not Found\"}"))),
@@ -166,8 +166,8 @@ public class BoardController {
     })
     @GetMapping("/tag")
     public ResponseEntity<?> getTagList() {
-        List<TagCategoryResDto> tagCategoryResDto = boardService.getBoardTagList();
-        return new ResponseEntity<>(new CMRespDto<>(1, "태그 리스트 조회 성공", tagCategoryResDto),HttpStatus.OK);
+        List<HashtagCategoryResDto> HashtagCategoryResDto = boardService.getBoardTagList();
+        return new ResponseEntity<>(new CMRespDto<>(1, "태그 리스트 조회 성공", HashtagCategoryResDto),HttpStatus.OK);
     }
 
     /**

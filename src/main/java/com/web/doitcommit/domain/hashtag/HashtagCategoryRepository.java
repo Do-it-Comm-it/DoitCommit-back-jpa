@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.Calendar;
 import java.util.List;
 
-public interface TagCategoryRepository extends JpaRepository<TagCategory, Long>, TagCategoryRepositoryQuerydsl {
+public interface HashtagCategoryRepository extends JpaRepository<HashtagCategory, Long>, HashtagCategoryRepositoryQuerydsl {
 
 }

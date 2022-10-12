@@ -1,7 +1,7 @@
 package com.web.doitcommit.service.popularTag;
 
 import com.web.doitcommit.domain.board.BoardRepository;
-import com.web.doitcommit.domain.hashtag.TagCategoryRepository;
+import com.web.doitcommit.domain.hashtag.HashtagCategoryRepository;
 import com.web.doitcommit.dto.popularTag.PoplarTagResDto;
 import com.web.doitcommit.handler.exception.CustomException;
 import com.web.doitcommit.redis.RedisService;
@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 @Service
 public class PopularTagService {
 
-    private final TagCategoryRepository tagCategoryRepository;
+    private final HashtagCategoryRepository HashtagCategoryRepository;
     private final RedisService redisService;
 
     /**
@@ -34,7 +34,7 @@ public class PopularTagService {
     @Transactional
     public void UpdatePopularTag(){
         //금일 인기태그 리스트 추가
-        List<Object[]> popularTagList = tagCategoryRepository.getLimitPopularTagListForPeriod(7);
+        List<Object[]> popularTagList = HashtagCategoryRepository.getLimitPopularTagListForPeriod(7);
         redisService.setList(popularTagList);
 
         List<Object[]> result = redisService.getValues(LocalDate.now().toString());
@@ -65,7 +65,7 @@ public class PopularTagService {
     @Transactional(readOnly = true)
     public List<PoplarTagResDto> getLimitPopularTagList(){
 
-        List<Object[]> result = tagCategoryRepository.getLimitPopularTagList();
+        List<Object[]> result = HashtagCategoryRepository.getLimitPopularTagList();
 
         return result.stream().map(arr -> new PoplarTagResDto(
                 (Long) arr[0], (String) arr[1], ((Long) arr[2]).intValue())).collect(Collectors.toList());
@@ -77,7 +77,7 @@ public class PopularTagService {
     @Transactional(readOnly = true)
     public List<PoplarTagResDto> getAllPopularTagListForPeriod(int period){
 
-        List<Object[]> result = tagCategoryRepository.getAllPopularTagListForPeriod(period);
+        List<Object[]> result = HashtagCategoryRepository.getAllPopularTagListForPeriod(period);
 
         System.out.println(result.size());
 

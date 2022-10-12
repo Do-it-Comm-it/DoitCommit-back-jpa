@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface TagCategoryRepositoryQuerydsl {
+public interface HashtagCategoryRepositoryQuerydsl {
 
     /**
      * 지정된 기간동안 인기태그 상위 8개 리스트

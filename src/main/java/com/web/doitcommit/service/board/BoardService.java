@@ -8,8 +8,8 @@ import com.web.doitcommit.domain.files.BoardImage;
 import com.web.doitcommit.domain.files.MemberImage;
 import com.web.doitcommit.domain.hashtag.BoardHashtag;
 import com.web.doitcommit.domain.hashtag.BoardHashtagRepository;
-import com.web.doitcommit.domain.hashtag.TagCategory;
-import com.web.doitcommit.domain.hashtag.TagCategoryRepository;
+import com.web.doitcommit.domain.hashtag.HashtagCategory;
+import com.web.doitcommit.domain.hashtag.HashtagCategoryRepository;
 import com.web.doitcommit.domain.member.Member;
 import com.web.doitcommit.domain.member.MemberRepository;
 import com.web.doitcommit.dto.board.*;
@@ -37,7 +37,7 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
     private final BoardHashtagRepository boardHashtagRepository;
-    private final TagCategoryRepository tagCategoryRepository;
+    private final HashtagCategoryRepository HashtagCategoryRepository;
     private final MemberRepository memberRepository;
     private final BoardHistoryRepository boardHistoryRepository;
     private final ImageService imageService;
@@ -51,7 +51,7 @@ public class BoardService {
         Pageable pageable = requestDto.getPageable(Sort.by(Sort.Direction.DESC, requestDto.getSortType()));
 
         Page<Object[]> results = boardRepository.getBoardListBySearch(
-                requestDto.getKeyword(), requestDto.getTagCategoryId(),
+                requestDto.getKeyword(), requestDto.getHashtagCategoryId(),
                 requestDto.getBoardCategoryId(), pageable);
 
         Function<Object[], BoardListResDto> fn = (arr -> {
@@ -133,7 +133,7 @@ public class BoardService {
         Pageable pageable = requestDto.getPageable(Sort.by("boardId").ascending());
 
         Page<Object[]> results = boardRepository.getBoardListByBookmark(
-                requestDto.getKeyword(), requestDto.getTagCategoryId()
+                requestDto.getKeyword(), requestDto.getHashtagCategoryId()
                 , requestDto.getBoardCategoryId(), principalId, pageable);
 
         Function<Object[], BoardListResDto> fn = (arr -> {
@@ -177,7 +177,7 @@ public class BoardService {
         Pageable pageable = requestDto.getPageable();
 
         Page<Object[]> results = boardRepository.getBoardListByBoardHistory(requestDto.getKeyword(),
-                requestDto.getTagCategoryId(), requestDto.getBoardCategoryId(), principalId, pageable);
+                requestDto.getHashtagCategoryId(), requestDto.getBoardCategoryId(), principalId, pageable);
 
         Function<Object[], BoardListResDto> fn = (arr -> {
 
@@ -270,8 +270,8 @@ public class BoardService {
         //해시태그 등록
         if (boardRegDto.getBoardHashtag() != null) {
             for (int i = 0; i < boardRegDto.getBoardHashtag().size(); i++) {
-                TagCategory tagCategory = new TagCategory(boardRegDto.getBoardHashtag().get(i));
-                BoardHashtag boardHashtag = new BoardHashtag(board, tagCategory);
+                HashtagCategory hashtagCategory = new HashtagCategory(boardRegDto.getBoardHashtag().get(i));
+                BoardHashtag boardHashtag = new BoardHashtag(board, hashtagCategory);
                 boardHashtagRepository.save(boardHashtag);
             }
         }
@@ -365,9 +365,9 @@ public class BoardService {
      * 태그 목록 조회
      */
     @Transactional(readOnly = true)
-    public List<TagCategoryResDto> getBoardTagList() {
-        List<TagCategory> result = tagCategoryRepository.findAll();
-        return result.stream().map(tag -> new TagCategoryResDto(tag)).collect(Collectors.toList());
+    public List<HashtagCategoryResDto> getBoardTagList() {
+        List<HashtagCategory> result = HashtagCategoryRepository.findAll();
+        return result.stream().map(tag -> new HashtagCategoryResDto(tag)).collect(Collectors.toList());
     }
 
     /**
@@ -407,8 +407,8 @@ public class BoardService {
         //해시태그 등록
         if (boardUpdateDto.getBoardHashtag() != null) {
             for (int i = 0; i < boardUpdateDto.getBoardHashtag().size(); i++) {
-                TagCategory tagCategory = new TagCategory(boardUpdateDto.getBoardHashtag().get(i));
-                BoardHashtag boardHashtag = new BoardHashtag(board, tagCategory);
+                HashtagCategory hashtagCategory = new HashtagCategory(boardUpdateDto.getBoardHashtag().get(i));
+                BoardHashtag boardHashtag = new BoardHashtag(board, hashtagCategory);
                 boardHashtagRepository.save(boardHashtag);
             }
         }

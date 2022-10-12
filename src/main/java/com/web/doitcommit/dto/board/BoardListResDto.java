@@ -84,7 +84,7 @@ public class BoardListResDto {
        if (board.getBoardHashtag() != null && !board.getBoardHashtag().isEmpty()){
            List<BoardHashtag> boardHashtagList = board.getBoardHashtag();
            for (BoardHashtag boardHashtag : boardHashtagList){
-               this.boardHashtagNameList.add(boardHashtag.getTagCategory().getTagName());
+               this.boardHashtagNameList.add(boardHashtag.getHashtagCategory().getTagName());
            }
        }
     }

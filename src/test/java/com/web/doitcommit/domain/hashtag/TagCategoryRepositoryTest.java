@@ -17,9 +17,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @Transactional
 @SpringBootTest
-class TagCategoryRepositoryTest {
+class HashtagCategoryRepositoryTest {
 
-    @Autowired TagCategoryRepository tagCategoryRepository;
+    @Autowired HashtagCategoryRepository HashtagCategoryRepository;
     @Autowired MemberRepository memberRepository;
 
 
@@ -29,7 +29,7 @@ class TagCategoryRepositoryTest {
         //given
 
         //when
-        List<Object[]> popularTagList = tagCategoryRepository.getLimitPopularTagListForPeriod(7);
+        List<Object[]> popularTagList = HashtagCategoryRepository.getLimitPopularTagListForPeriod(7);
 
         //then
         for (Object[] object : popularTagList){

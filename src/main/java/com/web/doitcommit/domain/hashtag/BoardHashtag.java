@@ -19,14 +19,14 @@ public class BoardHashtag {
     private Board board;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "tag_id")
-    private TagCategory tagCategory;
+    @JoinColumn(name = "hashtag_id")
+    private HashtagCategory hashtagCategory;
 
     protected BoardHashtag(){}
 
-    public BoardHashtag(Board board, TagCategory tagCategory) {
+    public BoardHashtag(Board board, HashtagCategory hashtagCategory) {
         this.board = board;
-        this.tagCategory = tagCategory;
+        this.hashtagCategory = hashtagCategory;
         board.setBoardHashtag(this);
     }
 }
