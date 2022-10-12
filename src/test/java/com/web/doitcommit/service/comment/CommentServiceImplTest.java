@@ -4,6 +4,7 @@ import com.web.doitcommit.domain.board.Board;
 import com.web.doitcommit.domain.board.BoardRepository;
 import com.web.doitcommit.domain.boardCategory.BoardCategory;
 import com.web.doitcommit.domain.boardCategory.BoardCategoryRepository;
+import com.web.doitcommit.domain.boardHashtag.BoardHashtagRepository;
 import com.web.doitcommit.domain.comment.Comment;
 import com.web.doitcommit.domain.comment.CommentRepository;
 
@@ -11,7 +12,8 @@ import com.web.doitcommit.domain.comment.MemberTag;
 import com.web.doitcommit.domain.comment.MemberTagRepository;
 import com.web.doitcommit.domain.files.MemberImage;
 import com.web.doitcommit.domain.files.MemberImageRepository;
-import com.web.doitcommit.domain.hashtag.BoardHashtagRepository;
+import com.web.doitcommit.domain.hashtagCategory.HashtagCategory;
+import com.web.doitcommit.domain.hashtagCategory.HashtagCategoryRepository;
 import com.web.doitcommit.domain.member.AuthProvider;
 import com.web.doitcommit.domain.member.Member;
 import com.web.doitcommit.domain.member.MemberRepository;
