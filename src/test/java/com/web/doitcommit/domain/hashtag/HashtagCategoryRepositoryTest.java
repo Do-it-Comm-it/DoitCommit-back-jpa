@@ -1,5 +1,6 @@
 package com.web.doitcommit.domain.hashtag;
 
+import com.web.doitcommit.domain.hashtagCategory.HashtagCategoryRepository;
 import com.web.doitcommit.domain.member.AuthProvider;
 import com.web.doitcommit.domain.member.Member;
 import com.web.doitcommit.domain.member.MemberRepository;
@@ -19,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 class HashtagCategoryRepositoryTest {
 
-    @Autowired HashtagCategoryRepository HashtagCategoryRepository;
+    @Autowired HashtagCategoryRepository hashtagCategoryRepository;
     @Autowired MemberRepository memberRepository;
 
 
@@ -29,7 +30,7 @@ class HashtagCategoryRepositoryTest {
         //given
 
         //when
-        List<Object[]> popularTagList = HashtagCategoryRepository.getLimitPopularTagListForPeriod(7);
+        List<Object[]> popularTagList = hashtagCategoryRepository.getLimitPopularTagListForPeriod(7);
 
         //then
         for (Object[] object : popularTagList){
