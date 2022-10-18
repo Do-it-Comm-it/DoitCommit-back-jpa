@@ -8,12 +8,12 @@ import com.web.doitcommit.domain.boardHistory.BoardHistory;
 import com.web.doitcommit.domain.boardHistory.BoardHistoryRepository;
 import com.web.doitcommit.domain.files.BoardImage;
 import com.web.doitcommit.domain.files.MemberImage;
-
 import com.web.doitcommit.domain.hashtagCategory.HashtagCategory;
 import com.web.doitcommit.domain.hashtagCategory.HashtagCategoryRepository;
 import com.web.doitcommit.domain.member.Member;
 import com.web.doitcommit.domain.member.MemberRepository;
 import com.web.doitcommit.dto.board.*;
+import com.web.doitcommit.dto.image.ImageIdResDto;
 import com.web.doitcommit.dto.page.PageRequestDto;
 import com.web.doitcommit.dto.page.ScrollResultDto;
 import com.web.doitcommit.handler.exception.CustomException;
@@ -24,7 +24,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Function;
@@ -297,15 +296,15 @@ public class BoardService {
         addBoardHistory(boardEntity, principalId);
 
         BoardResDto boardResDto = new BoardResDto(boardEntity);
-        Map<Long, String> savedImageIdsAndUrl = new HashMap<>();
 
-        //이미지id와 이미지url map
+        //이미지id와 이미지url 리스트
+        List<ImageIdResDto> ImageIdResDtoList = new ArrayList<>();
         if (boardEntity.getBoardImageList().size() != 0) {
             for (int i = 0; i < boardEntity.getBoardImageList().size(); i++) {
-                savedImageIdsAndUrl.put(boardEntity.getBoardImageList().get(i).getImageId(),
-                        imageService.getImage(boardEntity.getBoardImageList().get(i).getFilePath(), boardEntity.getBoardImageList().get(i).getFileNm()));
+                ImageIdResDto imageIdResDto = new ImageIdResDto(boardEntity.getBoardImageList().get(i).getImageId(),imageService.getImage(boardEntity.getBoardImageList().get(i).getFilePath(), boardEntity.getBoardImageList().get(i).getFileNm()));
+                ImageIdResDtoList.add(imageIdResDto);
             }
-            boardResDto.changeSavedImageIdsAndUrl(savedImageIdsAndUrl);
+            boardResDto.changeSavedImageIdsAndUrl(ImageIdResDtoList);
         }
 
         //로그인한 사용자의 북마크 글인지 유무
