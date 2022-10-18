@@ -301,9 +301,7 @@ public class BoardService {
         List<ImageIdResDto> ImageIdResDtoList = new ArrayList<>();
         if (boardEntity.getBoardImageList().size() != 0) {
             for (int i = 0; i < boardEntity.getBoardImageList().size(); i++) {
-                ImageIdResDto imageIdResDto = new ImageIdResDto();
-                imageIdResDto.setImageId(boardEntity.getBoardImageList().get(i).getImageId());
-                imageIdResDto.setImageUrl(imageService.getImage(boardEntity.getBoardImageList().get(i).getFilePath(), boardEntity.getBoardImageList().get(i).getFileNm()));
+                ImageIdResDto imageIdResDto = new ImageIdResDto(boardEntity.getBoardImageList().get(i).getImageId(),imageService.getImage(boardEntity.getBoardImageList().get(i).getFilePath(), boardEntity.getBoardImageList().get(i).getFileNm()));
                 ImageIdResDtoList.add(imageIdResDto);
             }
             boardResDto.changeSavedImageIdsAndUrl(ImageIdResDtoList);

@@ -1,11 +1,11 @@
 package com.web.doitcommit.dto.image;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
-@Data
+@Getter
 public class ImageIdResDto {
 
     @Schema(description = "이미지 Id")
