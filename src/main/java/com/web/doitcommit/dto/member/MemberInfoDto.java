@@ -17,11 +17,17 @@ import java.util.List;
 @NoArgsConstructor
 public class MemberInfoDto {
 
+    @Schema(description = "멤버아이디", nullable = true)
+    private Long memberId;
+
     @Schema(description = "닉네임", nullable = true)
     private String nickname;
 
     @Schema(description = "이메일", nullable = true)
     private String email;
+
+    @Schema(description = "자기소개", nullable = true)
+    private String selfIntro;
 
     @Schema(description = "관심기술정보", nullable = true)
     private List interestTechSet;
@@ -53,8 +59,10 @@ public class MemberInfoDto {
     private LocalDateTime modDate;
 
     public MemberInfoDto(Member member) {
+        this.memberId = member.getMemberId();
         this.nickname = member.getNickname();
         this.email = member.getEmail();
+        this.selfIntro = member.getSelfIntro();
         this.position = member.getPosition();
         this.githubUrl = member.getGithubUrl();
         this.url1 = member.getUrl1();
