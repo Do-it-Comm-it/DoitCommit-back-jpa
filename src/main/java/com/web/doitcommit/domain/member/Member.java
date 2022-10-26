@@ -40,15 +40,13 @@ public class Member extends BaseEntity {
 
     private String username;
 
+    @Column(length = 100)
+    private String selfIntro;
+
     private String email;
 
     @OneToOne(mappedBy = "member",fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private MemberImage memberImage;
-
-    /*@ElementCollection(fetch = FetchType.LAZY)
-    @CollectionTable(joinColumns = @JoinColumn(name = "member_id"))
-    @Builder.Default
-    private Set<String> interestTechSet = new HashSet<>();*/
 
     @BatchSize(size = 500)
     @OneToMany(mappedBy = "member",fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
@@ -86,9 +84,9 @@ public class Member extends BaseEntity {
         this.email = email;
     }
 
-//    public void changeInterestTechSet(Set<String> interestTechSet){
-//        this.interestTechSet = interestTechSet;
-//    }
+    public void changeSelfIntro(String selfIntro){
+        this.selfIntro = selfIntro;
+    }
 
     public void changeGithubUrl(String githubUrl){
         this.githubUrl = githubUrl;

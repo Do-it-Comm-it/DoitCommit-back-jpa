@@ -29,6 +29,9 @@ public class MemberUpdateDto {
     @Schema(description = "이메일", nullable = true)
     private String email;
 
+    @Schema(description = "자기소개", nullable = true)
+    private String selfIntro;
+
     @Schema(description = "관심기술정보", nullable = true)
     private List<Long> interestTechSet;
 
