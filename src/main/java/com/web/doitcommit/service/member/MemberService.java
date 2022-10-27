@@ -92,7 +92,7 @@ public class MemberService {
         memberEntity.changeNickname(memberUpdateDto.getNickname());
         memberEntity.changeEmail(memberUpdateDto.getEmail());
         memberEntity.changePosition(memberUpdateDto.getPosition());
-        //memberEntity.changeInterestTechSet(memberUpdateDto.getInterestTechSet());
+        memberEntity.changeSelfIntro(memberUpdateDto.getSelfIntro());
         memberEntity.changeGithubUrl(memberUpdateDto.getGithubUrl());
         memberEntity.changeUrl1(memberUpdateDto.getUrl1());
         memberEntity.changeUrl2(memberUpdateDto.getUrl2());
