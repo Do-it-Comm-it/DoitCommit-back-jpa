@@ -7,7 +7,7 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: ${DATABASE_URL}
-    username: admin
+    username: doitcommit
     password: ${DATABASE_PASSWORD}
 #  datasource:
 #    url: jdbc:h2:tcp://localhost/~/doitcommit
@@ -70,9 +70,6 @@ cloud:
       static: ap-northeast-2
     stack:
       auto: false
-
-file:
-  path: D:\doitcommit\upload\
 
 springdoc:
   version: '@project.version@'
