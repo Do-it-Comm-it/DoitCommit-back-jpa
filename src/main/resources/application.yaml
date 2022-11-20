@@ -71,6 +71,9 @@ cloud:
     stack:
       auto: false
 
+file:
+  path: D:\doitcommit\upload\
+
 springdoc:
   version: '@project.version@'
   api-docs:

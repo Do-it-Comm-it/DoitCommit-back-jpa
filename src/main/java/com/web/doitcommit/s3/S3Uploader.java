@@ -25,8 +25,8 @@ import java.util.*;
 @Component
 public class S3Uploader {
 
-    //@Value("${cloud.aws.s3.bucket}")
-    private final String bucket = "doitcommit20221120";
+    @Value("${cloud.aws.s3.bucket}")
+    private final String bucket;
 
     private final AmazonS3 amazonS3;
     private final ImageRepository imageRepository;
