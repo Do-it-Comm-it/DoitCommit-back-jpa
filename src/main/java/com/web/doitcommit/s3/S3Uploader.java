@@ -26,7 +26,7 @@ import java.util.*;
 public class S3Uploader {
 
     @Value("${cloud.aws.s3.bucket}")
-    private final String bucket;
+    private String bucket;
 
     private final AmazonS3 amazonS3;
     private final ImageRepository imageRepository;
