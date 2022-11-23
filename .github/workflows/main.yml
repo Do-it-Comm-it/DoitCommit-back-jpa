@@ -58,7 +58,7 @@ jobs:
           with:
             aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
             aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-            application_name: do-it-commit
+            application_name: doitcommit
             environment_name: Doitcommit-env
             version_label: "java-${{steps.current-time.outputs.formattedTime}}"
             region: ap-northeast-2
