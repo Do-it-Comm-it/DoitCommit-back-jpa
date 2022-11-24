@@ -10,6 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Transactional
 @RequiredArgsConstructor
 @Service
@@ -41,5 +44,15 @@ public class BookmarkServiceImpl implements BookmarkService{
     public void cancelBookmark(Long principalId, Long boardId) {
 
         bookmarkRepository.deleteBookmark(principalId,boardId);
+    }
+
+    /**
+     * 북마크 다중 취소
+     */
+    @Transactional
+    @Override
+    public void cancelMultipleBookmark(Long principalId,  List<Long> boardIdList) {
+
+        bookmarkRepository.deleteMultipleBookmark(principalId, boardIdList);
     }
 }

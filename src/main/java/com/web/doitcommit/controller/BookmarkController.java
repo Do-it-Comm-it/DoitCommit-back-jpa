@@ -2,6 +2,7 @@ package com.web.doitcommit.controller;
 
 import com.web.doitcommit.config.auth.PrincipalDetails;
 import com.web.doitcommit.dto.CMRespDto;
+import com.web.doitcommit.dto.board.BoardIdListDto;
 import com.web.doitcommit.dto.board.BoardListResDto;
 import com.web.doitcommit.dto.page.PageRequestDto;
 import com.web.doitcommit.dto.page.ScrollResultDto;
@@ -93,6 +94,30 @@ public class BookmarkController {
         bookmarkService.cancelBookmark(principalDetails.getMember().getMemberId(), boardId);
 
         return new ResponseEntity<>(new CMRespDto<>(1, "북마크 취소하기 성공",null),HttpStatus.OK);
+    }
+
+    /**
+     * 북마크 다중 취소
+     */
+    @Operation(summary = "게시글 북마크 다중 취소 API", description = "북마크에서 한번에 여러 게시글을 삭제한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(example = "{\n" +
+                    "  \"message\": \"북마크 다중 취소하기 성공\",\n" +
+                    "  \"data\": null,\n" +
+                    "  \"code\": 1\n" +
+                    "}"))),
+            @ApiResponse(responseCode = "400", content = @Content(schema = @Schema(example = "{\"error\": \"Bad Request\"}"))),
+            @ApiResponse(responseCode = "401", content = @Content(schema = @Schema(example = "{\"error\": \"Unauthorized\"}"))),
+            @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(example = "{\"error\": \"Not Found\"}"))),
+            @ApiResponse(responseCode = "500",  content = @Content(schema = @Schema(example = "{\"error\": \"Internal Server Error\"}")))
+    })
+    @DeleteMapping("/bookmarks")
+    public ResponseEntity<?> cancelMultipleBookmark(@RequestBody BoardIdListDto boardIdListDto,
+                                                    @Parameter(hidden = true) @AuthenticationPrincipal PrincipalDetails principalDetails){
+
+            bookmarkService.cancelMultipleBookmark(principalDetails.getMember().getMemberId(), boardIdListDto.getBoardIdList());
+
+        return new ResponseEntity<>(new CMRespDto<>(1, "북마크 다중 취소하기 성공",null),HttpStatus.OK);
     }
 
 }
