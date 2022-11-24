@@ -53,6 +53,6 @@ public class BookmarkServiceImpl implements BookmarkService{
     @Override
     public void cancelMultipleBookmark(Long principalId,  List<Long> boardIdList) {
 
-        boardRepository.deleteAllById(boardIdList);
+        bookmarkRepository.deleteMultipleBookmark(principalId, boardIdList);
     }
 }
