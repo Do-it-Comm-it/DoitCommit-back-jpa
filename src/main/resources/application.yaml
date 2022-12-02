@@ -50,7 +50,7 @@ app:
   token:
     secretKey: ${JWT_SECRET_KEY}
   oauth2:
-    authorized-redirect-url: https://www.doit-commit.kro.kr
+    authorized-redirect-url: https://web.doit-commit.kro.kr
 
 logging:
   level:
